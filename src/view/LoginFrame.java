@@ -1,4 +1,4 @@
-package Frame;
+package view;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,8 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginFrame extends JFrame {
-    private JTextField usernameField;
-    private JPasswordField passwordField;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
     private JButton loginButton;
 
     public LoginFrame() {
@@ -19,11 +19,11 @@ public class LoginFrame extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        panel.setBackground(new Color(230, 240, 255));
+        panel.setBackground(Color.decode("#FFFAFA"));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titleLabel = new JLabel("Accesso Configuratore");
+        JLabel titleLabel = new JLabel("Accesso configuratore");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -36,6 +36,7 @@ public class LoginFrame extends JFrame {
         panel.add(new JLabel("Username:"), gbc);
 
         usernameField = new JTextField(15);
+
         gbc.gridx = 1;
         panel.add(usernameField, gbc);
 
@@ -58,9 +59,8 @@ public class LoginFrame extends JFrame {
                 String password = new String(passwordField.getPassword());
 
                 if (authenticate(username, password)) {
-                    JOptionPane.showMessageDialog(LoginFrame.this, "Accesso riuscito!");
                     dispose(); // Chiude la finestra di login
-                    //new MainFrame(); // Apri l'interfaccia principale
+                    new MainFrame(); // Apri l'interfaccia principale
                 } else {
                     JOptionPane.showMessageDialog(LoginFrame.this, "Credenziali errate", "Errore", JOptionPane.ERROR_MESSAGE);
                 }
@@ -76,7 +76,8 @@ public class LoginFrame extends JFrame {
     }
 
     private boolean authenticate(String username, String password) {
-        return username.equals("admin") && password.equals("password"); // Sostituire con autenticazione reale
+        //TODO--> gestire qutenticazione con serializazione
+        return username.equals("a") && password.equals("a");
     }
 
     public static void main(String[] args) {
