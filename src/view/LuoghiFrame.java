@@ -1,30 +1,27 @@
 package view;
 import model.Luogo;
-import service.DataManager;
+import controller.AppController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LuoghiFrame extends JFrame {
     private DefaultListModel<String> luogoModel;
     private JList<String> listaLuoghi;
     private JTextField nomeField, descrizioneField, posizioneField;
-    private List<Luogo> luoghi;
+    private AppController controller;
 
     public LuoghiFrame() {
+        this.controller = new AppController();
         setTitle("Gestione Luoghi");
         setSize(500, 400);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Inizializza la lista
         luogoModel = new DefaultListModel<>();
         listaLuoghi = new JList<>(luogoModel);
         add(new JScrollPane(listaLuoghi), BorderLayout.CENTER);
 
-        // Form per aggiungere nuovi luoghi
         JPanel inputPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         inputPanel.add(new JLabel("Nome:"));
         nomeField = new JTextField();
@@ -44,23 +41,21 @@ public class LuoghiFrame extends JFrame {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        caricaLuoghi(); // Carica i luoghi salvati
-    }
-
-    private void caricaLuoghi() {
-        luoghi = (List<Luogo>) DataManager.caricaDatiLuogo("luoghi.dat");
-        if (luoghi == null) {
-            luoghi = new ArrayList<>();
-        }
         aggiornaLista();
     }
 
     private void aggiornaLista() {
         luogoModel.clear();
-        for (Luogo l : luoghi) {
-            luogoModel.addElement(l.getNome() + " - " + l.getPosizione());
+
+        if (controller.getLuoghi().isEmpty()) {
+            luogoModel.addElement("⚠️ Nessun luogo disponibile.");
+        } else {
+            for (Luogo l : controller.getLuoghi()) {
+                luogoModel.addElement(l.getNome() + " - " + l.getPosizione());
+            }
         }
     }
+
 
     private void aggiungiLuogo() {
         String nome = nomeField.getText().trim();
@@ -72,14 +67,10 @@ public class LuoghiFrame extends JFrame {
             return;
         }
 
-        Luogo nuovoLuogo = new Luogo(nome, descrizione, posizione);
-        luoghi.add(nuovoLuogo);
-        DataManager.salvaDatiLuogo(luoghi, "luoghi.dat");
-
+        controller.aggiungiLuogo(new Luogo(nome, descrizione, posizione));
         aggiornaLista();
         JOptionPane.showMessageDialog(this, "Luogo aggiunto con successo!");
 
-        // Pulisce i campi dopo l'inserimento
         nomeField.setText("");
         descrizioneField.setText("");
         posizioneField.setText("");
