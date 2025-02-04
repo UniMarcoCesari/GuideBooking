@@ -3,24 +3,25 @@ import model.Luogo;
 import controller.AppController;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.util.List;
+import card.*;
 
 public class LuoghiFrame extends JFrame {
-    private DefaultListModel<String> luogoModel;
-    private JList<String> listaLuoghi;
+    private JPanel listaPanel;
     private JTextField nomeField, descrizioneField, posizioneField;
     private AppController controller;
 
     public LuoghiFrame() {
         this.controller = new AppController();
         setTitle("Gestione Luoghi");
-        setSize(500, 400);
+        setSize(500, 500);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        luogoModel = new DefaultListModel<>();
-        listaLuoghi = new JList<>(luogoModel);
-        add(new JScrollPane(listaLuoghi), BorderLayout.CENTER);
+        listaPanel = new JPanel();
+        listaPanel.setLayout(new BoxLayout(listaPanel, BoxLayout.Y_AXIS));
+        JScrollPane scrollPane = new JScrollPane(listaPanel);
+        add(scrollPane, BorderLayout.CENTER);
 
         JPanel inputPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         inputPanel.add(new JLabel("Nome:"));
@@ -36,7 +37,7 @@ public class LuoghiFrame extends JFrame {
         inputPanel.add(posizioneField);
 
         JButton addButton = new JButton("Aggiungi Luogo");
-        addButton.addActionListener((ActionEvent e) -> aggiungiLuogo());
+        addButton.addActionListener(e -> aggiungiLuogo());
         inputPanel.add(addButton);
 
         add(inputPanel, BorderLayout.SOUTH);
@@ -44,18 +45,19 @@ public class LuoghiFrame extends JFrame {
         aggiornaLista();
     }
 
-    private void aggiornaLista() {
-        luogoModel.clear();
-
-        if (controller.getLuoghi().isEmpty()) {
-            luogoModel.addElement("⚠️ Nessun luogo disponibile.");
+    public void aggiornaLista() {
+        listaPanel.removeAll();
+        List<Luogo> luoghi = controller.getLuoghi();
+        if (luoghi.isEmpty()) {
+            listaPanel.add(new JLabel("⚠️ Nessun luogo disponibile."));
         } else {
-            for (Luogo l : controller.getLuoghi()) {
-                luogoModel.addElement(l.getNome() + " - " + l.getPosizione());
+            for (Luogo l : luoghi) {
+                listaPanel.add(new LuogoCard(l, controller, this));
             }
         }
+        listaPanel.revalidate();
+        listaPanel.repaint();
     }
-
 
     private void aggiungiLuogo() {
         String nome = nomeField.getText().trim();

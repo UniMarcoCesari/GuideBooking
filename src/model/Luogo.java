@@ -18,4 +18,8 @@ public class Luogo implements Serializable {
     public String getNome() { return nome; }
     public String getDescrizione() { return descrizione; }
     public String getPosizione() { return posizione; }
+
+    public void setNome(String nome) { this.nome = nome; }
+    public void setDescrizione(String descrizione) {this.descrizione = descrizione; }
+    public void setPosizione (String posizione) { this.posizione = posizione; }
 }

@@ -25,7 +25,7 @@ public class AppController {
         return luoghi;
     }
 
-    private void salvaDati() {
+    public void salvaDati() {
         DataManager.salvaDati(luoghi, Costants.file_luoghi);
     }
 }
