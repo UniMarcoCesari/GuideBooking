@@ -9,7 +9,7 @@ public class AppController {
     private List<Luogo> luoghi;
 
     public AppController() {
-        luoghi = (List<Luogo>) DataManager.caricaDati(Costants.file_luoghi);
+        luoghi = DataManager.caricaDati(Costants.file_luoghi);
         if (luoghi == null) {
             luoghi = new ArrayList<>();
             salvaDati();

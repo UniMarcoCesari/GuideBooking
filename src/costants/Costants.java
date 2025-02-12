@@ -3,7 +3,7 @@ package costants;
 public class Costants
 {
 
-    //DATI
+    //File salvataggio dati
     public static final String  file_luoghi = "src/data/luoghi.dat";
 
 }
