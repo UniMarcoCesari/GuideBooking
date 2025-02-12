@@ -8,6 +8,7 @@ import javax.swing.border.*;
 import java.awt.*;
 
 public class LuogoCard extends JPanel {
+
     private static final int CARD_WIDTH = 450;
     private static final int CARD_HEIGHT = 80;
     private static final int BORDER_RADIUS = 15;

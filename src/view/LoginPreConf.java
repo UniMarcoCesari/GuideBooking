@@ -1,21 +1,25 @@
 package view;
 
+import controller.AuthController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import controller.AuthController;
-import service.ValidationUtils;
-
-public class LoginFrame extends JFrame {
+public class LoginPreConf extends JFrame {
     private final JTextField usernameField;
     private final JPasswordField passwordField;
+    private final JPasswordField confirmPasswordField;
     private final JButton loginButton;
 
-    public LoginFrame() {
-        setTitle("Login Configuratore");
-        setSize(400, 200);
+    private final String username;
+
+    public LoginPreConf(String username) {
+        this.username = username;
+
+        setTitle("Inizializzazione Configuratore");
+        setSize(700, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -26,7 +30,7 @@ public class LoginFrame extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titleLabel = new JLabel("Accesso configuratore");
+        JLabel titleLabel = new JLabel("Primo Accesso Configuratore");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -39,32 +43,37 @@ public class LoginFrame extends JFrame {
         panel.add(new JLabel("Username:"), gbc);
 
         usernameField = new JTextField(15);
-
+        usernameField.setFocusable(false);
+        usernameField.setText(username);
         gbc.gridx = 1;
         panel.add(usernameField, gbc);
 
         gbc.gridy = 2;
         gbc.gridx = 0;
         panel.add(new JLabel("Password:"), gbc);
-
         passwordField = new JPasswordField(15);
         gbc.gridx = 1;
         panel.add(passwordField, gbc);
 
-        loginButton = new JButton("Login");
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        panel.add(new JLabel("Conferma Password:"), gbc);
+        confirmPasswordField = new JPasswordField(15);
+        gbc.gridx = 1;
+        panel.add(confirmPasswordField, gbc);
+
+        loginButton = new JButton("Salva Credenziali");
         loginButton.setForeground(Color.BLACK);
         loginButton.setFocusPainted(false);
         loginButton.setFont(new Font("Arial", Font.BOLD, 14));
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String username = usernameField.getText();
-                String password = new String(passwordField.getPassword());
-                authenticate(username, password);
-
+                salvaCredenziali();
             }
         });
-        gbc.gridy = 3;
+
+        gbc.gridy = 4;
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         panel.add(loginButton, gbc);
@@ -72,26 +81,23 @@ public class LoginFrame extends JFrame {
         add(panel);
     }
 
-    private void authenticate(String username, String password) {
-        int verifica =  AuthController.checkCredentials(username, password);
-        //ERRORE
-        if (verifica == -1) {
-            JOptionPane.showMessageDialog(this, "Credenziali errate", "Errore", JOptionPane.ERROR_MESSAGE);
-        }
-        //ACCESSO CLASSICO
-        else if (verifica == 0) {
-            dispose();
-            new MainFrame();
-        }
-        //PRIMO ACCESSO
-        else if (verifica == 1) {
-            dispose();
-            new LoginPreConf(username).setVisible(true);
+    private void salvaCredenziali() {
+        String password = new String(passwordField.getPassword());
+        String confermaPassword = new String(confirmPasswordField.getPassword());
+
+        if (password.isEmpty() || confermaPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "I campi password non possono essere vuoti!", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-    }
+        if (!password.equals(confermaPassword)) {
+            JOptionPane.showMessageDialog(this, "Le password non coincidono!", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
+        JOptionPane.showMessageDialog(this, "✅ Credenziali salvate con successo!");
+        AuthController.setNewPassConfiguratore(username, password);
+        dispose();  // Chiude la finestra
+        // Puoi ora passare alla schermata principale dell'app
     }
 }
