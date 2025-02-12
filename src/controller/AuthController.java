@@ -1,7 +1,7 @@
 package controller;
 
 import costants.Costants;
-import model.Credenziale;
+import costants.Credenziale;
 import service.DataManager;
 
 import java.util.List;

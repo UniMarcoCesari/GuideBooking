@@ -1,6 +1,6 @@
 
 import costants.Costants;
-import model.Credenziale;
+import costants.Credenziale;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

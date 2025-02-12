@@ -1,4 +1,4 @@
-package model;
+package costants;
 
 import java.io.Serializable;
 
