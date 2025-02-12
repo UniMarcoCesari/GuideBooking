@@ -42,7 +42,6 @@ public class LuogoCard extends JPanel {
     }
 
     private Border createCardBorder() {
-        int e = 20;
         return BorderFactory.createCompoundBorder(
                 new RoundedBorder(BORDER_RADIUS),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
