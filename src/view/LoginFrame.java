@@ -1,12 +1,10 @@
 package view;
 
+import controller.AuthController;
+import costants.Costants;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import controller.AuthController;
-import service.ValidationUtils;
 
 public class LoginFrame extends JFrame {
     private final JTextField usernameField;
@@ -15,83 +13,97 @@ public class LoginFrame extends JFrame {
 
     public LoginFrame() {
         setTitle("Login Configuratore");
-        setSize(400, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        panel.setBackground(Color.decode("#FFFAFA"));
+        // Pannello principale con BoxLayout
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBackground(Costants.BACKGROUND_COLOR);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+
+        // Header (Logo + Titolo)
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBackground(Costants.BACKGROUND_COLOR);
+        headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel logoLabel = new JLabel("🔑");
+        logoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 40));
+        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel titleLabel = new JLabel("Accesso Configuratore");
+        titleLabel.setFont(Costants.TITLE_FONT);
+        titleLabel.setForeground(Costants.ACCENT_COLOR);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        headerPanel.add(logoLabel);
+        headerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        headerPanel.add(titleLabel);
+
+        mainPanel.add(headerPanel);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        // Form di login
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(Costants.BACKGROUND_COLOR);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titleLabel = new JLabel("Accesso configuratore");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        panel.add(titleLabel, gbc);
-
-        gbc.gridwidth = 1;
-        gbc.gridy = 1;
-        gbc.gridx = 0;
-        panel.add(new JLabel("Username:"), gbc);
+        formPanel.add(new JLabel("Username:"), gbc);
 
         usernameField = new JTextField(15);
-
         gbc.gridx = 1;
-        panel.add(usernameField, gbc);
+        formPanel.add(usernameField, gbc);
 
-        gbc.gridy = 2;
+        gbc.gridy = 1;
         gbc.gridx = 0;
-        panel.add(new JLabel("Password:"), gbc);
+        formPanel.add(new JLabel("Password:"), gbc);
 
         passwordField = new JPasswordField(15);
         gbc.gridx = 1;
-        panel.add(passwordField, gbc);
+        formPanel.add(passwordField, gbc);
 
-        loginButton = new JButton("Login");
-        loginButton.setForeground(Color.BLACK);
-        loginButton.setFocusPainted(false);
-        loginButton.setFont(new Font("Arial", Font.BOLD, 14));
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = usernameField.getText();
-                String password = new String(passwordField.getPassword());
-                authenticate(username, password);
+        mainPanel.add(formPanel);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-            }
+        // Pulsante di login con larghezza automatica
+        loginButton = Costants.createMenuButton("Accedi", "🔓");
+        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loginButton.setMaximumSize(loginButton.getPreferredSize()); // Adatta la larghezza al testo
+
+        loginButton.addActionListener(e -> {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            authenticate(username, password);
         });
-        gbc.gridy = 3;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
-        panel.add(loginButton, gbc);
 
-        add(panel);
+        mainPanel.add(loginButton);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        add(mainPanel);
+        pack(); // Adatta automaticamente la finestra
+        setVisible(true);
     }
 
     private void authenticate(String username, String password) {
-        int verifica =  AuthController.checkCredentials(username, password);
-        //ERRORE
+        int verifica = AuthController.checkCredentials(username, password);
+
         if (verifica == -1) {
             JOptionPane.showMessageDialog(this, "Credenziali errate", "Errore", JOptionPane.ERROR_MESSAGE);
-        }
-        //ACCESSO CLASSICO
-        else if (verifica == 0) {
+        } else if (verifica == 0) {
             dispose();
-            new MainFrame();
-        }
-        //PRIMO ACCESSO
-        else if (verifica == 1) {
+            new PannelloConfiguratore();
+        } else if (verifica == 1) {
             dispose();
             new LoginPreConf(username).setVisible(true);
         }
-
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
+        SwingUtilities.invokeLater(LoginFrame::new);
     }
 }

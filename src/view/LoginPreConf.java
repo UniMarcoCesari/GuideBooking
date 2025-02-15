@@ -98,6 +98,6 @@ public class LoginPreConf extends JFrame {
         JOptionPane.showMessageDialog(this, "✅ Credenziali salvate con successo!");
         AuthController.setNewPassConfiguratore(username, password);
         dispose();  // Chiude la finestra
-        // Puoi ora passare alla schermata principale dell'app
+        new LoginFrame().setVisible(true); // Rimanda alla pagina di LOGIN
     }
 }

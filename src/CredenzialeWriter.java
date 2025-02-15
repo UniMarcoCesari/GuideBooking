@@ -11,8 +11,8 @@ import java.util.List;
 public class CredenzialeWriter {
     public static void main(String[] args) {
         // Creiamo una credenziale di esempio
-        Credenziale admin = new Credenziale("a", "a", Costants.ruolo_PRE_configuratore);
-        Credenziale gia = new Credenziale("b", "b", Costants.ruolo_configuratore);
+        Credenziale admin = new Credenziale("pre", "a", Costants.ruolo_PRE_configuratore);
+        Credenziale gia = new Credenziale("a", "a", Costants.ruolo_configuratore);
 
         List<Credenziale> credenzialeList = new ArrayList<>();
         credenzialeList.add(admin);
