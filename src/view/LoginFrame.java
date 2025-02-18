@@ -12,44 +12,59 @@ public class LoginFrame extends JFrame {
     private final JButton loginButton;
 
     public LoginFrame() {
-        setTitle("Login Configuratore");
+        setTitle("LogIn");
+        setSize(800, 500); // Aumentata la dimensione della finestra
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        // Pannello principale con BoxLayout
+        // Pannello principale
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setLayout(new BorderLayout());
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
 
         // Header (Logo + Titolo)
         JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setOpaque(true);
         headerPanel.setBackground(Costants.BACKGROUND_COLOR);
-        headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS)); // BoxLayout orizzontale per il layout
 
-        JLabel logoLabel = new JLabel("🔑");
+        headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Allinea l'header al centro
+
+        JLabel logoLabel = new JLabel("🏥");
         logoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 40));
-        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel titleLabel = new JLabel("Accesso Configuratore");
+        // Pannello per il titolo
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+        titlePanel.setBackground(Costants.BACKGROUND_COLOR);
+
+        JLabel titleLabel = new JLabel("Sistema di Gestione Visite");
         titleLabel.setFont(Costants.TITLE_FONT);
         titleLabel.setForeground(Costants.ACCENT_COLOR);
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        JLabel subtitleLabel = new JLabel("Pannello di Controllo Amministratore");
+        subtitleLabel.setFont(Costants.BUTTON_FONT);
+        subtitleLabel.setForeground(Costants.BORDER_COLOR);
+
+        titlePanel.add(titleLabel);
+        titlePanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        titlePanel.add(subtitleLabel);
+
+        // Aggiungi logo e titolo al pannello
         headerPanel.add(logoLabel);
-        headerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        headerPanel.add(titleLabel);
+        headerPanel.add(Box.createRigidArea(new Dimension(10, 0))); // Spazio tra logo e titolo
+        headerPanel.add(titlePanel);
 
-        mainPanel.add(headerPanel);
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // Form di login
+        // Form di login (centrato)
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(Costants.BACKGROUND_COLOR);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.CENTER;
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -67,10 +82,12 @@ public class LoginFrame extends JFrame {
         gbc.gridx = 1;
         formPanel.add(passwordField, gbc);
 
-        mainPanel.add(formPanel);
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        mainPanel.add(formPanel, BorderLayout.CENTER);
 
-        // Pulsante di login con larghezza automatica
+        // Pulsante di login (centrato)
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(Costants.BACKGROUND_COLOR);
+
         loginButton = Costants.createMenuButton("Accedi", "🔓");
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.setMaximumSize(loginButton.getPreferredSize()); // Adatta la larghezza al testo
@@ -81,11 +98,10 @@ public class LoginFrame extends JFrame {
             authenticate(username, password);
         });
 
-        mainPanel.add(loginButton);
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        buttonPanel.add(loginButton);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
-        pack(); // Adatta automaticamente la finestra
         setVisible(true);
     }
 
