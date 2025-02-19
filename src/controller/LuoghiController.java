@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import costants.*;
 
-public class AppController {
+public class LuoghiController {
     private List<Luogo> luoghi;
 
-    public AppController() {
+    public LuoghiController() {
         luoghi = DataManager.caricaDati(Costants.file_luoghi);
         if (luoghi == null) {
             luoghi = new ArrayList<>();

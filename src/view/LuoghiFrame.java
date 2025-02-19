@@ -2,7 +2,7 @@ package view;
 
 import card.LuogoCard;
 import model.Luogo;
-import controller.AppController;
+import controller.LuoghiController;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -16,10 +16,10 @@ public class LuoghiFrame extends JFrame {
     private  JTextField nomeField;
     private  JTextField descrizioneField;
     private  JTextField posizioneField;
-    private final AppController controller;
+    private final LuoghiController controller;
 
     public LuoghiFrame() {
-        controller = new AppController();
+        controller = new LuoghiController();
         initializeFrame();
 
         listaPanel = createListPanel();

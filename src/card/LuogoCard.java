@@ -1,7 +1,7 @@
 package card;
 
 import model.Luogo;
-import controller.AppController;
+import controller.LuoghiController;
 import view.LuoghiFrame;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -16,10 +16,10 @@ public class LuogoCard extends JPanel {
     private final JLabel nomeLabel;
     private final JLabel posizioneLabel;
     private final Luogo luogo;
-    private final AppController controller;
+    private final LuoghiController controller;
     private final LuoghiFrame frame;
 
-    public LuogoCard(Luogo luogo, AppController controller, LuoghiFrame frame) {
+    public LuogoCard(Luogo luogo, LuoghiController controller, LuoghiFrame frame) {
         this.luogo = luogo;
         this.controller = controller;
         this.frame = frame;

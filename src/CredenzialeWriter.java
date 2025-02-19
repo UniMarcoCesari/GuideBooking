@@ -14,6 +14,7 @@ public class CredenzialeWriter {
         Credenziale admin = new Credenziale("pre", "a", Costants.ruolo_PRE_configuratore);
         Credenziale gia = new Credenziale("a", "a", Costants.ruolo_configuratore);
 
+
         List<Credenziale> credenzialeList = new ArrayList<>();
         credenzialeList.add(admin);
         credenzialeList.add(gia);
