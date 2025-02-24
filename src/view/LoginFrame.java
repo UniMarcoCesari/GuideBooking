@@ -112,7 +112,7 @@ public class LoginFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Credenziali errate", "Errore", JOptionPane.ERROR_MESSAGE);
         } else if (verifica == 0) {
             dispose();
-            new PannelloConfiguratore();
+            new CreazioneCorpoDati();
         } else if (verifica == 1) {
             dispose();
             new LoginPreConf(username).setVisible(true);

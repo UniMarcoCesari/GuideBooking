@@ -18,8 +18,8 @@ public class LuoghiFrame extends JFrame {
     private  JTextField posizioneField;
     private final LuoghiController controller;
 
-    public LuoghiFrame() {
-        controller = new LuoghiController();
+    public LuoghiFrame(LuoghiController controller) {
+        this.controller = controller;
         initializeFrame();
 
         listaPanel = createListPanel();

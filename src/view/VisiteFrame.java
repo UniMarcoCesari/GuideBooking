@@ -12,14 +12,14 @@ public class VisiteFrame extends JFrame {
     private JPanel listaPanel;
     private TipiVisitaController controller;
 
-    public VisiteFrame() {
+    public VisiteFrame(TipiVisitaController controller) {
         setTitle("Gestione Visite");
         setSize(1200, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
 
-        controller = new TipiVisitaController();
+        this.controller = controller;
 
         // Pannello principale
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));

@@ -182,7 +182,7 @@ public class NuovaVisitaFrame extends JFrame {
         parentFrame.aggiornaLista(); // Aggiorna immediatamente la lista delle visite
         dispose();
         JOptionPane.showMessageDialog(parentFrame, "Visita aggiunta con successo!");
-        new VisiteFrame().setVisible(true);
+
     }
 
     private LocalDate convertToLocalDate(Object spinnerValue) {
