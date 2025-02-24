@@ -15,6 +15,7 @@ public class TipiVisitaController {
     }
 
     public List<TipoVisita> getTipiVisita() {
+        caricaDati();
         return tipiVisita;
     }
 

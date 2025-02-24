@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class NuovaVisitaFrame extends JFrame {
-    private JTextField titoloField, descrizioneField, puntoIncontroField;
-    private JSpinner dataInizioSpinner, dataFineSpinner, oraInizioSpinner;
+    private final JTextField titoloField, descrizioneField, puntoIncontroField;
+    private final JSpinner dataInizioSpinner, dataFineSpinner, oraInizioSpinner;
     private JSpinner durataSpinner, minPartecipantiSpinner, maxPartecipantiSpinner;
     private JCheckBox bigliettoCheckbox;
 

@@ -1,8 +1,11 @@
 package view;
 
 import card.LuogoCard;
+import controller.TipiVisitaController;
 import model.Luogo;
 import controller.LuoghiController;
+import model.TipoVisita;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -18,8 +21,11 @@ public class LuoghiFrame extends JFrame {
     private  JTextField posizioneField;
     private final LuoghiController controller;
 
-    public LuoghiFrame(LuoghiController controller) {
-        this.controller = controller;
+    private final TipiVisitaController tipoVisitaController;
+
+    public LuoghiFrame() {
+        this.controller = new LuoghiController();
+        this.tipoVisitaController = new TipiVisitaController();
         initializeFrame();
 
         listaPanel = createListPanel();
@@ -45,11 +51,20 @@ public class LuoghiFrame extends JFrame {
     }
 
     private JPanel createInputPanel() {
-        JPanel inputPanel = new JPanel(new GridLayout(4, 2, 5, 5));
+        JPanel inputPanel = new JPanel(new GridLayout(5, 2, 5, 5));
 
         nomeField = addLabeledField(inputPanel, "Nome:");
         descrizioneField = addLabeledField(inputPanel, "Descrizione:");
         posizioneField = addLabeledField(inputPanel, "Posizione:");
+
+        // Sezione per associare tipi di visita
+        JLabel tipiVisitaLabel = new JLabel("Tipi di visita:");
+        JComboBox<String> tipiVisitaComboBox = new JComboBox<>();
+        for (model.TipoVisita tipoVisita : tipoVisitaController.getTipiVisita()) {
+            tipiVisitaComboBox.addItem(tipoVisita.getTitolo());
+        }
+        inputPanel.add(tipiVisitaLabel);
+        inputPanel.add(tipiVisitaComboBox);
 
         JButton addButton = new JButton("➕ Aggiungi Luogo");
         addButton.addActionListener(e -> aggiungiLuogo());
@@ -57,6 +72,7 @@ public class LuoghiFrame extends JFrame {
 
         return inputPanel;
     }
+
 
     private JTextField addLabeledField(JPanel panel, String labelText) {
         panel.add(new JLabel(labelText));
