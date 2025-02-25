@@ -18,14 +18,19 @@ public class VolontariFrame extends JFrame {
 
     private VolontariController controller;
 
-    public VolontariFrame() {
+    NuovoTipoVisitaFrame parent;
+
+    public VolontariFrame(NuovoTipoVisitaFrame nuovoTipoVisitaFrame, VolontariController volontariController) {
+
+        parent = nuovoTipoVisitaFrame;
+        controller = volontariController;
+
         setTitle("Gestione Volontari");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        this.controller = new VolontariController();
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -92,6 +97,8 @@ public class VolontariFrame extends JFrame {
         setVisible(true);
     }
 
+
+
     private void caricaVolontari() {
         ArrayList<Volontario> volontari = controller.getListaVolontari();
         for (Volontario volontario : volontari) {
@@ -117,9 +124,11 @@ public class VolontariFrame extends JFrame {
         // Aggiorna la lista dei volontari
         volontariListModel.addElement(nomeVolontario);
         nomeVolontarioField.setText("");
+
     }
 
     private void chiudiEmandaIndietro() {
+       // parent.aggiornaListaVolonatari();
         dispose();
 
         //new NuovoTipoVisitaFrame().setVisible(true);  // Torna alla finestra precedente, ad esempio quella per i tipi di visita

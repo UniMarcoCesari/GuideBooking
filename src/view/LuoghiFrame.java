@@ -27,14 +27,15 @@ public class LuoghiFrame extends JFrame {
     private JTextField nomeField;
     private JTextField descrizioneField;
     private JTextField posizioneField;
-    private final LuoghiController controller;
-    private final TipiVisitaController tipoVisitaController;
     private JComboBox<String> tipiVisitaComboBox;
     private DefaultListModel<String> tipiVisitaModel;
     private JList<String> tipiVisitaList;
 
+    private final LuoghiController luoghiController;
+    private final TipiVisitaController tipoVisitaController;
+
     public LuoghiFrame() {
-        this.controller = new LuoghiController();
+        this.luoghiController = new LuoghiController();
         this.tipoVisitaController = new TipiVisitaController();
 
         initializeFrame();
@@ -55,9 +56,6 @@ public class LuoghiFrame extends JFrame {
         add(mainPanel);
         aggiornaListaLuoghi();
         setVisible(true);
-    }
-
-    public static void aggiornaTipiVisita() {
     }
 
     private void initializeFrame() {
@@ -160,7 +158,7 @@ public class LuoghiFrame extends JFrame {
 
     private void openTipoVisitaDialog()
     {
-        new NuovoTipoVisitaFrame(this).setVisible(true);
+        new NuovoTipoVisitaFrame(this, tipoVisitaController).setVisible(true);
     }
 
 
@@ -192,7 +190,7 @@ public class LuoghiFrame extends JFrame {
 
     public void aggiornaListaLuoghi() {
         listaPanel.removeAll();
-        List<Luogo> luoghi = controller.getLuoghi();
+        List<Luogo> luoghi = luoghiController.getLuoghi();
 
         if (luoghi.isEmpty()) {
             listaPanel.add(new JLabel("Nessun luogo disponibile.", SwingConstants.CENTER));
@@ -204,9 +202,28 @@ public class LuoghiFrame extends JFrame {
         listaPanel.repaint();
     }
 
+    public void aggiornaListaTipiVisita() {
+        // Clear the current combo box items
+        tipiVisitaComboBox.removeAllItems();
+
+        // Add updated tipi visita to the combo box
+        for (TipoVisita tipoVisita : tipoVisitaController.getTipiVisita()) {
+            tipiVisitaComboBox.addItem(tipoVisita.getTitolo());
+        }
+
+        // Clear the model (no need to recreate it)
+        tipiVisitaModel.clear();
+
+        // Refresh the UI
+        tipiVisitaComboBox.revalidate();
+        tipiVisitaComboBox.repaint();
+        tipiVisitaList.revalidate();
+        tipiVisitaList.repaint();
+    }
+
     private void addLuogoCard(Luogo luogo) {
         listaPanel.add(Box.createVerticalStrut(6));
-        listaPanel.add(new LuogoCard(luogo, controller, this));
+        listaPanel.add(new LuogoCard(luogo, luoghiController, this));
     }
 
     private void aggiungiLuogo() {
@@ -232,7 +249,7 @@ public class LuoghiFrame extends JFrame {
             return;
         }
 
-        controller.aggiungiLuogo(new Luogo(nome, descrizione, posizione,tipiVisita));
+        luoghiController.aggiungiLuogo(new Luogo(nome, descrizione, posizione,tipiVisita));
         aggiornaListaLuoghi();
         JOptionPane.showMessageDialog(this, "Luogo aggiunto con successo!");
         clearFields();

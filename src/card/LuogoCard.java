@@ -86,17 +86,17 @@ public class LuogoCard extends JPanel {
         nomeLabel.setForeground(DARK_TEXT);
 
         // Posizione
-        JLabel posizioneLabel = new JLabel("📍 " + luogo.getPosizione());
+        JLabel posizioneLabel = new JLabel("Posizione: " + luogo.getPosizione());
         posizioneLabel.setFont(NORMAL_FONT);
         posizioneLabel.setForeground(LIGHT_TEXT);
 
         // Descrizione
-        JLabel descrizioneLabel = new JLabel("📝 " + (luogo.getDescrizione().isEmpty() ? "Nessuna descrizione" : luogo.getDescrizione()));
+        JLabel descrizioneLabel = new JLabel("Descrizione: " + (luogo.getDescrizione().isEmpty() ? "Nessuna descrizione" : luogo.getDescrizione()));
         descrizioneLabel.setFont(NORMAL_FONT);
         descrizioneLabel.setForeground(LIGHT_TEXT);
 
         // Tipi di Visita
-        JLabel tipiVisitaLabel = new JLabel("🗓️ " + formatTipiVisita(luogo.getTipiVisita()));
+        JLabel tipiVisitaLabel = new JLabel("Tipi di visita associati: " + formatTipiVisita(luogo.getTipiVisita()));
         tipiVisitaLabel.setFont(NORMAL_FONT);
         tipiVisitaLabel.setForeground(LIGHT_TEXT);
 
@@ -112,8 +112,8 @@ public class LuogoCard extends JPanel {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         panel.setOpaque(false);
 
-        JButton modificaButton = createIconButton("✏️ Modifica");
-        JButton eliminaButton = createIconButton("🗑️ Elimina");
+        JButton modificaButton = createIconButton("Modifica");
+        JButton eliminaButton = createIconButton("Elimina");
 
         modificaButton.addActionListener(e -> modificaLuogo());
         eliminaButton.addActionListener(e -> eliminaLuogo());

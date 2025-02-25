@@ -20,20 +20,20 @@ public class NuovoTipoVisitaFrame extends JFrame {
     private JSpinner durataSpinner, minPartecipantiSpinner, maxPartecipantiSpinner;
     private JCheckBox bigliettoCheckbox;
     private JComboBox<String> volontarioComboBox;  // ComboBox per selezionare un volontario
-    private TipiVisitaController controller;
+    private TipiVisitaController tipiVisitaController;
     private VolontariController volontariController;
 
-    private Frame frame;
+    private LuoghiFrame parent;
 
-    public NuovoTipoVisitaFrame(LuoghiFrame frame) {
+    public NuovoTipoVisitaFrame(LuoghiFrame parent, TipiVisitaController tipoVisitaController) {
         setTitle("Nuova Visita");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        this.frame = frame;
-        this.controller = new TipiVisitaController();
+        this.parent = parent;
+        this.tipiVisitaController = tipoVisitaController;
         this.volontariController = new VolontariController();
 
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -130,7 +130,6 @@ public class NuovoTipoVisitaFrame extends JFrame {
         gbc.gridy = row;
         formPanel.add(new JLabel("Seleziona Volontario:"), gbc);
         volontarioComboBox = new JComboBox<>();
-        // Popola il ComboBox con i volontari dal controller
         aggiornaListaVolontari(); // Metodo per aggiornare la lista dei volontari
         gbc.gridx = 1;
         formPanel.add(volontarioComboBox, gbc);
@@ -140,7 +139,6 @@ public class NuovoTipoVisitaFrame extends JFrame {
         JButton aggiungiVolontarioButton = new JButton("Aggiungi Volontario");
         aggiungiVolontarioButton.addActionListener(e -> {
             creaNuovoVolontario();
-            aggiornaListaVolontari(); // Ricarica la lista dopo aver aggiunto un nuovo volontario
         });
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -175,7 +173,7 @@ public class NuovoTipoVisitaFrame extends JFrame {
     }
 
     private void creaNuovoVolontario() {
-        new VolontariFrame().setVisible(true);
+        new VolontariFrame(this, volontariController).setVisible(true);
     }
 
     private void salvaVisita() {
@@ -207,7 +205,7 @@ public class NuovoTipoVisitaFrame extends JFrame {
         LocalTime oraInizio = convertToLocalTime(oraInizioSpinner.getValue());
 
         // Controllo se il titolo esiste già
-        if (controller.titoloEsiste(titolo)) {
+        if (tipiVisitaController.titoloEsiste(titolo)) {
             JOptionPane.showMessageDialog(this, "Errore: Esiste già una visita con questo titolo!", "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -232,14 +230,38 @@ public class NuovoTipoVisitaFrame extends JFrame {
                 10
         );
 
-        controller.aggiungiVisita(nuovaVisita);
-        controller.salvaDati();
+        tipiVisitaController.aggiungiVisita(nuovaVisita);
 
+        // Aggiorna la lista dei tipi di visita nel frame padre
+        parent.aggiornaListaTipiVisita();
 
-
-
+        // Mostra messaggio di conferma
+        JOptionPane.showMessageDialog(this, "Tipo di visita aggiunto con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
 
         chiudiEmandaIndietro();
+    }
+
+    public void aggiornaListaVolonatari() {
+
+
+
+        // Clear the current combo box items
+        volontarioComboBox.removeAllItems();
+
+        // Add updated tipi visita to the combo box
+        for (Volontario volontario : volontariController.getListaVolontari()) {
+            volontarioComboBox.addItem(volontario.getNome());
+        }
+
+        // Clear the model (no need to recreate it)
+        //volontario
+
+        // Refresh the UI
+        volontarioComboBox.revalidate();
+        volontarioComboBox.repaint();
+        //tipiVisitaList.revalidate();
+        //tipiVisitaList.repaint();
+
     }
 
     private void chiudiEmandaIndietro() {

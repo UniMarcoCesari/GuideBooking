@@ -30,6 +30,10 @@ public class TipiVisitaController {
     }
 
     public void salvaDati() {
+        System.out.println("salvati i seguenti tipi di visita");
+        for (int i = 0; i < tipiVisita.size(); i++) {
+            System.out.println(tipiVisita.get(i).getTitolo());
+        }
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_tipi_visita))) {
             oos.writeObject(tipiVisita);
         } catch (IOException e) {

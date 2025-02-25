@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TipoVisita implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     private String titolo;
     private String descrizione;
