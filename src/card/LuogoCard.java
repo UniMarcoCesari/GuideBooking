@@ -1,78 +1,119 @@
 package card;
 
 import model.Luogo;
+import model.TipoVisita;
 import controller.LuoghiController;
 import view.LuoghiFrame;
+
 import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class LuogoCard extends JPanel {
+    private static final int CARD_WIDTH = 750;
+    private static final int CARD_HEIGHT = 120;
+    private static final Color BORDER_COLOR = new Color(200, 200, 200);
+    private static final Color ACCENT_COLOR = new Color(49, 130, 189);
+    private static final Color DARK_TEXT = new Color(50, 50, 50);
+    private static final Color LIGHT_TEXT = new Color(100, 100, 100);
+    private static final Color BACKGROUND_HOVER = new Color(235, 245, 255);
+    private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 16);
+    private static final Font NORMAL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
 
-    private static final int CARD_WIDTH = 450;
-    private static final int CARD_HEIGHT = 80;
-    private static final int BORDER_RADIUS = 15;
-
-    private final JLabel nomeLabel;
-    private final JLabel posizioneLabel;
     private final Luogo luogo;
     private final LuoghiController controller;
     private final LuoghiFrame frame;
+    private final JPanel contentPanel;
 
     public LuogoCard(Luogo luogo, LuoghiController controller, LuoghiFrame frame) {
         this.luogo = luogo;
         this.controller = controller;
         this.frame = frame;
 
-        setupPanel();
-
-        nomeLabel = createNomeLabel();
-        posizioneLabel = createPosizioneLabel();
-
-        add(createInfoPanel(), BorderLayout.CENTER);
-        add(createButtonPanel(), BorderLayout.EAST);
-    }
-
-    private void setupPanel() {
-        setLayout(new BorderLayout());
+        // Configurazione panel
         setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
-        setBorder(createCardBorder());
+        setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setOpaque(true);
-    }
+        setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
 
-    private Border createCardBorder() {
-        return BorderFactory.createCompoundBorder(
-                new RoundedBorder(BORDER_RADIUS),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        // Contenitore principale
+        contentPanel = new JPanel(new BorderLayout(15, 0));
+        contentPanel.setOpaque(false);
+        contentPanel.setBorder(new EmptyBorder(12, 15, 12, 15));
 
-        );
-    }
+        // Icona luogo
+        JLabel iconLabel = new JLabel("📍");
+        iconLabel.setFont(new Font("Segoe UI", Font.PLAIN, 24));
+        iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-    private JLabel createNomeLabel() {
-        JLabel label = new JLabel("<html><b>" + luogo.getNome() + "</b></html>");
-        label.setFont(new Font("Arial", Font.BOLD, 14));
-        return label;
-    }
+        // Area informazioni
+        JPanel infoPanel = createInfoPanel();
 
-    private JLabel createPosizioneLabel() {
-        return new JLabel(luogo.getPosizione());
+        // Area pulsanti
+        JPanel actionPanel = createButtonPanel();
+
+        // Assembly
+        contentPanel.add(iconLabel, BorderLayout.WEST);
+        contentPanel.add(infoPanel, BorderLayout.CENTER);
+        contentPanel.add(actionPanel, BorderLayout.EAST);
+        add(contentPanel);
+
+        // Effetto hover
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                setBackground(BACKGROUND_HOVER);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                setBackground(Color.WHITE);
+            }
+        });
     }
 
     private JPanel createInfoPanel() {
-        JPanel panel = new JPanel(new GridLayout(2, 1));
+        JPanel panel = new JPanel(new GridLayout(4, 1, 0, 3));
         panel.setOpaque(false);
+
+        // Nome
+        JLabel nomeLabel = new JLabel(luogo.getNome());
+        nomeLabel.setFont(TITLE_FONT);
+        nomeLabel.setForeground(DARK_TEXT);
+
+        // Posizione
+        JLabel posizioneLabel = new JLabel("📍 " + luogo.getPosizione());
+        posizioneLabel.setFont(NORMAL_FONT);
+        posizioneLabel.setForeground(LIGHT_TEXT);
+
+        // Descrizione
+        JLabel descrizioneLabel = new JLabel("📝 " + (luogo.getDescrizione().isEmpty() ? "Nessuna descrizione" : luogo.getDescrizione()));
+        descrizioneLabel.setFont(NORMAL_FONT);
+        descrizioneLabel.setForeground(LIGHT_TEXT);
+
+        // Tipi di Visita
+        JLabel tipiVisitaLabel = new JLabel("🗓️ " + formatTipiVisita(luogo.getTipiVisita()));
+        tipiVisitaLabel.setFont(NORMAL_FONT);
+        tipiVisitaLabel.setForeground(LIGHT_TEXT);
+
         panel.add(nomeLabel);
         panel.add(posizioneLabel);
+        panel.add(descrizioneLabel);
+        panel.add(tipiVisitaLabel);
+
         return panel;
     }
 
     private JPanel createButtonPanel() {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         panel.setOpaque(false);
 
-        JButton modificaButton = new JButton("✏️ Modifica");
-        JButton eliminaButton = new JButton("🗑️ Elimina");
+        JButton modificaButton = createIconButton("✏️ Modifica");
+        JButton eliminaButton = createIconButton("🗑️ Elimina");
 
         modificaButton.addActionListener(e -> modificaLuogo());
         eliminaButton.addActionListener(e -> eliminaLuogo());
@@ -83,14 +124,52 @@ public class LuogoCard extends JPanel {
         return panel;
     }
 
-    private void modificaLuogo() {
-        String nuovoNome = JOptionPane.showInputDialog(this, "Modifica Nome:", luogo.getNome());
-        String nuovaPosizione = JOptionPane.showInputDialog(this, "Modifica Posizione:", luogo.getPosizione());
+    private JButton createIconButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        button.setForeground(Color.WHITE);
+        button.setBackground(ACCENT_COLOR);
+        button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        if (isValidInput(nuovoNome, nuovaPosizione)) {
-            updateLuogo(nuovoNome, nuovaPosizione);
-            controller.salvaDati();
-            frame.aggiornaLista();
+        return button;
+    }
+
+    private void modificaLuogo() {
+        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+        panel.setBorder(new EmptyBorder(15, 15, 5, 15));
+
+        JTextField nomeField = new JTextField(luogo.getNome(), 20);
+        JTextField posizioneField = new JTextField(luogo.getPosizione(), 20);
+        JTextField descrizioneField = new JTextField(luogo.getDescrizione(), 20);
+
+        panel.add(new JLabel("Nome:"));
+        panel.add(nomeField);
+        panel.add(new JLabel("Posizione:"));
+        panel.add(posizioneField);
+        panel.add(new JLabel("Descrizione:"));
+        panel.add(descrizioneField);
+
+        int result = JOptionPane.showConfirmDialog(this, panel,
+                "Modifica Luogo", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            String nuovoNome = nomeField.getText().trim();
+            String nuovaPosizione = posizioneField.getText().trim();
+            String nuovaDescrizione = descrizioneField.getText().trim();
+
+            if (isValidInput(nuovoNome, nuovaPosizione)) {
+                updateLuogo(nuovoNome, nuovaPosizione, nuovaDescrizione);
+                controller.salvaDati();
+                //frame.aggiornaLista();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Nome e Posizione sono obbligatori!",
+                        "Errore",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -99,40 +178,32 @@ public class LuogoCard extends JPanel {
                 posizione != null && !posizione.trim().isEmpty();
     }
 
-    private void updateLuogo(String nome, String posizione) {
+    private void updateLuogo(String nome, String posizione, String descrizione) {
         luogo.setNome(nome);
         luogo.setPosizione(posizione);
-        nomeLabel.setText("<html><b>" + nome + "</b></html>");
-        posizioneLabel.setText(posizione);
+        luogo.setDescrizione(descrizione);
     }
 
     private void eliminaLuogo() {
         int conferma = JOptionPane.showConfirmDialog(this,
-                "Sei sicuro di voler eliminare questo luogo?",
+                "Sei sicuro di voler eliminare il luogo '" + luogo.getNome() + "'?",
                 "Conferma Eliminazione",
-                JOptionPane.YES_NO_OPTION);
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
 
         if (conferma == JOptionPane.YES_OPTION) {
             controller.getLuoghi().remove(luogo);
             controller.salvaDati();
-            frame.aggiornaLista();
+            //frame.aggiornaLista();
         }
     }
-}
 
-class RoundedBorder extends AbstractBorder {
-    private final int radius;
-
-    RoundedBorder(int radius) {
-        this.radius = radius;
-    }
-
-    @Override
-    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.BLACK);
-        g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
-        g2.dispose();
+    private String formatTipiVisita(List<TipoVisita> tipiVisita) {
+        if (tipiVisita == null || tipiVisita.isEmpty()) {
+            return "Nessun tipo di visita";
+        }
+        return tipiVisita.stream()
+                .map(TipoVisita::getTitolo)
+                .collect(Collectors.joining(", "));
     }
 }

@@ -13,7 +13,7 @@ public class LoginFrame extends JFrame {
 
     public LoginFrame() {
         setTitle("LogIn");
-        setSize(800, 500); // Aumentata la dimensione della finestra
+        setSize(800, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
