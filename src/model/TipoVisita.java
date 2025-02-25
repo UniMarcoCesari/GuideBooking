@@ -3,6 +3,7 @@ package model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TipoVisita implements Serializable {
@@ -19,6 +20,8 @@ public class TipoVisita implements Serializable {
     private boolean bigliettoNecessario;
     private int minPartecipanti;
     private int maxPartecipanti;
+
+
 
     public TipoVisita(String titolo, String descrizione, String puntoIncontro,
                       LocalDate dataInizio, LocalDate dataFine, List<String> giorniSettimana,

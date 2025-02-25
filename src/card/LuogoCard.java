@@ -194,7 +194,7 @@ public class LuogoCard extends JPanel {
         if (conferma == JOptionPane.YES_OPTION) {
             controller.getLuoghi().remove(luogo);
             controller.salvaDati();
-            //frame.aggiornaLista();
+            frame.aggiornaListaLuoghi();
         }
     }
 

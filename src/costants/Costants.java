@@ -11,6 +11,7 @@ public class Costants
     public static final String  file_luoghi = "src/data/luoghi.dat";
     public static final String  file_credenziali = "src/data/credenziali.dat";
     public static final String  file_tipi_visita = "src/data/tipiVisita.dat";
+    public static final String  file_volontari = "src/data/volontari.dat";
 
     //Ruoli
     public static final String ruolo_PRE_configuratore =  "PRE-configuratore";

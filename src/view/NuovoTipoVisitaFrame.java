@@ -1,8 +1,10 @@
 package view;
 
 import controller.TipiVisitaController;
+import controller.VolontariController;
 import model.TipoVisita;
 import costants.Costants;
+import model.Volontario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,24 +14,27 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class NuovaVisitaFrame extends JFrame {
+public class NuovoTipoVisitaFrame extends JFrame {
     private final JTextField titoloField, descrizioneField, puntoIncontroField;
     private final JSpinner dataInizioSpinner, dataFineSpinner, oraInizioSpinner;
     private JSpinner durataSpinner, minPartecipantiSpinner, maxPartecipantiSpinner;
     private JCheckBox bigliettoCheckbox;
-
+    private JComboBox<String> volontarioComboBox;  // ComboBox per selezionare un volontario
     private TipiVisitaController controller;
-    private VisiteFrame parentFrame;
+    private VolontariController volontariController;
 
-    public NuovaVisitaFrame(VisiteFrame parent) {
+    private Frame frame;
+
+    public NuovoTipoVisitaFrame(LuoghiFrame frame) {
         setTitle("Nuova Visita");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        this.parentFrame = parent;
+        this.frame = frame;
         this.controller = new TipiVisitaController();
+        this.volontariController = new VolontariController();
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -41,7 +46,7 @@ public class NuovaVisitaFrame extends JFrame {
 
         JButton backButton = Costants.createMenuButton("🔙 Indietro", "");
         backButton.setPreferredSize(new Dimension(120, 40));
-        backButton.addActionListener(e -> dispose()); // Torna a VisiteFrame
+        backButton.addActionListener(e -> chiudiEmandaIndietro());
 
         JLabel titleLabel = new JLabel("Nuova Visita", SwingConstants.CENTER);
         titleLabel.setFont(Costants.TITLE_FONT);
@@ -60,6 +65,7 @@ public class NuovaVisitaFrame extends JFrame {
 
         int row = 0;
 
+        // Altri campi del form...
         gbc.gridx = 0;
         gbc.gridy = row;
         formPanel.add(new JLabel("Titolo:"), gbc);
@@ -119,6 +125,29 @@ public class NuovaVisitaFrame extends JFrame {
         formPanel.add(durataSpinner, gbc);
         row++;
 
+        // Aggiungi il ComboBox per selezionare il volontario
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        formPanel.add(new JLabel("Seleziona Volontario:"), gbc);
+        volontarioComboBox = new JComboBox<>();
+        // Popola il ComboBox con i volontari dal controller
+        aggiornaListaVolontari(); // Metodo per aggiornare la lista dei volontari
+        gbc.gridx = 1;
+        formPanel.add(volontarioComboBox, gbc);
+        row++;
+
+        // Pulsante per aggiungere un volontario
+        JButton aggiungiVolontarioButton = new JButton("Aggiungi Volontario");
+        aggiungiVolontarioButton.addActionListener(e -> {
+            creaNuovoVolontario();
+            aggiornaListaVolontari(); // Ricarica la lista dopo aver aggiunto un nuovo volontario
+        });
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.gridwidth = 2;
+        formPanel.add(aggiungiVolontarioButton, gbc);
+        row++;
+
         // Pulsante per salvare
         JButton salvaButton = Costants.createMenuButton("Salva Visita", "💾");
         salvaButton.addActionListener(e -> salvaVisita());
@@ -132,7 +161,22 @@ public class NuovaVisitaFrame extends JFrame {
         setVisible(true);
     }
 
+    // Metodo che aggiorna la lista dei volontari nel ComboBox
+    private void aggiornaListaVolontari() {
+        volontarioComboBox.removeAllItems(); // Rimuove gli elementi esistenti
+        ArrayList<Volontario> volontari = volontariController.getListaVolontari();
+        for (Volontario volontario : volontari) {
+            volontarioComboBox.addItem(volontario.getNome());
+        }
+    }
 
+    public JComboBox<String> getVolontarioComboBox() {
+        return volontarioComboBox;
+    }
+
+    private void creaNuovoVolontario() {
+        new VolontariFrame().setVisible(true);
+    }
 
     private void salvaVisita() {
         String titolo = titoloField.getText().trim();
@@ -142,6 +186,12 @@ public class NuovaVisitaFrame extends JFrame {
         // Controllo che tutti i campi siano compilati
         if (titolo.isEmpty() || descrizione.isEmpty() || puntoIncontro.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Errore: Tutti i campi devono essere compilati!", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Verifica che sia stato selezionato almeno un volontario
+        if (volontarioComboBox.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "Errore: Seleziona almeno un volontario!", "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -162,13 +212,19 @@ public class NuovaVisitaFrame extends JFrame {
             return;
         }
 
+        // Recupera il volontario selezionato
+        String volontarioSelezionato = (String) volontarioComboBox.getSelectedItem();
+        // Aggiungi il volontario alla visita
+        ArrayList<String> volontari = new ArrayList<>();
+        volontari.add(volontarioSelezionato);
+
         TipoVisita nuovaVisita = new TipoVisita(
                 titolo,
                 descrizione,
                 puntoIncontro,
                 dataInizio,
                 dataFine,
-                new ArrayList<>(),
+                volontari,
                 oraInizio,
                 (int) durataSpinner.getValue(),
                 false,
@@ -179,10 +235,16 @@ public class NuovaVisitaFrame extends JFrame {
         controller.aggiungiVisita(nuovaVisita);
         controller.salvaDati();
 
-        parentFrame.aggiornaLista(); // Aggiorna immediatamente la lista delle visite
-        dispose();
-        JOptionPane.showMessageDialog(parentFrame, "Visita aggiunta con successo!");
 
+
+
+
+        chiudiEmandaIndietro();
+    }
+
+    private void chiudiEmandaIndietro() {
+        dispose();
+        // new LuoghiFrame().setVisible(true);
     }
 
     private LocalDate convertToLocalDate(Object spinnerValue) {

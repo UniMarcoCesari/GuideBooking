@@ -53,8 +53,11 @@ public class LuoghiFrame extends JFrame {
         mainPanel.add(inputPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
-        aggiornaLista();
+        aggiornaListaLuoghi();
         setVisible(true);
+    }
+
+    public static void aggiornaTipiVisita() {
     }
 
     private void initializeFrame() {
@@ -120,6 +123,14 @@ public class LuoghiFrame extends JFrame {
         JButton addTipoVisitaButton = createStyledButton("Aggiungi Tipo");
         addTipoVisitaButton.addActionListener(e -> aggiungiTipoVisita());
 
+        JButton addNewTipoVisitaButton = createStyledButton("Aggiungi Nuovo Tipo Visita");
+        addNewTipoVisitaButton.addActionListener(e -> openTipoVisitaDialog());  // Azione per aprire il dialogo
+
+        // Aggiungi pulsante "+" sotto la lista per aggiungere nuovo tipo visita
+        JButton addNewTipoVisitaPlusButton = createStyledButton("+");
+        addNewTipoVisitaPlusButton.setFont(new Font("Segoe UI", Font.BOLD, 24));  // Cambia la dimensione per farlo più visibile
+        addNewTipoVisitaPlusButton.addActionListener(e -> openTipoVisitaDialog());
+
         JButton addButton = createStyledButton("Salva Luogo");
         addButton.addActionListener(e -> aggiungiLuogo());
 
@@ -136,11 +147,22 @@ public class LuoghiFrame extends JFrame {
         gbc.gridx = 1; panel.add(tipiVisitaComboBox, gbc);
         gbc.gridx = 2; panel.add(addTipoVisitaButton, gbc);
 
+        gbc.gridx = 2; gbc.gridy = 3; panel.add(addNewTipoVisitaButton, gbc);  // Aggiungi il pulsante "Aggiungi Nuovo Tipo Visita"
+
         gbc.gridx = 1; gbc.gridy = 4; panel.add(tipiVisitaScrollPane, gbc);
-        gbc.gridx = 1; gbc.gridy = 5; panel.add(addButton, gbc);
+        gbc.gridx = 1; gbc.gridy = 5; panel.add(addNewTipoVisitaPlusButton, gbc); // Aggiungi il pulsante "+"
+
+        gbc.gridx = 1; gbc.gridy = 6; panel.add(addButton, gbc);
 
         return panel;
     }
+
+
+    private void openTipoVisitaDialog()
+    {
+        new NuovoTipoVisitaFrame(this).setVisible(true);
+    }
+
 
     private JTextField createStyledTextField() {
         JTextField field = new JTextField();
@@ -168,7 +190,7 @@ public class LuoghiFrame extends JFrame {
         }
     }
 
-    public void aggiornaLista() {
+    public void aggiornaListaLuoghi() {
         listaPanel.removeAll();
         List<Luogo> luoghi = controller.getLuoghi();
 
@@ -211,7 +233,7 @@ public class LuoghiFrame extends JFrame {
         }
 
         controller.aggiungiLuogo(new Luogo(nome, descrizione, posizione,tipiVisita));
-        aggiornaLista();
+        aggiornaListaLuoghi();
         JOptionPane.showMessageDialog(this, "Luogo aggiunto con successo!");
         clearFields();
     }
