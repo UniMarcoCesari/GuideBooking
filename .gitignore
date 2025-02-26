@@ -1,3 +1,6 @@
+## Us ##
+src/data
+
 ### IntelliJ IDEA ###
 out/
 !**/src/main/**/out/
