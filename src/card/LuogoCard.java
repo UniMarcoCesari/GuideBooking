@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LuogoCard extends JPanel {
-    private static final int CARD_WIDTH = 750;
+    private static final int CARD_WIDTH = 300;
     private static final int CARD_HEIGHT = 120;
     private static final Color BORDER_COLOR = new Color(200, 200, 200);
     private static final Color ACCENT_COLOR = new Color(49, 130, 189);
@@ -36,6 +36,8 @@ public class LuogoCard extends JPanel {
 
         // Configurazione panel
         setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, CARD_HEIGHT));
+
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
@@ -127,7 +129,7 @@ public class LuogoCard extends JPanel {
     private JButton createIconButton(String text) {
         JButton button = new JButton(text);
         button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        button.setForeground(Color.WHITE);
+        button.setForeground(Color.BLACK);
         button.setBackground(ACCENT_COLOR);
         button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         button.setFocusPainted(false);

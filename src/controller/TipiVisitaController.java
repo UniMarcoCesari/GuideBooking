@@ -19,6 +19,18 @@ public class TipiVisitaController {
         return tipiVisita;
     }
 
+    public TipoVisita getTipoVisita(String titolo) {
+        caricaDati();
+
+        for(TipoVisita tipoVisita: tipiVisita) {
+            if(tipoVisita.getTitolo().equals(titolo)) {
+                return tipoVisita;
+            }
+        }
+
+        return null;
+    }
+
     public void aggiungiVisita(TipoVisita visita) {
         tipiVisita.add(visita);
         salvaDati();

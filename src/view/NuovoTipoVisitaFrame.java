@@ -44,7 +44,7 @@ public class NuovoTipoVisitaFrame extends JFrame {
         headerPanel.setBackground(Costants.BACKGROUND_COLOR);
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JButton backButton = Costants.createMenuButton("🔙 Indietro", "");
+        JButton backButton = Costants.createMenuButton("Indietro", "");
         backButton.setPreferredSize(new Dimension(120, 40));
         backButton.addActionListener(e -> chiudiEmandaIndietro());
 
