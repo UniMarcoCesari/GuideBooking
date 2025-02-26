@@ -1,6 +1,7 @@
 package costants;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
@@ -13,7 +14,12 @@ public class Costants
     public static final String  file_tipi_visita = "src/data/tipiVisita.dat";
     public static final String  file_volontari = "src/data/volontari.dat";
 
-    //Ruoli
+    // Header
+    private static final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 20);
+    public static final Color HEADER_BACK = new Color(100, 100, 200);
+    private static final int SPACING = 12;
+
+    // Ruoli
     public static final String ruolo_PRE_configuratore =  "PRE-configuratore";
     public static final String ruolo_configuratore =  "configuratore";
 
@@ -27,6 +33,20 @@ public class Costants
     // Font
     public static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 22);
     public static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 16);
+
+
+    public static JPanel createHeaderPanel(String title) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel.setBackground(HEADER_BACK);
+        panel.setBorder(new EmptyBorder(10, SPACING, 10, SPACING));
+
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(HEADER_FONT);
+        titleLabel.setForeground(Color.WHITE);
+        panel.add(titleLabel);
+
+        return panel;
+    }
 
     // Metodo per creare bottoni con lo stesso stile
     public static JButton createMenuButton(String text, String icon) {

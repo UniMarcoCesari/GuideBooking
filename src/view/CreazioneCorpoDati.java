@@ -1,7 +1,10 @@
 package view;
 
+import costants.Costants;
+
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class CreazioneCorpoDati extends JFrame {
@@ -20,19 +23,19 @@ public class CreazioneCorpoDati extends JFrame {
 
         // Layout principale
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        // Pannello per il testo introduttivo
-        JPanel introPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JLabel introLabel = new JLabel("Ciao configuratore! Inserisci il corpo dei dati!", SwingConstants.CENTER);
-        introLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
-        introPanel.add(introLabel);
+
+        // Crea l'intestazione
+        JPanel headerPanel = Costants.createHeaderPanel("Creazione corpo dei dati - Fase 1");
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+
 
         // Form per i dati
         JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBorder(BorderFactory.createTitledBorder("Dati di Configurazione"));
+        formPanel.setBorder(new EmptyBorder(39, 39, 39, 39));  // Solo spazio
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(15, 10, 5, 10);
+        gbc.insets = new Insets(0, 10, 5, 10);
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
@@ -78,7 +81,7 @@ public class CreazioneCorpoDati extends JFrame {
         buttonPanel.add(confermaButton);
 
         // Aggiunta componenti al pannello principale
-        mainPanel.add(introPanel, BorderLayout.NORTH);
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
         mainPanel.add(formPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
         add(mainPanel);

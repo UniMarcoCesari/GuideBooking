@@ -2,6 +2,7 @@ package view;
 
 import card.LuogoCard;
 import controller.TipiVisitaController;
+import costants.Costants;
 import model.Luogo;
 import controller.LuoghiController;
 import model.TipoVisita;
@@ -19,7 +20,7 @@ public class LuoghiFrame extends JFrame {
     private static final Color ACCENT_COLOR = new Color(49, 130, 189);
     private static final Color TEXT_COLOR = new Color(255, 255, 255);
     private static final Color BORDER_COLOR = new Color(220, 220, 220);
-    private static final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 20);
+
     private static final Font LABEL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
     private static final int SPACING = 12;
 
@@ -45,7 +46,7 @@ public class LuoghiFrame extends JFrame {
         mainPanel.setBackground(BACKGROUND_COLOR);
 
         // Crea l'intestazione
-        JPanel headerPanel = createHeaderPanel("Gestione Luoghi");
+        JPanel headerPanel = Costants.createHeaderPanel("Creazione corpo dei dati - Fase 2");
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Crea un pannello per il contenuto con un JSplitPane
@@ -109,18 +110,6 @@ public class LuoghiFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
-    private JPanel createHeaderPanel(String title) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.setBackground(ACCENT_COLOR);
-        panel.setBorder(new EmptyBorder(10, SPACING, 10, SPACING));
-
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(HEADER_FONT);
-        titleLabel.setForeground(Color.WHITE);
-        panel.add(titleLabel);
-
-        return panel;
-    }
 
     private JPanel createListPanel() {
         JPanel panel = new JPanel();
