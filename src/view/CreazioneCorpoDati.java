@@ -15,7 +15,6 @@ public class CreazioneCorpoDati extends JFrame {
     private final Border defaultBorder;
 
     public CreazioneCorpoDati() {
-        setTitle("Configurazione Iniziale - Sistema Gestione Visite");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -73,18 +72,18 @@ public class CreazioneCorpoDati extends JFrame {
 
         defaultBorder = ambitoField.getBorder();
 
-        // Pannello pulsante in basso a destra
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        // Pannello footer +  bottone avanti
+        JPanel footerPanel = Costants.createFooterPanel("");
         JButton confermaButton = new JButton("Avanti");
         confermaButton.setPreferredSize(new Dimension(200, 40));
-        buttonPanel.add(confermaButton);
-
+        footerPanel.add(confermaButton, BorderLayout.WEST);
 
 
         // Aggiunta componenti al pannello principale
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         mainPanel.add(formPanel, BorderLayout.CENTER);
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        mainPanel.add(footerPanel, BorderLayout.SOUTH);
         add(mainPanel);
 
         // Event Listeners

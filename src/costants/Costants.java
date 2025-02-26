@@ -9,10 +9,10 @@ public class Costants
 {
 
     //File salvataggio dati
-    public static final String  file_luoghi = "GuideBooking/src/data/luoghi.dat";
-    public static final String  file_credenziali = "GuideBooking/src/data/credenziali.dat";
-    public static final String  file_tipi_visita = "GuideBooking/src/data/tipiVisita.dat";
-    public static final String  file_volontari = "GuideBooking/src/data/volontari.dat";
+    public static final String  file_luoghi = "src/data/luoghi.dat";
+    public static final String  file_credenziali = "src/data/credenziali.dat";
+    public static final String  file_tipi_visita = "src/data/tipiVisita.dat";
+    public static final String  file_volontari = "src/data/volontari.dat";
 
     // Header
     private static final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 20);
@@ -54,15 +54,23 @@ public class Costants
     public static JPanel createFooterPanel(String title) {
         JPanel footerPanel = new JPanel();
         footerPanel.setBackground(Costants.HEADER_BACK);
-        JLabel footerLabel = new JLabel(title);
-        footerLabel.setFont(Costants.TITLE_FONT);
-        footerLabel.setForeground(Color.WHITE);
-        footerPanel.add(footerLabel);
+        if(!title.isEmpty()) {
+            JLabel footerLabel = new JLabel(title);
+            footerLabel.setFont(Costants.TITLE_FONT);
+            footerLabel.setForeground(Color.WHITE);
+            footerPanel.add(footerLabel);
+        }
         return footerPanel;
     }
 
+    public static JButton createSimpleButton(String text) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(200, 40));
+        return button;
+    }
+
     // Metodo per creare bottoni con lo stesso stile
-    public static JButton createMenuButton(String text, String icon) {
+    public static JButton createMenuButton(String text) {
         JButton button = new JButton() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -75,14 +83,9 @@ public class Costants
         button.setBackground(BUTTON_BACKGROUND);
         button.setLayout(new BorderLayout(15, 0));
 
-        JLabel iconLabel = new JLabel(icon);
-        iconLabel.setFont(new Font("Segoe UI", Font.PLAIN, 24));
-        iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-
         JLabel textLabel = new JLabel(text);
         textLabel.setFont(BUTTON_FONT);
 
-        button.add(iconLabel, BorderLayout.WEST);
         button.add(textLabel, BorderLayout.CENTER);
 
         button.setPreferredSize(new Dimension(300, 80));

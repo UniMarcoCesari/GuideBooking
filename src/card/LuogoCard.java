@@ -111,7 +111,8 @@ public class LuogoCard extends JPanel {
     }
 
     private JPanel createButtonPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Layout verticale
         panel.setOpaque(false);
 
         JButton modificaButton = createIconButton("Modifica");
@@ -120,11 +121,17 @@ public class LuogoCard extends JPanel {
         modificaButton.addActionListener(e -> modificaLuogo());
         eliminaButton.addActionListener(e -> eliminaLuogo());
 
+        // Aggiungere spazio tra i pulsanti
+        modificaButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        eliminaButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         panel.add(modificaButton);
+        panel.add(Box.createVerticalStrut(10)); // Spazio tra i pulsanti
         panel.add(eliminaButton);
 
         return panel;
     }
+
 
     private JButton createIconButton(String text) {
         JButton button = new JButton(text);

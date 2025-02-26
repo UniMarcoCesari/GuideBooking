@@ -88,7 +88,7 @@ public class LoginFrame extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Costants.BACKGROUND_COLOR);
 
-        loginButton = Costants.createMenuButton("Accedi", "🔓");
+        loginButton = Costants.createMenuButton("Accedi");
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.setMaximumSize(loginButton.getPreferredSize()); // Adatta la larghezza al testo
 

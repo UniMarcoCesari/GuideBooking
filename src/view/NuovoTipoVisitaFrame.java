@@ -9,6 +9,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.swing.*;
 import model.TipoVisita;
 import model.Volontario;
@@ -18,166 +19,241 @@ public class NuovoTipoVisitaFrame extends JFrame {
     private final JSpinner dataInizioSpinner, dataFineSpinner, oraInizioSpinner;
     private JSpinner durataSpinner, minPartecipantiSpinner, maxPartecipantiSpinner;
     private JCheckBox bigliettoCheckbox;
-    private JComboBox<String> volontarioComboBox;  // ComboBox per selezionare un volontario
+
+    // Sostituiamo il ComboBox con una JList e un modello per selezioni multiple
+    private JList<String> volontariList;
+    private DefaultListModel<String> volontariListModel;
+
     private TipiVisitaController tipiVisitaController;
     private VolontariController volontariController;
 
-    private LuoghiFrame parent;
+    private final LuoghiFrame parent;
 
     public NuovoTipoVisitaFrame(LuoghiFrame parent, TipiVisitaController tipoVisitaController) {
-        setTitle("Nuova Visita");
-        setSize(600, 500);
+        setSize(1200, 900);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false);
+        setResizable(true);
+        setTitle("Nuovo Tipo Visita");
 
         this.parent = parent;
         this.tipiVisitaController = tipoVisitaController;
         this.volontariController = new VolontariController();
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         // Pannello superiore con titolo e tasto indietro
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(Costants.BACKGROUND_COLOR);
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        JButton backButton = Costants.createMenuButton("Indietro", "");
-        backButton.setPreferredSize(new Dimension(120, 40));
-        backButton.addActionListener(e -> chiudiEmandaIndietro());
-
-        JLabel titleLabel = new JLabel("Nuova Visita", SwingConstants.CENTER);
-        titleLabel.setFont(Costants.TITLE_FONT);
-        titleLabel.setForeground(Costants.ACCENT_COLOR);
-
-        headerPanel.add(backButton, BorderLayout.WEST);
-        headerPanel.add(titleLabel, BorderLayout.CENTER);
+        JPanel headerPanel = Costants.createHeaderPanel("Nuovo tipo visita");
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // Pannello per il form
+        // Pannello per il form - usando GridBagLayout per un controllo migliore
         JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
         formPanel.setBackground(Costants.BACKGROUND_COLOR);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        int row = 0;
+        // Creiamo un pannello scorrevole per contenere il form
+        JScrollPane scrollPane = new JScrollPane(formPanel);
+        scrollPane.setBorder(null);
+        scrollPane.setBackground(Costants.BACKGROUND_COLOR);
 
-        // Altri campi del form...
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Titolo:"), gbc);
-        titoloField = new JTextField();
-        gbc.gridx = 1;
-        formPanel.add(titoloField, gbc);
-        row++;
+        // Configurazione GridBagConstraints
+        GridBagConstraints labelGbc = new GridBagConstraints();
+        labelGbc.anchor = GridBagConstraints.EAST;
+        labelGbc.fill = GridBagConstraints.NONE;
+        labelGbc.insets = new Insets(8, 10, 8, 10);
+        labelGbc.gridx = 0;
 
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Descrizione:"), gbc);
-        descrizioneField = new JTextField();
-        gbc.gridx = 1;
-        formPanel.add(descrizioneField, gbc);
-        row++;
+        GridBagConstraints fieldGbc = new GridBagConstraints();
+        fieldGbc.fill = GridBagConstraints.HORIZONTAL;
+        fieldGbc.weightx = 1.0;
+        fieldGbc.insets = new Insets(8, 10, 8, 10);
+        fieldGbc.gridx = 1;
 
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Punto di Incontro:"), gbc);
-        puntoIncontroField = new JTextField();
-        gbc.gridx = 1;
-        formPanel.add(puntoIncontroField, gbc);
-        row++;
+        // Sezione 1: Informazioni generali
+        addSectionLabel(formPanel, "Informazioni Generali", 0);
 
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Data Inizio:"), gbc);
-        dataInizioSpinner = new JSpinner(new SpinnerDateModel());
+        // Titolo
+        labelGbc.gridy = 1;
+        formPanel.add(createLabel("Titolo:"), labelGbc);
+        titoloField = new JTextField(30);
+        fieldGbc.gridy = 1;
+        formPanel.add(titoloField, fieldGbc);
+
+        // Descrizione
+        labelGbc.gridy = 2;
+        formPanel.add(createLabel("Descrizione:"), labelGbc);
+        descrizioneField = new JTextField(30);
+        fieldGbc.gridy = 2;
+        formPanel.add(descrizioneField, fieldGbc);
+
+        // Punto di Incontro
+        labelGbc.gridy = 3;
+        formPanel.add(createLabel("Punto di Incontro:"), labelGbc);
+        puntoIncontroField = new JTextField(30);
+        fieldGbc.gridy = 3;
+        formPanel.add(puntoIncontroField, fieldGbc);
+
+        // Sezione 2: Date e orari
+        addSectionLabel(formPanel, "Date e Orari", 4);
+
+        // Data Inizio
+        labelGbc.gridy = 5;
+        formPanel.add(createLabel("Data Inizio:"), labelGbc);
+        SpinnerDateModel dataInizioModel = new SpinnerDateModel();
+        dataInizioSpinner = new JSpinner(dataInizioModel);
         dataInizioSpinner.setEditor(new JSpinner.DateEditor(dataInizioSpinner, "yyyy-MM-dd"));
-        gbc.gridx = 1;
-        formPanel.add(dataInizioSpinner, gbc);
-        row++;
+        Dimension spinnerSize = new Dimension(150, 25);
+        dataInizioSpinner.setPreferredSize(spinnerSize);
+        fieldGbc.gridy = 5;
+        formPanel.add(dataInizioSpinner, fieldGbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Data Fine:"), gbc);
-        dataFineSpinner = new JSpinner(new SpinnerDateModel());
+        // Data Fine
+        labelGbc.gridy = 6;
+        formPanel.add(createLabel("Data Fine:"), labelGbc);
+        SpinnerDateModel dataFineModel = new SpinnerDateModel();
+        dataFineSpinner = new JSpinner(dataFineModel);
         dataFineSpinner.setEditor(new JSpinner.DateEditor(dataFineSpinner, "yyyy-MM-dd"));
-        gbc.gridx = 1;
-        formPanel.add(dataFineSpinner, gbc);
-        row++;
+        dataFineSpinner.setPreferredSize(spinnerSize);
+        fieldGbc.gridy = 6;
+        formPanel.add(dataFineSpinner, fieldGbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Ora Inizio:"), gbc);
-        oraInizioSpinner = new JSpinner(new SpinnerDateModel());
+        // Ora Inizio
+        labelGbc.gridy = 7;
+        formPanel.add(createLabel("Ora Inizio:"), labelGbc);
+        SpinnerDateModel oraInizioModel = new SpinnerDateModel();
+        oraInizioSpinner = new JSpinner(oraInizioModel);
         oraInizioSpinner.setEditor(new JSpinner.DateEditor(oraInizioSpinner, "HH:mm"));
-        gbc.gridx = 1;
-        formPanel.add(oraInizioSpinner, gbc);
-        row++;
+        oraInizioSpinner.setPreferredSize(spinnerSize);
+        fieldGbc.gridy = 7;
+        formPanel.add(oraInizioSpinner, fieldGbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Durata (minuti):"), gbc);
+        // Durata
+        labelGbc.gridy = 8;
+        formPanel.add(createLabel("Durata (minuti):"), labelGbc);
         durataSpinner = new JSpinner(new SpinnerNumberModel(30, 1, 300, 5));
-        gbc.gridx = 1;
-        formPanel.add(durataSpinner, gbc);
-        row++;
+        durataSpinner.setPreferredSize(spinnerSize);
+        fieldGbc.gridy = 8;
+        formPanel.add(durataSpinner, fieldGbc);
 
-        // Aggiungi il ComboBox per selezionare il volontario
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Seleziona Volontario:"), gbc);
-        volontarioComboBox = new JComboBox<>();
-        aggiornaListaVolontari(); // Metodo per aggiornare la lista dei volontari
-        gbc.gridx = 1;
-        formPanel.add(volontarioComboBox, gbc);
-        row++;
+        // Sezione 3: Partecipanti
+        addSectionLabel(formPanel, "Partecipanti", 9);
 
-        // Pulsante per aggiungere un volontario
-        JButton aggiungiVolontarioButton = new JButton("Aggiungi Volontario");
-        aggiungiVolontarioButton.addActionListener(e -> {
-            creaNuovoVolontario();
-        });
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.gridwidth = 2;
-        formPanel.add(aggiungiVolontarioButton, gbc);
-        row++;
+        // Min Partecipanti
+        labelGbc.gridy = 10;
+        formPanel.add(createLabel("Minimo Partecipanti:"), labelGbc);
+        minPartecipantiSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+        minPartecipantiSpinner.setPreferredSize(spinnerSize);
+        fieldGbc.gridy = 10;
+        formPanel.add(minPartecipantiSpinner, fieldGbc);
 
-        // Pulsante per salvare
-        JButton salvaButton = Costants.createMenuButton("Salva Visita", "💾");
+        // Max Partecipanti
+        labelGbc.gridy = 11;
+        formPanel.add(createLabel("Massimo Partecipanti:"), labelGbc);
+        maxPartecipantiSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 100, 1));
+        maxPartecipantiSpinner.setPreferredSize(spinnerSize);
+        fieldGbc.gridy = 11;
+        formPanel.add(maxPartecipantiSpinner, fieldGbc);
+
+        // Biglietto
+        labelGbc.gridy = 12;
+        formPanel.add(createLabel("Richiede Biglietto:"), labelGbc);
+        bigliettoCheckbox = new JCheckBox();
+        fieldGbc.gridy = 12;
+        formPanel.add(bigliettoCheckbox, fieldGbc);
+
+        // Sezione 4: Volontari
+        addSectionLabel(formPanel, "Gestione Volontari", 13);
+
+        // Lista di volontari con selezione multipla
+        labelGbc.gridy = 14;
+        formPanel.add(createLabel("Seleziona Volontari:"), labelGbc);
+
+        // Inizializza la lista con selezione multipla
+        volontariListModel = new DefaultListModel<>();
+        volontariList = new JList<>(volontariListModel);
+        volontariList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        // Aggiungi un bordo alla lista
+        JScrollPane volontariScrollPane = new JScrollPane(volontariList);
+        volontariScrollPane.setPreferredSize(new Dimension(250, 100));
+        volontariScrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        fieldGbc.gridy = 14;
+        formPanel.add(volontariScrollPane, fieldGbc);
+
+        // Aggiorna la lista dei volontari
+        aggiornaListaVolontari();
+
+        // Pulsante aggiungi volontario
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        buttonPanel.setBackground(Costants.BACKGROUND_COLOR);
+        JButton aggiungiVolontarioButton = new JButton("Aggiungi Nuovo Volontario");
+        aggiungiVolontarioButton.addActionListener(e -> creaNuovoVolontario());
+        buttonPanel.add(aggiungiVolontarioButton);
+
+        labelGbc.gridy = 15;
+        labelGbc.gridx = 0;
+        labelGbc.gridwidth = 2;
+        formPanel.add(buttonPanel, labelGbc);
+
+        //footer e annulla
+        JButton salvaButton = Costants.createSimpleButton("Salva Visita");
         salvaButton.addActionListener(e -> salvaVisita());
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.gridwidth = 2;
-        formPanel.add(salvaButton, gbc);
 
-        mainPanel.add(formPanel, BorderLayout.CENTER);
+        JButton annullaButton = Costants.createSimpleButton("Annulla");
+        annullaButton.addActionListener(e -> chiudiEmandaIndietro());
+
+
+        JPanel footerPanel = Costants.createFooterPanel("");
+        footerPanel.add(salvaButton, BorderLayout.CENTER);
+        footerPanel.add(annullaButton, BorderLayout.EAST);
+
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(footerPanel, BorderLayout.SOUTH);
+
         add(mainPanel);
         setVisible(true);
     }
 
-    // Metodo che aggiorna la lista dei volontari nel ComboBox
-    private void aggiornaListaVolontari() {
-        volontarioComboBox.removeAllItems(); // Rimuove gli elementi esistenti
-        ArrayList<Volontario> volontari = volontariController.getListaVolontari();
-        for (Volontario volontario : volontari) {
-            volontarioComboBox.addItem(volontario.getNome());
-        }
-
-        volontarioComboBox.invalidate();
-        volontarioComboBox.revalidate();
-        volontarioComboBox.repaint();
+    private JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Dialog", Font.BOLD, 12));
+        return label;
     }
 
-    public JComboBox<String> getVolontarioComboBox() {
-        return volontarioComboBox;
+    private void addSectionLabel(JPanel panel, String text, int gridy) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = gridy;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(15, 5, 5, 5);
+
+        JLabel sectionLabel = new JLabel(text);
+        sectionLabel.setFont(new Font("Dialog", Font.BOLD, 14));
+        sectionLabel.setForeground(new Color(0, 102, 204));
+        panel.add(sectionLabel, gbc);
+
+    }
+
+    // Metodo che aggiorna la lista dei volontari nella JList
+    private void aggiornaListaVolontari() {
+        volontariListModel.clear(); // Rimuove gli elementi esistenti
+        ArrayList<Volontario> volontari = volontariController.getListaVolontari();
+        for (Volontario volontario : volontari) {
+            volontariListModel.addElement(volontario.getNome());
+        }
+    }
+
+    // Getter per accedere alla lista volontari da altre classi
+    public JList<String> getVolontariList() {
+        return volontariList;
     }
 
     private void creaNuovoVolontario() {
         new VolontariFrame(this, volontariController).setVisible(true);
-        aggiornaListaVolonatari();
+        aggiornaListaVolontari();
     }
 
     private void salvaVisita() {
@@ -192,7 +268,7 @@ public class NuovoTipoVisitaFrame extends JFrame {
         }
 
         // Verifica che sia stato selezionato almeno un volontario
-        if (volontarioComboBox.getSelectedIndex() == -1) {
+        if (volontariList.getSelectedIndices().length == 0) {
             JOptionPane.showMessageDialog(this, "Errore: Seleziona almeno un volontario!", "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -214,11 +290,29 @@ public class NuovoTipoVisitaFrame extends JFrame {
             return;
         }
 
-        // Recupera il volontario selezionato
-        String volontarioSelezionato = (String) volontarioComboBox.getSelectedItem();
-        // Aggiungi il volontario alla visita
-        ArrayList<String> volontari = new ArrayList<>();
-        volontari.add(volontarioSelezionato);
+        // Recupera i volontari selezionati
+        List<String> volontariSelezionati = volontariList.getSelectedValuesList();
+        // Aggiungi i volontari alla visita
+        ArrayList<String> volontari = new ArrayList<>(volontariSelezionati);
+
+        // Messaggio di debug per verificare i volontari selezionati
+        StringBuilder sb = new StringBuilder("Volontari selezionati: ");
+        for (String v : volontari) {
+            sb.append(v).append(", ");
+        }
+        System.out.println(sb.toString());
+
+        // Ottiene i valori dai nuovi campi
+        int minPartecipanti = (int) minPartecipantiSpinner.getValue();
+        int maxPartecipanti = (int) maxPartecipantiSpinner.getValue();
+        boolean richiedeBiglietto = bigliettoCheckbox.isSelected();
+
+        // Verifica che il minimo non superi il massimo
+        if (minPartecipanti > maxPartecipanti) {
+            JOptionPane.showMessageDialog(this, "Errore: Il numero minimo di partecipanti non può essere maggiore del massimo!",
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         TipoVisita nuovaVisita = new TipoVisita(
                 titolo,
@@ -229,9 +323,9 @@ public class NuovoTipoVisitaFrame extends JFrame {
                 volontari,
                 oraInizio,
                 (int) durataSpinner.getValue(),
-                false,
-                1,
-                10
+                richiedeBiglietto,
+                minPartecipanti,
+                maxPartecipanti
         );
 
         tipiVisitaController.aggiungiVisita(nuovaVisita);
@@ -245,32 +339,9 @@ public class NuovoTipoVisitaFrame extends JFrame {
         chiudiEmandaIndietro();
     }
 
-    public void aggiornaListaVolonatari() {
-
-
-
-        // Clear the current combo box items
-        volontarioComboBox.removeAllItems();
-
-        // Add updated tipi visita to the combo box
-        for (Volontario volontario : volontariController.getListaVolontari()) {
-            volontarioComboBox.addItem(volontario.getNome());
-        }
-
-        // Clear the model (no need to recreate it)
-        //volontario
-
-        // Refresh the UI
-        volontarioComboBox.revalidate();
-        volontarioComboBox.repaint();
-        //tipiVisitaList.revalidate();
-        //tipiVisitaList.repaint();
-
-    }
 
     private void chiudiEmandaIndietro() {
         dispose();
-        // new LuoghiFrame().setVisible(true);
     }
 
     private LocalDate convertToLocalDate(Object spinnerValue) {
