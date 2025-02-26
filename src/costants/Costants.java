@@ -17,7 +17,7 @@ public class Costants
     // Header
     private static final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 20);
     public static final Color HEADER_BACK = new Color(100, 100, 200);
-    private static final int SPACING = 12;
+
 
     // Ruoli
     public static final String ruolo_PRE_configuratore =  "PRE-configuratore";
@@ -34,6 +34,9 @@ public class Costants
     public static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 22);
     public static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 16);
 
+    // Margin e Padding
+    public static final int SPACING = 20;
+
 
     public static JPanel createHeaderPanel(String title) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -46,6 +49,16 @@ public class Costants
         panel.add(titleLabel);
 
         return panel;
+    }
+
+    public static JPanel createFooterPanel(String title) {
+        JPanel footerPanel = new JPanel();
+        footerPanel.setBackground(Costants.HEADER_BACK);
+        JLabel footerLabel = new JLabel(title);
+        footerLabel.setFont(Costants.TITLE_FONT);
+        footerLabel.setForeground(Color.WHITE);
+        footerPanel.add(footerLabel);
+        return footerPanel;
     }
 
     // Metodo per creare bottoni con lo stesso stile

@@ -29,7 +29,6 @@ public class CreazioneCorpoDati extends JFrame {
         JPanel headerPanel = Costants.createHeaderPanel("Creazione corpo dei dati - Fase 1");
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-
         // Form per i dati
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBorder(new EmptyBorder(39, 39, 39, 39));  // Solo spazio
@@ -79,6 +78,8 @@ public class CreazioneCorpoDati extends JFrame {
         JButton confermaButton = new JButton("Avanti");
         confermaButton.setPreferredSize(new Dimension(200, 40));
         buttonPanel.add(confermaButton);
+
+
 
         // Aggiunta componenti al pannello principale
         mainPanel.add(headerPanel, BorderLayout.NORTH);
