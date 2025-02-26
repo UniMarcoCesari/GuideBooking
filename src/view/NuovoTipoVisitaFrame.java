@@ -238,7 +238,7 @@ public class NuovoTipoVisitaFrame extends JFrame {
     }
 
     // Metodo che aggiorna la lista dei volontari nella JList
-    private void aggiornaListaVolontari() {
+    public void aggiornaListaVolontari() {
         volontariListModel.clear(); // Rimuove gli elementi esistenti
         ArrayList<Volontario> volontari = volontariController.getListaVolontari();
         for (Volontario volontario : volontari) {

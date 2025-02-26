@@ -1,10 +1,8 @@
 package view;
 
-import controller.TipiVisitaController;
 import controller.VolontariController;
-import model.TipoVisita;
-import costants.Costants;
 import model.Volontario;
+import costants.Costants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,45 +10,31 @@ import java.util.ArrayList;
 
 public class VolontariFrame extends JFrame {
     private final JTextField nomeVolontarioField;
-    private final JButton aggiungiVolontarioButton;
     private final JList<String> volontariList;
     private final DefaultListModel<String> volontariListModel;
-
-    private VolontariController controller;
-
-    NuovoTipoVisitaFrame parent;
+    private final VolontariController controller;
+    private final NuovoTipoVisitaFrame parent;
 
     public VolontariFrame(NuovoTipoVisitaFrame nuovoTipoVisitaFrame, VolontariController volontariController) {
-
-        parent = nuovoTipoVisitaFrame;
-        controller = volontariController;
+        this.parent = nuovoTipoVisitaFrame;
+        this.controller = volontariController;
 
         setTitle("Gestione Volontari");
-        setSize(600, 400);
+        setSize(900, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
 
-
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
-        // Pannello superiore con titolo e tasto indietro
-        JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(Costants.BACKGROUND_COLOR);
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        JButton backButton = Costants.createMenuButton("Indietro");
-        backButton.setPreferredSize(new Dimension(120, 40));
-        backButton.addActionListener(e -> chiudiEmandaIndietro());
-
-        JLabel titleLabel = new JLabel("Gestione Volontari", SwingConstants.CENTER);
-        titleLabel.setFont(Costants.TITLE_FONT);
-        titleLabel.setForeground(Costants.ACCENT_COLOR);
-
-        headerPanel.add(backButton, BorderLayout.WEST);
-        headerPanel.add(titleLabel, BorderLayout.CENTER);
+        // Pannello superiore con titolo
+        JPanel headerPanel = Costants.createHeaderPanel("Crea Nuovo Volontario");
         mainPanel.add(headerPanel, BorderLayout.NORTH);
+
+        // Pannello centrale per il form e la lista
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         // Pannello per il form
         JPanel formPanel = new JPanel(new GridBagLayout());
@@ -58,46 +42,41 @@ public class VolontariFrame extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        int row = 0;
-
-        // Campo per nome del volontario
         gbc.gridx = 0;
-        gbc.gridy = row;
+        gbc.gridy = 0;
+
         formPanel.add(new JLabel("Nome Volontario:"), gbc);
-        nomeVolontarioField = new JTextField();
+        nomeVolontarioField = new JTextField(20);
         gbc.gridx = 1;
         formPanel.add(nomeVolontarioField, gbc);
-        row++;
 
-        // Pulsante per aggiungere volontario
-        aggiungiVolontarioButton = new JButton("Aggiungi Volontario");
-        aggiungiVolontarioButton.addActionListener(e -> aggiungiVolontario());
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.gridwidth = 2;
-        formPanel.add(aggiungiVolontarioButton, gbc);
-        row++;
+        centerPanel.add(formPanel, BorderLayout.NORTH);
 
-        // Lista dei volontari esistenti
+        // Lista dei volontari
         volontariListModel = new DefaultListModel<>();
         volontariList = new JList<>(volontariListModel);
         JScrollPane scrollPane = new JScrollPane(volontariList);
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.gridwidth = 2;
-        formPanel.add(scrollPane, gbc);
-        row++;
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
+
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         // Carica volontari esistenti
         caricaVolontari();
 
-        mainPanel.add(formPanel, BorderLayout.CENTER);
+        // Footer con i pulsanti
+        JPanel footerPanel = Costants.createFooterPanel("");
+        JButton salvaButton = Costants.createSimpleButton("Salva Volontario");
+        salvaButton.addActionListener(e -> aggiungiVolontario());
+        JButton annullaButton = Costants.createSimpleButton("Annulla");
+        annullaButton.addActionListener(e -> chiudiEmandaIndietro());
+
+        footerPanel.add(salvaButton, BorderLayout.CENTER);
+        footerPanel.add(annullaButton, BorderLayout.EAST);
+        mainPanel.add(footerPanel, BorderLayout.SOUTH);
+
         add(mainPanel);
         setVisible(true);
     }
-
-
 
     private void caricaVolontari() {
         ArrayList<Volontario> volontari = controller.getListaVolontari();
@@ -114,25 +93,20 @@ public class VolontariFrame extends JFrame {
         }
 
         // Aggiungi il volontario al controller
-        boolean aggiuntaConfermta = controller.aggiungiVolontario(new Volontario(nomeVolontario));
-
-        if (!aggiuntaConfermta) {
-            JOptionPane.showMessageDialog(this, "Errore: esiste gia un volontario con questo nome!", "Errore", JOptionPane.ERROR_MESSAGE);
+        boolean aggiuntaConfermata = controller.aggiungiVolontario(new Volontario(nomeVolontario));
+        if (!aggiuntaConfermata) {
+            JOptionPane.showMessageDialog(this, "Errore: Esiste già un volontario con questo nome!", "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         // Aggiorna la lista dei volontari
         volontariListModel.addElement(nomeVolontario);
         nomeVolontarioField.setText("");
-
+        chiudiEmandaIndietro();
     }
 
     private void chiudiEmandaIndietro() {
-       // parent.aggiornaListaVolonatari();
+        parent.aggiornaListaVolontari();
         dispose();
-
-        //new NuovoTipoVisitaFrame().setVisible(true);  // Torna alla finestra precedente, ad esempio quella per i tipi di visita
     }
-
-
 }
