@@ -1,7 +1,6 @@
 
 import costants.Costants;
 import costants.Credenziale;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -20,7 +19,7 @@ public class CredenzialeWriter {
         credenzialeList.add(gia);
 
         // Scriviamo l'oggetto nel file
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src/data/credenziali.dat"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("GuideBooking/src/data/credenziali.dat"))) {
             oos.writeObject(credenzialeList);
             System.out.println("✅ File credenziali.dat creato con successo!");
         } catch (IOException e) {
