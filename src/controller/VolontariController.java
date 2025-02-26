@@ -1,11 +1,9 @@
 package controller;
 
 import costants.Costants;
-import model.Volontario;
-
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
+import model.Volontario;
 
 public class VolontariController {
     private ArrayList<Volontario> listaVolontari;
@@ -39,6 +37,10 @@ public class VolontariController {
     }
 
     public void salvaDati() {
+        System.out.println("salvati i seguenti tipi di visita");
+        for (int i = 0; i < listaVolontari.size(); i++) {
+            System.out.println(listaVolontari.get(i).getNome());
+        }
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_volontari))) {
             oos.writeObject(listaVolontari);
         } catch (IOException e) {

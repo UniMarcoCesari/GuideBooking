@@ -2,17 +2,16 @@ package view;
 
 import controller.TipiVisitaController;
 import controller.VolontariController;
-import model.TipoVisita;
 import costants.Costants;
-import model.Volontario;
-
-import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.*;
+import model.TipoVisita;
+import model.Volontario;
 
 public class NuovoTipoVisitaFrame extends JFrame {
     private final JTextField titoloField, descrizioneField, puntoIncontroField;
@@ -166,6 +165,10 @@ public class NuovoTipoVisitaFrame extends JFrame {
         for (Volontario volontario : volontari) {
             volontarioComboBox.addItem(volontario.getNome());
         }
+
+        volontarioComboBox.invalidate();
+        volontarioComboBox.revalidate();
+        volontarioComboBox.repaint();
     }
 
     public JComboBox<String> getVolontarioComboBox() {
@@ -174,6 +177,7 @@ public class NuovoTipoVisitaFrame extends JFrame {
 
     private void creaNuovoVolontario() {
         new VolontariFrame(this, volontariController).setVisible(true);
+        aggiornaListaVolonatari();
     }
 
     private void salvaVisita() {
