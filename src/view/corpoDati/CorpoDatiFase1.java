@@ -7,14 +7,14 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class CreazioneCorpoDati extends JFrame {
+public class CorpoDatiFase1 extends JFrame {
     private final JTextField ambitoField;
     private final JTextField maxPersoneField;
     private final JLabel ambitoErrorLabel;
     private final JLabel maxPersoneErrorLabel;
     private final Border defaultBorder;
 
-    public CreazioneCorpoDati() {
+    public CorpoDatiFase1() {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -131,11 +131,11 @@ public class CreazioneCorpoDati extends JFrame {
         if (!hasErrors) {
             JOptionPane.showMessageDialog(this, "Dati salvati con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
             dispose();
-            new LuoghiFrame().setVisible(true);
+            new CorpoDatiFase2().setVisible(true);
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(CreazioneCorpoDati::new);
+        SwingUtilities.invokeLater(CorpoDatiFase1::new);
     }
 }

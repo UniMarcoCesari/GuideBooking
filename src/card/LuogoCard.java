@@ -3,7 +3,7 @@ package card;
 import model.Luogo;
 import model.TipoVisita;
 import controller.LuoghiController;
-import view.corpoDati.LuoghiFrame;
+import view.corpoDati.CorpoDatiFase2;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -26,10 +26,10 @@ public class LuogoCard extends JPanel {
 
     private final Luogo luogo;
     private final LuoghiController controller;
-    private final LuoghiFrame frame;
+    private final CorpoDatiFase2 frame;
     private final JPanel contentPanel;
 
-    public LuogoCard(Luogo luogo, LuoghiController controller, LuoghiFrame frame) {
+    public LuogoCard(Luogo luogo, LuoghiController controller, CorpoDatiFase2 frame) {
         this.luogo = luogo;
         this.controller = controller;
         this.frame = frame;

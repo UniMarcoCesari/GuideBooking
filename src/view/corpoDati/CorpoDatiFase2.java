@@ -14,7 +14,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LuoghiFrame extends JFrame {
+public class CorpoDatiFase2 extends JFrame {
     private static final int FRAME_WIDTH = 1200;
     private static final int FRAME_HEIGHT = 800;
     private static final Color BACKGROUND_COLOR = new Color(245, 248, 250);
@@ -36,7 +36,7 @@ public class LuoghiFrame extends JFrame {
     private final LuoghiController luoghiController;
     private final TipiVisitaController tipoVisitaController;
 
-    public LuoghiFrame() {
+    public CorpoDatiFase2() {
         this.luoghiController = new LuoghiController();
         this.tipoVisitaController = new TipiVisitaController();
 
@@ -372,6 +372,6 @@ public class LuoghiFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-        LuoghiFrame frame = new LuoghiFrame();
+        CorpoDatiFase2 frame = new CorpoDatiFase2();
     }
 }

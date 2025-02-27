@@ -1,7 +1,7 @@
 package view;
 
 import controller.AuthController;
-import view.corpoDati.CreazioneCorpoDati;
+import view.corpoDati.CorpoDatiFase1;
 
 import javax.swing.*;
 import java.awt.*;
@@ -99,6 +99,6 @@ public class LoginPreConf extends JFrame {
         JOptionPane.showMessageDialog(this, "✅ Credenziali salvate con successo!");
         AuthController.setNewPassConfiguratore(username, password);
         dispose();  // Chiude la finestra
-        new CreazioneCorpoDati().setVisible(true); //Creazione corpo dati
+        new CorpoDatiFase1().setVisible(true); //Creazione corpo dati
     }
 }

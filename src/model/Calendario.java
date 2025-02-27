@@ -24,7 +24,6 @@ public class Calendario
     public void indietroUnGiorno()
     {
         data = data.minus(1, ChronoUnit.DAYS);
-        System.out.println(data.getMonth().name());
     }
 
     public static String formatDate(LocalDate date) {
@@ -49,6 +48,12 @@ public class Calendario
     public String getNomeMese()
     {
         return data.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
+    }
+
+    public String getNomeMesePiu(int i)
+    {
+
+        return data.getMonth().plus(i).getDisplayName(TextStyle.FULL, Locale.ITALIAN);
     }
 
 

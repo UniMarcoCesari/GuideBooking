@@ -13,7 +13,7 @@ import java.util.List;
 import javax.swing.*;
 import model.TipoVisita;
 import model.Volontario;
-import view.corpoDati.LuoghiFrame;
+import view.corpoDati.CorpoDatiFase2;
 
 public class NuovoTipoVisitaFrame extends JFrame {
     private final JTextField titoloField, descrizioneField, puntoIncontroField;
@@ -28,9 +28,9 @@ public class NuovoTipoVisitaFrame extends JFrame {
     private TipiVisitaController tipiVisitaController;
     private VolontariController volontariController;
 
-    private final LuoghiFrame parent;
+    private final CorpoDatiFase2 parent;
 
-    public NuovoTipoVisitaFrame(LuoghiFrame parent, TipiVisitaController tipoVisitaController) {
+    public NuovoTipoVisitaFrame(CorpoDatiFase2 parent, TipiVisitaController tipoVisitaController) {
         setSize(1200, 900);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
