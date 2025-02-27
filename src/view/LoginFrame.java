@@ -2,6 +2,7 @@ package view;
 
 import controller.AuthController;
 import costants.Costants;
+import view.corpoDati.LuoghiFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -112,7 +113,7 @@ public class LoginFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Credenziali errate", "Errore", JOptionPane.ERROR_MESSAGE);
         } else if (verifica == 0) {
             dispose();
-            new CreazioneCorpoDati();
+            new BaseFrame().setVisible(true);
         } else if (verifica == 1) {
             dispose();
             new LoginPreConf(username).setVisible(true);

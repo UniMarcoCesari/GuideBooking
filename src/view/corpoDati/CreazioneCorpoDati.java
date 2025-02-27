@@ -1,4 +1,4 @@
-package view;
+package view.corpoDati;
 
 import costants.Costants;
 

@@ -3,7 +3,7 @@ package card;
 import model.Luogo;
 import model.TipoVisita;
 import controller.LuoghiController;
-import view.LuoghiFrame;
+import view.corpoDati.LuoghiFrame;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.*;
 import model.TipoVisita;
 import model.Volontario;
+import view.corpoDati.LuoghiFrame;
 
 public class NuovoTipoVisitaFrame extends JFrame {
     private final JTextField titoloField, descrizioneField, puntoIncontroField;

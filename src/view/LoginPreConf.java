@@ -1,6 +1,7 @@
 package view;
 
 import controller.AuthController;
+import view.corpoDati.CreazioneCorpoDati;
 
 import javax.swing.*;
 import java.awt.*;
