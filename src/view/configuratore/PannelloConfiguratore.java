@@ -1,22 +1,34 @@
-package view;
+package view.configuratore;
 
+import controller.CalendarioController;
 import costants.Costants;
-import model.Calendario;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PannelloConfiguratore extends JFrame {
-
-    private final Calendario calendario;
+    private final CalendarioController calendarioController;
     private JTextField textArea;
-    private JPanel mainContentPanel;
     private JButton button1, button2, button3;
 
     public PannelloConfiguratore() {
         initializeFrame();
-        calendario = new Calendario();
+
+        //    CIAO MATTE, Segui questi commenti per capire, qui creo controller e inserisci due giorni festivi
+        //    15 e 16 febbraio  (ora vai in basso)
+
+        // Definiamo alcuni giorni festivi di esempio
+        Set<LocalDate> giorniFestivi = new HashSet<>();
+        giorniFestivi.add(LocalDate.of(2025, 2, 15));  // 15 febbraio 2025
+        giorniFestivi.add(LocalDate.of(2025, 2, 16)); //  16 febbraio 2025
+
+        //inizializiamo controller qui
+        calendarioController = new CalendarioController(giorniFestivi);
+
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -26,10 +38,10 @@ public class PannelloConfiguratore extends JFrame {
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Contenuto principale
-        mainContentPanel = createMainContentPanel();
+        JPanel mainContentPanel = createMainContentPanel();
         mainPanel.add(mainContentPanel, BorderLayout.CENTER);
 
-        // Footer (se necessario)
+        // Footer
         JPanel footerPanel = Costants.createFooterPanel("Footer");
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
@@ -43,6 +55,8 @@ public class PannelloConfiguratore extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+
+    //Pannello centrale
     private JPanel createMainContentPanel() {
         JPanel contentPanel = new JPanel(new GridBagLayout());
         contentPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -58,7 +72,7 @@ public class PannelloConfiguratore extends JFrame {
 
         // Pannello superiore (Data + Bottoni)
         JPanel topPanel = new JPanel(new BorderLayout(10, 10));
-        textArea = new JTextField(calendario.getDataString(), 20);
+        textArea = new JTextField(calendarioController.getDataCorrente(), 20);
         textArea.setHorizontalAlignment(JTextField.CENTER);
         textArea.setEditable(false);
 
@@ -78,10 +92,14 @@ public class PannelloConfiguratore extends JFrame {
         gbc.gridy = 1;
         JPanel bottomPanel = new JPanel(new GridLayout(1, 3, 20, 0));
 
-        // Bottoni personalizzati
-        button1 = new JButton();
-        button2 = new JButton();
-        button3 = new JButton();
+        //
+        //    CIAO MATTE, qui creo bottoni ancora vuori
+        //
+
+
+        button1 = Costants.createSimpleButton("");
+        button2 = Costants.createSimpleButton("");
+        button3 = Costants.createSimpleButton("");
 
         aggiornaBottoni();
 
@@ -96,20 +114,40 @@ public class PannelloConfiguratore extends JFrame {
 
     private void aggiornaData(int giorni) {
         if (giorni < 0) {
-            calendario.indietroUnGiorno();
+            calendarioController.indietroUnGiorno();
         } else {
-            calendario.avantiUnGiorno();
+            calendarioController.avantiUnGiorno();
         }
-        textArea.setText(calendario.getDataString());
+        textArea.setText(calendarioController.getDataCorrente());
         aggiornaBottoni();
         revalidate();
         repaint();
     }
 
     private void aggiornaBottoni() {
-        button1.setText("Modifiche per " + calendario.getNomeMese());
-        button2.setText("Modifiche per " + calendario.getNomeMesePiu(1));
-        button3.setText("Modifiche per " + calendario.getNomeMesePiu(2));
+
+
+        // PER MATTE --> Qui  aggiorno bottoni (si aggiornano ogni cambio data) ma cambiano davvero solo se
+        // controller cambia mese che restituisce (logica sempre nel controller)
+        //FATTO SOLO PER BOTTONE 1
+
+        //prende nome primo mese utile conrrollando anche i festivi, per esempio ora ce impostato che il 15 e il 16 febbraio
+        //sono festivi infatti noterai che non cambiano i bottoni li ma solo il 17 febbraio cambiano
+
+        //invece il 15 marzo come è giusto che sia cambiano gia
+
+        button1.setText("Modifiche per " + calendarioController.getNomeMesePrimoCheSiPuoModificare());
+        button1.addActionListener(e -> {
+           dispose();
+
+           //Creo nuova finistra sezione 1 e gli passo Proprio oggetto mese cosi di la toppp
+           new Sezione1(calendarioController.getNomeMesePrimoCheSiPuoModificare()).setVisible(true);
+        });
+
+        //qui aggiungo 1 o 2 per mese
+        button2.setText("Modifiche per " + calendarioController.getNomeMesePrimoCheSiPuoModificare().plus(1));
+        button3.setText("Modifiche per " + calendarioController.getNomeMesePrimoCheSiPuoModificare().plus(2));
+
     }
 
     public static void main(String[] args) {

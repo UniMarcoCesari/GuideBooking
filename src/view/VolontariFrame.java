@@ -3,6 +3,7 @@ package view;
 import controller.VolontariController;
 import model.Volontario;
 import costants.Costants;
+import view.corpoDati.NuovoTipoVisitaFrame;
 
 import javax.swing.*;
 import java.awt.*;

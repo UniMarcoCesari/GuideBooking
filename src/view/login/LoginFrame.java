@@ -1,7 +1,8 @@
-package view;
+package view.login;
 
 import controller.AuthController;
 import costants.Costants;
+import view.configuratore.PannelloConfiguratore;
 
 import javax.swing.*;
 import java.awt.*;
@@ -115,7 +116,7 @@ public class LoginFrame extends JFrame {
             new PannelloConfiguratore().setVisible(true);
         } else if (verifica == 1) {
             dispose();
-            new LoginPreConf(username).setVisible(true);
+            new NewPasswordConf(username).setVisible(true);
         }
     }
 

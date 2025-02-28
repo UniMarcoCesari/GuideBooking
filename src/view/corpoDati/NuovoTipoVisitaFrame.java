@@ -1,4 +1,4 @@
-package view;
+package view.corpoDati;
 
 import controller.TipiVisitaController;
 import controller.VolontariController;
@@ -13,7 +13,7 @@ import java.util.List;
 import javax.swing.*;
 import model.TipoVisita;
 import model.Volontario;
-import view.corpoDati.CorpoDatiFase2;
+import view.VolontariFrame;
 
 public class NuovoTipoVisitaFrame extends JFrame {
     private final JTextField titoloField, descrizioneField, puntoIncontroField;

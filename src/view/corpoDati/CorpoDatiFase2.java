@@ -6,7 +6,6 @@ import costants.Costants;
 import model.Luogo;
 import controller.LuoghiController;
 import model.TipoVisita;
-import view.NuovoTipoVisitaFrame;
 
 import javax.swing.*;
 import javax.swing.border.*;

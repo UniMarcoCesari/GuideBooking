@@ -1,4 +1,4 @@
-package view;
+package view.login;
 
 import controller.AuthController;
 import view.corpoDati.CorpoDatiFase1;
@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginPreConf extends JFrame {
+public class NewPasswordConf extends JFrame {
     private final JTextField usernameField;
     private final JPasswordField passwordField;
     private final JPasswordField confirmPasswordField;
@@ -16,7 +16,7 @@ public class LoginPreConf extends JFrame {
 
     private final String username;
 
-    public LoginPreConf(String username) {
+    public NewPasswordConf(String username) {
         this.username = username;
 
         setTitle("Inizializzazione Configuratore");
