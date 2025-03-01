@@ -1,9 +1,9 @@
 package controller;
-import model.Luogo;
-import service.DataManager;
+import costants.*;
 import java.util.ArrayList;
 import java.util.List;
-import costants.*;
+import model.Luogo;
+import service.DataManager;
 
 public class LuoghiController {
     private List<Luogo> luoghi;

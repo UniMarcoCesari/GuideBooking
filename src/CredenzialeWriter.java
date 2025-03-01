@@ -19,7 +19,7 @@ public class CredenzialeWriter {
         credenzialeList.add(gia);
 
         // Scriviamo l'oggetto nel file
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src/data/credenziali.dat"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("GuideBooking/src/data/credenziali.dat"))) {
             oos.writeObject(credenzialeList);
             System.out.println("✅ File credenziali.dat creato con successo!");
         } catch (IOException e) {
