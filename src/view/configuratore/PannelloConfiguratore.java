@@ -18,9 +18,6 @@ public class PannelloConfiguratore extends JFrame {
     public PannelloConfiguratore() {
         initializeFrame();
 
-        //    CIAO MATTE, Segui questi commenti per capire, qui creo controller e inserisci due giorni festivi
-        //    15 e 16 febbraio  (ora vai in basso)
-
         // Definiamo alcuni giorni festivi di esempio
         Set<LocalDate> giorniFestivi = new HashSet<>();
         giorniFestivi.add(LocalDate.of(2025, 2, 15));  // 15 febbraio 2025
@@ -53,6 +50,12 @@ public class PannelloConfiguratore extends JFrame {
         setSize(1200, 800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    //IDEA PER SALVARE STATO APP
+    @Override
+    public void dispose() {
+        super.dispose();
     }
 
 
@@ -92,14 +95,18 @@ public class PannelloConfiguratore extends JFrame {
         gbc.gridy = 1;
         JPanel bottomPanel = new JPanel(new GridLayout(1, 3, 20, 0));
 
-        //
-        //    CIAO MATTE, qui creo bottoni ancora vuori
-        //
-
-
         button1 = Costants.createSimpleButton("");
         button2 = Costants.createSimpleButton("");
         button3 = Costants.createSimpleButton("");
+
+        button1.addActionListener(e -> {
+            dispose();
+            new Sezione1(calendarioController);
+        });
+        button3.addActionListener(e -> {
+            dispose();
+            new Sezione3(calendarioController);
+        });
 
         aggiornaBottoni();
 
@@ -125,30 +132,11 @@ public class PannelloConfiguratore extends JFrame {
     }
 
     private void aggiornaBottoni() {
-
-
-        // PER MATTE --> Qui  aggiorno bottoni (si aggiornano ogni cambio data) ma cambiano davvero solo se
-        // controller cambia mese che restituisce (logica sempre nel controller)
-        //FATTO SOLO PER BOTTONE 1
-
-        //prende nome primo mese utile conrrollando anche i festivi, per esempio ora ce impostato che il 15 e il 16 febbraio
-        //sono festivi infatti noterai che non cambiano i bottoni li ma solo il 17 febbraio cambiano
-
-        //invece il 15 marzo come è giusto che sia cambiano gia
-
         button1.setText("Modifiche per " + calendarioController.getNomeMesePrimoCheSiPuoModificare());
-        button1.addActionListener(e -> {
-           dispose();
-
-           //Creo nuova finistra sezione 1 e gli passo Proprio oggetto mese cosi di la toppp
-           new Sezione1(calendarioController.getNomeMesePrimoCheSiPuoModificare()).setVisible(true);
-        });
-
-        //qui aggiungo 1 o 2 per mese
         button2.setText("Modifiche per " + calendarioController.getNomeMesePrimoCheSiPuoModificare().plus(1));
         button3.setText("Modifiche per " + calendarioController.getNomeMesePrimoCheSiPuoModificare().plus(2));
-
     }
+
 
     public static void main(String[] args) {
         new PannelloConfiguratore();

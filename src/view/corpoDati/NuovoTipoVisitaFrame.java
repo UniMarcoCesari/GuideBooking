@@ -25,8 +25,8 @@ public class NuovoTipoVisitaFrame extends JFrame {
     private JList<String> volontariList;
     private DefaultListModel<String> volontariListModel;
 
-    private TipiVisitaController tipiVisitaController;
-    private VolontariController volontariController;
+    private final TipiVisitaController tipiVisitaController;
+    private final  VolontariController volontariController;
 
     private final CorpoDatiFase2 parent;
 

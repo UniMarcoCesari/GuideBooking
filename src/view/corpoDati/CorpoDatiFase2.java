@@ -97,6 +97,12 @@ public class CorpoDatiFase2 extends JFrame {
         // Aggiungi JSplitPane al pannello principale
         mainPanel.add(splitPane, BorderLayout.CENTER);
 
+        // Crea l'intestazione
+        JPanel footerPanel = Costants.createFooterPanel("");
+        //TODO crea bottone per salvare e andare avanti
+        mainPanel.add(footerPanel, BorderLayout.SOUTH);
+
+
         add(mainPanel);
         aggiornaListaLuoghi();
         setVisible(true);
@@ -369,8 +375,9 @@ public class CorpoDatiFase2 extends JFrame {
         posizioneField.setText("");
         tipiVisitaModel.clear();
     }
-
     public static void main(String[] args) {
         CorpoDatiFase2 frame = new CorpoDatiFase2();
     }
+
+
 }

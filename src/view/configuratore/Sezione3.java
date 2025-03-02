@@ -10,13 +10,13 @@ import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-public class Sezione1 extends JFrame {
+public class Sezione3 extends JFrame {
     private final Month mese;
     private JTextField textArea;
 
-    public Sezione1(CalendarioController calendarioController) {
+    public Sezione3(CalendarioController calendarioController) {
         initializeFrame();
-        mese = calendarioController.getNomeMesePrimoCheSiPuoModificare(); //prende mese
+        mese = calendarioController.getNomeMesePrimoCheSiPuoModificare().plus(+2); //prende mese
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 

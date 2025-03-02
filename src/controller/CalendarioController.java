@@ -43,7 +43,7 @@ public class CalendarioController {
     // questo metodo restituisce il PRIMO mese UTILE su cui configuratore puo fare modifiche
     public Month getNomeMesePrimoCheSiPuoModificare()
     {
-        if (calendario.getData().getDayOfMonth()>=15)   //  se dopo il 15
+        if (calendario.getData().getDayOfMonth()>15)   //  se dopo il 15
         {
             if (!isGiornoCancellato(calendario.getData()))  //   e se data non festiva
             {

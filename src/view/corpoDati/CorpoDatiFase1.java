@@ -135,7 +135,4 @@ public class CorpoDatiFase1 extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(CorpoDatiFase1::new);
-    }
 }
