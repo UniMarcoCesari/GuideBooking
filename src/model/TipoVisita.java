@@ -19,13 +19,14 @@ public class TipoVisita implements Serializable {
     private boolean bigliettoNecessario;
     private int minPartecipanti;
     private int maxPartecipanti;
+    private ArrayList<Volontario> volontari;
 
 
 
     public TipoVisita(String titolo, String descrizione, String puntoIncontro,
                       LocalDate dataInizio, LocalDate dataFine, List<String> giorniSettimana,
                       LocalTime oraInizio, int durataMinuti, boolean bigliettoNecessario,
-                      int minPartecipanti, int maxPartecipanti) {
+                      int minPartecipanti, int maxPartecipanti, ArrayList<Volontario> volontari) {
         this.titolo = titolo;
         this.descrizione = descrizione;
         this.puntoIncontro = puntoIncontro;
@@ -37,6 +38,7 @@ public class TipoVisita implements Serializable {
         this.bigliettoNecessario = bigliettoNecessario;
         this.minPartecipanti = minPartecipanti;
         this.maxPartecipanti = maxPartecipanti;
+        this.volontari = volontari;
     }
 
     // Getters e setters
@@ -126,5 +128,9 @@ public class TipoVisita implements Serializable {
 
     public void setMaxPartecipanti(int maxPartecipanti) {
         this.maxPartecipanti = maxPartecipanti;
+    }
+
+    public ArrayList<Volontario> getVolontari() {
+        return volontari;
     }
 }

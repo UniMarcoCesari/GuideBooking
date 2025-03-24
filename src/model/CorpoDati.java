@@ -1,18 +1,18 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CorpoDati
+public class CorpoDati implements Serializable
 {
     private String ambito;
     private String maxPersone;
-    private ArrayList<Luogo> luogi;
+    private Boolean isAlreadyStart = false;
 
-    CorpoDati(String ambito, String maxPersone, ArrayList<Luogo> luogi)
+    public CorpoDati(String ambito, String maxPersone)
     {
         this.ambito = ambito;
         this.maxPersone = maxPersone;
-        this.luogi = luogi;
     }
 
     public String getAmbito() {
@@ -31,11 +31,12 @@ public class CorpoDati
         this.maxPersone = maxPersone;
     }
 
-    public ArrayList<Luogo> getLuogi() {
-        return luogi;
+
+    public Boolean getIsAlreadyStart() {
+        return isAlreadyStart;
+    }
+    public void setIsAlreadyStart(Boolean isAlreadyStart) {
+        this.isAlreadyStart = isAlreadyStart;
     }
 
-    public void setLuogi(ArrayList<Luogo> luogi) {
-        this.luogi = luogi;
-    }
 }

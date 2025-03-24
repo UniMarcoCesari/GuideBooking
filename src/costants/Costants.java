@@ -1,6 +1,9 @@
 package costants;
 
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -18,6 +21,8 @@ public class Costants
       public static final String  file_credenziali = "src/data/credenziali.dat";
       public static final String  file_tipi_visita = "src/data/tipiVisita.dat";
       public static final String  file_volontari = "src/data/volontari.dat";
+      public static final String  file_corpo = "src/data/corpo.dat";
+      public static String file_date = "src/data/date.dat";
 
 
     // Header
@@ -42,6 +47,16 @@ public class Costants
 
     // Margin e Padding
     public static final int SPACING = 20;
+
+    // Date e simili
+
+    // Formattatore di date per l'italiano
+    public static final DateTimeFormatter ITALIAN_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ITALY);
+
+    // Metodo per formattare una data in italiano
+    public static String formatToItalian(LocalDate date) {
+        return date.format(ITALIAN_DATE_FORMATTER);
+    }
 
 
     public static JPanel createHeaderPanel(String title) {

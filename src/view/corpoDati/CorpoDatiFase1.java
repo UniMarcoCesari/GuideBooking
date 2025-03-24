@@ -1,6 +1,8 @@
 package view.corpoDati;
 
 import costants.Costants;
+import model.CorpoDati;
+import service.DataManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -19,6 +21,7 @@ public class CorpoDatiFase1 extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+
 
         // Layout principale
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
@@ -87,7 +90,9 @@ public class CorpoDatiFase1 extends JFrame {
         add(mainPanel);
 
         // Event Listeners
-        confermaButton.addActionListener(e -> confermaDati());
+        confermaButton.addActionListener(e -> {
+            confermaDati();
+        });
 
         ambitoField.addCaretListener(e -> resetFieldError(ambitoField, ambitoErrorLabel));
         maxPersoneField.addCaretListener(e -> resetFieldError(maxPersoneField, maxPersoneErrorLabel));
@@ -129,9 +134,10 @@ public class CorpoDatiFase1 extends JFrame {
         }
 
         if (!hasErrors) {
-            JOptionPane.showMessageDialog(this, "Dati salvati con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
             dispose();
-            new CorpoDatiFase2().setVisible(true);
+            CorpoDati corpoDati = new CorpoDati(ambito, maxPersoneText);
+            DataManager.salvaCorpoDati(corpoDati,Costants.file_corpo);
+            new CorpoDatiFase2(corpoDati).setVisible(true);
         }
     }
 

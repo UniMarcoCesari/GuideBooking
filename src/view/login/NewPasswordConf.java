@@ -99,6 +99,6 @@ public class NewPasswordConf extends JFrame {
         JOptionPane.showMessageDialog(this, "✅ Credenziali salvate con successo!");
         AuthController.setNewPassConfiguratore(username, password);
         dispose();  // Chiude la finestra
-        new CorpoDatiFase1().setVisible(true); //Creazione corpo dati
+        new LoginFrame().setVisible(true);
     }
 }

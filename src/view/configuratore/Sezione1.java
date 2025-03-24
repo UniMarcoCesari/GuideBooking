@@ -22,6 +22,12 @@ public class Sezione1 extends JFrame {
 
         // Header
         JPanel headerPanel = Costants.createHeaderPanel("Cose che puoi fare nel mese di " + mese.getDisplayName(TextStyle.FULL, Locale.ITALIAN));
+        JButton indietro = Costants.createSimpleButton("Indietro");
+        indietro.addActionListener(e -> {
+            dispose();
+            new PannelloConfiguratore().setVisible(true);
+        });
+        headerPanel.add(indietro, BorderLayout.WEST);
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Contenuto principale

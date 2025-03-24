@@ -3,9 +3,12 @@ package view.corpoDati;
 import card.LuogoCard;
 import controller.TipiVisitaController;
 import costants.Costants;
+import model.CorpoDati;
 import model.Luogo;
 import controller.LuoghiController;
 import model.TipoVisita;
+import service.DataManager;
+import view.configuratore.PannelloConfiguratore;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -21,6 +24,7 @@ public class CorpoDatiFase2 extends JFrame {
     private static final Color TEXT_COLOR = new Color(255, 255, 255);
     private static final Color BORDER_COLOR = new Color(220, 220, 220);
 
+
     private static final Font LABEL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
     private static final int SPACING = 12;
 
@@ -32,12 +36,15 @@ public class CorpoDatiFase2 extends JFrame {
     private DefaultListModel<String> tipiVisitaModel;
     private JList<String> tipiVisitaList;
 
+    private CorpoDati corpoDati;
+
     private final LuoghiController luoghiController;
     private final TipiVisitaController tipoVisitaController;
 
-    public CorpoDatiFase2() {
+    public CorpoDatiFase2(CorpoDati corpoDati) {
         this.luoghiController = new LuoghiController();
         this.tipoVisitaController = new TipiVisitaController();
+        this.corpoDati = corpoDati;
 
         initializeFrame();
 
@@ -99,13 +106,26 @@ public class CorpoDatiFase2 extends JFrame {
 
         // Crea l'intestazione
         JPanel footerPanel = Costants.createFooterPanel("");
-        //TODO crea bottone per salvare e andare avanti
-        mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
+        // bottone
+        JButton salvaButton = Costants.createSimpleButton("Avvia applicazione");
+        salvaButton.addActionListener(e -> {salvaEMandaPannello();});
+        footerPanel.add(salvaButton);
+
+        mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
         aggiornaListaLuoghi();
         setVisible(true);
+    }
+
+
+    private void salvaEMandaPannello()
+    {
+        //TODO:salva dati app 2
+        DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+        dispose();
+        new PannelloConfiguratore().setVisible(true);
     }
 
 
@@ -329,7 +349,7 @@ public class CorpoDatiFase2 extends JFrame {
 
     private void addLuogoCard(Luogo luogo) {
         listaPanel.add(Box.createVerticalStrut(6));
-        listaPanel.add(new LuogoCard(luogo, luoghiController, this));
+        listaPanel.add(new LuogoCard(luogo, luoghiController));
     }
 
     private void aggiungiLuogo() {
@@ -355,6 +375,7 @@ public class CorpoDatiFase2 extends JFrame {
         }
 
         luoghiController.aggiungiLuogo(new Luogo(nome, descrizione, posizione, tipiVisita));
+
         aggiornaListaLuoghi();
         JOptionPane.showMessageDialog(this, "Luogo aggiunto con successo!");
         clearFields();
@@ -375,9 +396,9 @@ public class CorpoDatiFase2 extends JFrame {
         posizioneField.setText("");
         tipiVisitaModel.clear();
     }
-    public static void main(String[] args) {
-        CorpoDatiFase2 frame = new CorpoDatiFase2();
-    }
 
+    public static void main(String[] args) {
+        new CorpoDatiFase2(new CorpoDati("",""));
+    }
 
 }

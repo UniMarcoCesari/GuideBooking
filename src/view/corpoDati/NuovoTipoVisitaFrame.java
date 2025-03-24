@@ -293,6 +293,14 @@ public class NuovoTipoVisitaFrame extends JFrame {
 
         // Recupera i volontari selezionati
         List<String> volontariSelezionati = volontariList.getSelectedValuesList();
+
+        ArrayList<Volontario> listaVolontari = new ArrayList<>();
+
+        for (String nomeVolontario : volontariSelezionati) {
+            listaVolontari.add(new Volontario(nomeVolontario));
+        }
+
+
         // Aggiungi i volontari alla visita
         ArrayList<String> volontari = new ArrayList<>(volontariSelezionati);
 
@@ -301,7 +309,7 @@ public class NuovoTipoVisitaFrame extends JFrame {
         for (String v : volontari) {
             sb.append(v).append(", ");
         }
-        System.out.println(sb.toString());
+        System.out.println(sb);
 
         // Ottiene i valori dai nuovi campi
         int minPartecipanti = (int) minPartecipantiSpinner.getValue();
@@ -326,7 +334,8 @@ public class NuovoTipoVisitaFrame extends JFrame {
                 (int) durataSpinner.getValue(),
                 richiedeBiglietto,
                 minPartecipanti,
-                maxPartecipanti
+                maxPartecipanti,
+                listaVolontari
         );
 
         tipiVisitaController.aggiungiVisita(nuovaVisita);

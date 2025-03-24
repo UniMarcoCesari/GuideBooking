@@ -1,5 +1,6 @@
 package card;
 
+import costants.Costants;
 import model.Luogo;
 import model.TipoVisita;
 import controller.LuoghiController;
@@ -10,10 +11,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LuogoCard extends JPanel {
+public class TipoVisitaCard extends JPanel {
     private static final int CARD_WIDTH = 400;
     private static final int CARD_HEIGHT = 120;
     private static final Color BORDER_COLOR = new Color(200, 200, 200);
@@ -24,13 +26,17 @@ public class LuogoCard extends JPanel {
     private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 16);
     private static final Font NORMAL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
 
-    private final Luogo luogo;
+    private final TipoVisita tipoVisita;
     private final LuoghiController controller;
     private final JPanel contentPanel;
 
-    public LuogoCard(Luogo luogo, LuoghiController controller) {
-        this.luogo = luogo;
+    public TipoVisitaCard(TipoVisita tipoVisita, LuoghiController controller) {
+        this.tipoVisita = tipoVisita;
         this.controller = controller;
+
+        System.out.println(tipoVisita.getGiorniSettimana().toString());
+        System.out.println(tipoVisita.getVolontari().toString());
+
 
         // Configurazione panel
         setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
@@ -46,12 +52,10 @@ public class LuogoCard extends JPanel {
         contentPanel.setBorder(new EmptyBorder(12, 15, 12, 15));
 
 
-
         // Area informazioni
         JPanel infoPanel = createInfoPanel();
 
-        // Area pulsanti
-        //JPanel actionPanel = createButtonPanel();
+
 
         // Assembly
 
@@ -77,30 +81,28 @@ public class LuogoCard extends JPanel {
         JPanel panel = new JPanel(new GridLayout(4, 1, 0, 3));
         panel.setOpaque(false);
 
-        // Nome
-        JLabel nomeLabel = new JLabel(luogo.getNome());
+        // Titolo
+        JLabel nomeLabel = new JLabel(tipoVisita.getTitolo());
         nomeLabel.setFont(TITLE_FONT);
         nomeLabel.setForeground(DARK_TEXT);
 
-        // Posizione
-        JLabel posizioneLabel = new JLabel("Posizione: " + luogo.getPosizione());
+        // Descrizione
+        JLabel posizioneLabel = new JLabel("Descrizione: " + tipoVisita.getDescrizione());
         posizioneLabel.setFont(NORMAL_FONT);
         posizioneLabel.setForeground(LIGHT_TEXT);
 
-        // Descrizione
-        JLabel descrizioneLabel = new JLabel("Descrizione: " + (luogo.getDescrizione().isEmpty() ? "Nessuna descrizione" : luogo.getDescrizione()));
+        // DataInizio e data fine
+        String data_inizio = Costants.formatToItalian(tipoVisita.getDataInizio());
+        String data_fine = Costants.formatToItalian(tipoVisita.getDataFine());
+        JLabel descrizioneLabel = new JLabel("Dal "+data_inizio+" al "+data_fine);
         descrizioneLabel.setFont(NORMAL_FONT);
         descrizioneLabel.setForeground(LIGHT_TEXT);
 
-        // Tipi di Visita
-        JLabel tipiVisitaLabel = new JLabel("Tipi di visita associati: " + formatTipiVisita(luogo.getTipiVisita()));
-        tipiVisitaLabel.setFont(NORMAL_FONT);
-        tipiVisitaLabel.setForeground(LIGHT_TEXT);
 
         panel.add(nomeLabel);
         panel.add(posizioneLabel);
         panel.add(descrizioneLabel);
-        panel.add(tipiVisitaLabel);
+
 
         return panel;
     }
@@ -113,8 +115,6 @@ public class LuogoCard extends JPanel {
         JButton modificaButton = createIconButton("Modifica");
         JButton eliminaButton = createIconButton("Elimina");
 
-        modificaButton.addActionListener(e -> modificaLuogo());
-        eliminaButton.addActionListener(e -> eliminaLuogo());
 
         // Aggiungere spazio tra i pulsanti
         modificaButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -140,66 +140,16 @@ public class LuogoCard extends JPanel {
         return button;
     }
 
-    private void modificaLuogo() {
-        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
-        panel.setBorder(new EmptyBorder(15, 15, 5, 15));
 
-        JTextField nomeField = new JTextField(luogo.getNome(), 20);
-        JTextField posizioneField = new JTextField(luogo.getPosizione(), 20);
-        JTextField descrizioneField = new JTextField(luogo.getDescrizione(), 20);
-
-        panel.add(new JLabel("Nome:"));
-        panel.add(nomeField);
-        panel.add(new JLabel("Posizione:"));
-        panel.add(posizioneField);
-        panel.add(new JLabel("Descrizione:"));
-        panel.add(descrizioneField);
-
-        int result = JOptionPane.showConfirmDialog(this, panel,
-                "Modifica Luogo", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-
-        if (result == JOptionPane.OK_OPTION) {
-            String nuovoNome = nomeField.getText().trim();
-            String nuovaPosizione = posizioneField.getText().trim();
-            String nuovaDescrizione = descrizioneField.getText().trim();
-
-            if (isValidInput(nuovoNome, nuovaPosizione)) {
-                updateLuogo(nuovoNome, nuovaPosizione, nuovaDescrizione);
-                controller.salvaDati();
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Nome e Posizione sono obbligatori!",
-                        "Errore",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
 
     private boolean isValidInput(String nome, String posizione) {
         return nome != null && !nome.trim().isEmpty() &&
                 posizione != null && !posizione.trim().isEmpty();
     }
 
-    private void updateLuogo(String nome, String posizione, String descrizione) {
-        luogo.setNome(nome);
-        luogo.setPosizione(posizione);
-        luogo.setDescrizione(descrizione);
-    }
 
-    private void eliminaLuogo() {
-        int conferma = JOptionPane.showConfirmDialog(this,
-                "Sei sicuro di voler eliminare il luogo '" + luogo.getNome() + "'?",
-                "Conferma Eliminazione",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
 
-        if (conferma == JOptionPane.YES_OPTION) {
-            controller.getLuoghi().remove(luogo);
-            controller.salvaDati();
-            //frame.aggiornaListaLuoghi();
-        }
-    }
+
 
     private String formatTipiVisita(List<TipoVisita> tipiVisita) {
         if (tipiVisita == null || tipiVisita.isEmpty()) {

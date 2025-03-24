@@ -2,10 +2,16 @@ package view.login;
 
 import controller.AuthController;
 import costants.Costants;
+import model.CorpoDati;
+import service.DataManager;
 import view.configuratore.PannelloConfiguratore;
+import view.corpoDati.CorpoDatiFase1;
+import view.corpoDati.CorpoDatiFase2;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginFrame extends JFrame {
     private final JTextField usernameField;
@@ -18,6 +24,7 @@ public class LoginFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+
 
         // Pannello principale
         JPanel mainPanel = new JPanel();
@@ -109,12 +116,24 @@ public class LoginFrame extends JFrame {
     private void authenticate(String username, String password) {
         int verifica = AuthController.checkCredentials(username, password);
 
-        if (verifica == -1) {
+        if (verifica == -1) {  //errore
             JOptionPane.showMessageDialog(this, "Credenziali errate", "Errore", JOptionPane.ERROR_MESSAGE);
-        } else if (verifica == 0) {
+        } else if (verifica == 0) {  //configuratore
             dispose();
-            new PannelloConfiguratore().setVisible(true);
-        } else if (verifica == 1) {
+
+            CorpoDati corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
+
+            if (corpoDati == null)
+            {
+                new CorpoDatiFase1().setVisible(true);
+            }
+            else
+            {
+                new PannelloConfiguratore().setVisible(true);
+            }
+
+
+        } else if (verifica == 1) { //PRE-configuratore
             dispose();
             new NewPasswordConf(username).setVisible(true);
         }
