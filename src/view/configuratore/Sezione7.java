@@ -16,7 +16,13 @@ public class Sezione7 extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
-        corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
+        // Se corpoDati è null, crea una nuova istanza
+        CorpoDati corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
+        if (corpoDati == null) {
+            corpoDati = new CorpoDati();
+            corpoDati.setMaxPersone("0"); // Imposta un valore di default
+        }
+        this.corpoDati = corpoDati;
 
         // Header
         JPanel headerPanel = Costants.createHeaderPanel("Lista volontari");
@@ -36,12 +42,12 @@ public class Sezione7 extends JFrame {
         JTextField textField = new JTextField();
         textField.setEditable(true);
         textField.setText(corpoDati.getMaxPersone());
-        textField.setHorizontalAlignment(JTextField.CENTER);  // Centra il testo
-        textField.setFont(new Font("Arial", Font.BOLD, 30));  // Imposta un font più grande
-        textField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));  // Aggiungi un bordo
+        textField.setHorizontalAlignment(JTextField.CENTER); // Centra il testo
+        textField.setFont(new Font("Arial", Font.BOLD, 30)); // Imposta un font più grande
+        textField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2)); // Aggiungi un bordo
         textField.setBackground(Costants.BACKGROUND_COLOR);
         textField.setForeground(Color.BLACK);
-        textField.setPreferredSize(new Dimension(300, 50));  // Imposta una dimensione preferita
+        textField.setPreferredSize(new Dimension(300, 50)); // Imposta una dimensione preferita
 
         mainContentPanel.add(textField, BorderLayout.CENTER);
 
@@ -49,9 +55,10 @@ public class Sezione7 extends JFrame {
         JPanel savePanel = new JPanel();
         JButton salvaBtn = new JButton("Salva");
         salvaBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        CorpoDati finalCorpoDati = corpoDati;
         salvaBtn.addActionListener(e -> {
-            corpoDati.setMaxPersone(textField.getText());
-            DataManager.salvaCorpoDati(corpoDati,Costants.file_corpo);
+            finalCorpoDati.setMaxPersone(textField.getText());
+            DataManager.salvaCorpoDati(finalCorpoDati,Costants.file_corpo);
             JOptionPane.showMessageDialog(this, "Dati salvati con successo!");
         });
 

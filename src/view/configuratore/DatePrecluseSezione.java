@@ -12,17 +12,16 @@ import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 
-public class Sezione3 extends JFrame {
+public class DatePrecluseSezione extends JFrame {
     private static final Locale ITALIAN_LOCALE = Locale.ITALIAN;
-    private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy", ITALIAN_LOCALE);
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy", ITALIAN_LOCALE);
 
     private final LocalDate selectedMonth;
     private final DefaultListModel<String> dateListModel = new DefaultListModel<>();
     private JTextField dateInputField;
     private final CalendarioController calendarioController;
 
-    public Sezione3(CalendarioController calendarioController) {
+    public DatePrecluseSezione(CalendarioController calendarioController) {
         this.calendarioController = calendarioController;
         this.selectedMonth = calculateSelectedMonth();
 
@@ -73,7 +72,7 @@ public class Sezione3 extends JFrame {
         return headerPanel;
     }
 
-    private JPanel createMainContentPanel() {
+   private JPanel createMainContentPanel() {
         JPanel mainContentPanel = new JPanel(new BorderLayout());
         mainContentPanel.add(createInputPanel(), BorderLayout.NORTH);
         mainContentPanel.add(createDateListPanel(), BorderLayout.CENTER);
@@ -160,7 +159,7 @@ public class Sezione3 extends JFrame {
     }
 
     private void showMonthMismatchError() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", ITALIAN_LOCALE);
+       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", ITALIAN_LOCALE);
         String monthName = selectedMonth.format(formatter);
         JOptionPane.showMessageDialog(
                 this,

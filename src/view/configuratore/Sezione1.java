@@ -6,12 +6,13 @@ import model.Calendario;
 
 import javax.swing.*;
 import java.awt.*;
-import java.time.Month;
-import java.time.format.TextStyle;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import javax.swing.*;
 
 public class Sezione1 extends JFrame {
-    private final Month mese;
+    private final LocalDate mese;
     private JTextField textArea;
 
     public Sezione1(CalendarioController calendarioController) {
@@ -21,7 +22,8 @@ public class Sezione1 extends JFrame {
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         // Header
-        JPanel headerPanel = Costants.createHeaderPanel("Cose che puoi fare nel mese di " + mese.getDisplayName(TextStyle.FULL, Locale.ITALIAN));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ITALIAN);
+        JPanel headerPanel = Costants.createHeaderPanel("Cose che puoi fare nel mese di " + mese.format(formatter));
         JButton indietro = Costants.createSimpleButton("Indietro");
         indietro.addActionListener(e -> {
             dispose();

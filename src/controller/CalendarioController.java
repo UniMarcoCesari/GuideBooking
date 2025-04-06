@@ -10,13 +10,25 @@ import model.Calendario;
 import model.CorpoDati;
 import service.DataManager;
 
+import java.io.Serializable;
+
 public class CalendarioController {
     private final Calendario calendario;
     private final List<LocalDate> datePrecluse;
+    private static final String CALENDARIO_FILE = "src/data/calendario.dat";
 
     public CalendarioController() {
-        this.calendario = new Calendario();
+        Calendario loadedCalendario = DataManager.caricaDati(CALENDARIO_FILE);
+        this.calendario = (Calendario) (loadedCalendario != null ? loadedCalendario : new Calendario());
         this.datePrecluse = DataManager.caricaDatePrecluse(Costants.file_date);
+    }
+
+    private Calendario caricaCalendario() {
+        return (Calendario) DataManager.caricaDati(CALENDARIO_FILE);
+    }
+
+    private void salvaCalendario() {
+        DataManager.salvaDati(calendario, CALENDARIO_FILE);
     }
 
     public String getDataCorrente() {
@@ -25,10 +37,12 @@ public class CalendarioController {
 
     public void avantiUnGiorno() {
         calendario.avantiUnGiorno();
+        salvaCalendario();
     }
 
     public void indietroUnGiorno() {
         calendario.indietroUnGiorno();
+        salvaCalendario();
     }
 
     public String getNomeMese() {
@@ -41,22 +55,17 @@ public class CalendarioController {
 
 
     // questo metodo restituisce il PRIMO mese UTILE su cui configuratore puo fare modifiche
-    public Month getNomeMesePrimoCheSiPuoModificare()
-    {
-        if (calendario.getData().getDayOfMonth()>15)   //  se dopo il 15
-        {
-            if (!isGiornoCancellato(calendario.getData()))  //   e se data non festiva
-            {
-                CorpoDati corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
-                if(corpoDati.getIsAlreadyStart() == false)
-                {
-                    corpoDati.setIsAlreadyStart(true);
-                    DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
-                }
-                return calendario.getData().getMonth().plus(1);  // mese successivo
+    public LocalDate getNomeMesePrimoCheSiPuoModificare() {
+        LocalDate data = calendario.getData();
+        if (data.getDayOfMonth() > 15 && !isGiornoCancellato(data)) {
+            CorpoDati corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
+            if (!corpoDati.getIsAlreadyStart()) {
+                corpoDati.setIsAlreadyStart(true);
+                DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
             }
+            data = data.plusMonths(1);
         }
-        return calendario.getData().getMonth(); // te stesso
+        return data.withDayOfMonth(1);
     }
 
     public boolean isButtonLocked() {
@@ -78,11 +87,11 @@ public class CalendarioController {
     }
 
     // Metodo per ottenere le date precluse di un mese e anno specifici
-    public List<LocalDate> getDatePrecluse(int mese) {
+    public List<LocalDate> getDatePrecluse(LocalDate data) {
         List<LocalDate> dateFiltrate = new ArrayList<>();
-        for (LocalDate data : datePrecluse) {
-            if (data.getMonthValue() == mese ) {
-                dateFiltrate.add(data);
+        for (LocalDate dataPreclusa : datePrecluse) {
+            if (dataPreclusa.getMonthValue() == data.getMonthValue() && dataPreclusa.getYear() == data.getYear()) {
+                dateFiltrate.add(dataPreclusa);
             }
         }
         return dateFiltrate;

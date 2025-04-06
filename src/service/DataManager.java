@@ -1,5 +1,6 @@
 package service;
 
+import model.Calendario;
 import model.CorpoDati;
 
 import java.io.*;
@@ -24,14 +25,6 @@ public class DataManager {
         }
     }
 
-    public static <T extends Serializable> void salvaDati(T dati, String filename) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(dati);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Carica una lista di oggetti da un file.
      * Se il file non esiste, lo crea e restituisce una lista vuota.
@@ -41,7 +34,7 @@ public class DataManager {
      * @return Lista di oggetti caricati oppure una lista vuota in caso di errore.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Serializable> List<T> caricaDati(String filename) {
+    private static <T extends Serializable> List<T> caricaDatiLista(String filename) {
         File file = new File(filename);
 
         if (!file.exists()) {
@@ -54,6 +47,29 @@ public class DataManager {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return new ArrayList<>();
+        }
+    }
+
+    public static void salvaDati(Calendario dati, String filename) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+            oos.writeObject(dati);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static <T extends Serializable> T caricaDati(String filename) {
+        File file = new File(filename);
+
+        if (!file.exists()) {
+            return null;
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            return (T) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

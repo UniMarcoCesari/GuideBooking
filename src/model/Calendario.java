@@ -3,8 +3,9 @@ package model;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
+import java.io.Serializable;
 
-public class Calendario {
+public class Calendario implements Serializable {
     private LocalDate data;
     private Set<LocalDate> datePrecluse; // Date in cui non si possono fare visite
 

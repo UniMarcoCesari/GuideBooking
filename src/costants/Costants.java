@@ -87,6 +87,7 @@ public class Costants
     public static JButton createSimpleButton(String text) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(200, 40));
+        button.setBackground(BACKGROUND_COLOR);
         return button;
     }
 

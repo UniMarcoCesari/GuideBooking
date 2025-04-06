@@ -9,10 +9,12 @@ public class CorpoDati implements Serializable
     private String maxPersone;
     private Boolean isAlreadyStart = false;
 
-    public CorpoDati(String ambito, String maxPersone)
-    {
+    public CorpoDati(String ambito, String maxPersone) {
         this.ambito = ambito;
         this.maxPersone = maxPersone;
+    }
+
+    public CorpoDati() {
     }
 
     public String getAmbito() {

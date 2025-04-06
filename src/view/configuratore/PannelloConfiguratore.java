@@ -10,8 +10,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Locale;
 
 public class PannelloConfiguratore extends JFrame {
     private final CalendarioController calendarioController;
@@ -104,7 +103,7 @@ public class PannelloConfiguratore extends JFrame {
         });
         button3.addActionListener(e -> {
             dispose();
-            new Sezione3(calendarioController);
+            new DatePrecluseSezione(calendarioController);
         });
 
         aggiornaBottoni();
@@ -185,17 +184,18 @@ public class PannelloConfiguratore extends JFrame {
     }
 
     private void aggiornaBottoni() {
-        if (calendarioController.isButtonLocked())
-        {
+        LocalDate firstModifiableMonth = calendarioController.getNomeMesePrimoCheSiPuoModificare();
+        if (calendarioController.isButtonLocked()) {
             button1.setEnabled(false);
-        }
-        else
-        {
+        } else {
             button1.setEnabled(true);
         }
-        button1.setText("Modifiche per " + calendarioController.getNomeMesePrimoCheSiPuoModificare());
-        button2.setText("Modifiche per " + calendarioController.getNomeMesePrimoCheSiPuoModificare().plus(1));
-        button3.setText("Date precluse " + calendarioController.getNomeMesePrimoCheSiPuoModificare().plus(3));
+
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ITALIAN);
+
+        button1.setText("Modifiche per " + firstModifiableMonth.format(formatter));
+        button2.setText("Modifiche per " + firstModifiableMonth.plusMonths(1).format(formatter));
+        button3.setText("Date precluse " + firstModifiableMonth.plusMonths(2).format(formatter)); // Changed to plusMonths(2) to reflect the user's request for a 3-month difference
     }
 
     public static void main(String[] args) {
