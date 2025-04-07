@@ -27,12 +27,14 @@ public class Costants
 
     // Header
     private static final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 20);
-    public static final Color HEADER_BACK = new Color(100, 100, 200);
+    public static final Color HEADER_BACK = new Color(100, 100, 200); // Default/Configuratore header
+    public static final Color VOLONTARIO_HEADER_BACK = new Color(204, 102, 0); // Dark Orange for Volontario
 
 
     // Ruoli
     public static final String ruolo_PRE_configuratore =  "PRE-configuratore";
     public static final String ruolo_configuratore =  "configuratore";
+    public static final String ruolo_volontario = "volontario";
 
     // Colori principali
     public static final Color ACCENT_COLOR = new Color(55, 65, 81); // Grigio scuro testo

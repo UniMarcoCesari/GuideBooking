@@ -1,6 +1,5 @@
 
-import costants.Costants;
-import costants.Credenziale;
+import costants.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -12,11 +11,13 @@ public class CredenzialeWriter {
         // Creiamo una credenziale di esempio
         Credenziale admin = new Credenziale("pre", "a", Costants.ruolo_PRE_configuratore);
         Credenziale gia = new Credenziale("a", "a", Costants.ruolo_configuratore);
+        Credenziale vol = new Credenziale("vol", "v", Costants.ruolo_volontario);
 
 
         List<Credenziale> credenzialeList = new ArrayList<>();
         credenzialeList.add(admin);
         credenzialeList.add(gia);
+        credenzialeList.add(vol);
 
         // Scriviamo l'oggetto nel file
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_credenziali))) {

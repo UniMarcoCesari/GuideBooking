@@ -28,6 +28,8 @@ public class AuthController
                    return 1;
                if (Objects.equals(credenziale.getRuolo(), Costants.ruolo_configuratore))
                    return 0;
+               if (Objects.equals(credenziale.getRuolo(), Costants.ruolo_volontario))
+                   return 2;
            }
         }
         return -1;
@@ -39,6 +41,19 @@ public class AuthController
             if (credenziale.getUsername().equals(username)) {
                 credenziale.setPassword(password);
                 credenziale.setRuolo(Costants.ruolo_configuratore);  // ruolo nuovo
+            }
+        }
+
+        DataManager.salvaDati(credenzialeList, file_credenziali);
+
+    }
+
+    public static void setNewPassVolontario(String username, String password) {
+        List<Credenziale> credenzialeList = DataManager.caricaDati(file_credenziali);
+        for (Credenziale credenziale : credenzialeList) {
+            if (credenziale.getUsername().equals(username)) {
+                credenziale.setPassword(password);
+                credenziale.setRuolo(Costants.ruolo_volontario);  // ruolo nuovo
             }
         }
 

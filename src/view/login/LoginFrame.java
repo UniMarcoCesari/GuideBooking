@@ -4,6 +4,7 @@ import controller.AuthController;
 import costants.Costants;
 import model.CorpoDati;
 import service.DataManager;
+import view.PannelloVolontario;
 import view.configuratore.PannelloConfiguratore;
 import view.corpoDati.CorpoDatiFase1;
 import view.corpoDati.CorpoDatiFase2;
@@ -136,6 +137,9 @@ public class LoginFrame extends JFrame {
         } else if (verifica == 1) { //PRE-configuratore
             dispose();
             new NewPasswordConf(username).setVisible(true);
+        } else if (verifica == 2) { //volontario
+            dispose();
+            new PannelloVolontario(username).setVisible(true); // Pass username
         }
     }
 
