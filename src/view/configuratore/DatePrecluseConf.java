@@ -12,7 +12,7 @@ import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 
-public class Sezione3 extends JFrame {
+public class DatePrecluseConf extends JFrame {
     private static final Locale ITALIAN_LOCALE = Locale.ITALIAN;
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy", ITALIAN_LOCALE);
@@ -22,7 +22,7 @@ public class Sezione3 extends JFrame {
     private JTextField dateInputField;
     private final CalendarioController calendarioController;
 
-    public Sezione3(CalendarioController calendarioController) {
+    public DatePrecluseConf(CalendarioController calendarioController) {
         this.calendarioController = calendarioController;
         this.selectedMonth = calculateSelectedMonth();
 

@@ -7,15 +7,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import model.Volontario;
 
 public class VolontariController {
     private ArrayList<Volontario> listaVolontari;
-    private Map<LocalDate, List<Volontario>> disponibilitaVolontari;
+    private Map<LocalDate, Map<String, Boolean>> disponibilitaVolontari;
 
     public VolontariController() {
         listaVolontari = caricaDati();
         disponibilitaVolontari = new HashMap<>();
+    }
+
+    public boolean isDisponibile(Volontario volontario, LocalDate data) {
+        if (!disponibilitaVolontari.containsKey(data)) return false;
+        return disponibilitaVolontari.get(data).getOrDefault(volontario.getNome(), false);
     }
 
     public ArrayList<Volontario> getListaVolontari() {
@@ -23,69 +30,67 @@ public class VolontariController {
         return listaVolontari;
     }
 
-    public Map<LocalDate, List<Volontario>> getDisponibilitaVolontari() {
+    public Map<LocalDate, Map<String, Boolean>> getDisponibilitaVolontari() {
         return disponibilitaVolontari;
     }
 
-    public void setDisponibilitaVolontari(Map<LocalDate, List<Volontario>> disponibilitaVolontari) {
+    public void setDisponibilitaVolontari(Map<LocalDate, Map<String, Boolean>> disponibilitaVolontari) {
         this.disponibilitaVolontari = disponibilitaVolontari;
     }
 
     public boolean aggiungiVolontario(Volontario volontario) {
-
-        // se esiste volontatio con stesso nome
         for (int i = 0; i < listaVolontari.size(); i++) {
             if (listaVolontari.get(i).getNome().equals(volontario.getNome())) {
                 return false;
             }
         }
-
         listaVolontari.add(volontario);
-        salvaDati();
+        salvaVolontari();
         return true;
     }
 
     public void rimuoviVolonatario(Volontario volontario) {
         listaVolontari.remove(volontario);
-        salvaDati();
+        salvaVolontari();
     }
 
     public void aggiornaDisponibilita(Volontario volontario, LocalDate data, boolean disponibile) {
-        // Se la data non è presente nella mappa, la inizializziamo con una lista vuota
-        disponibilitaVolontari.putIfAbsent(data, new ArrayList<>());
-    
-        List<Volontario> volontariDisponibili = disponibilitaVolontari.get(data);
-    
-        if (disponibile) {
-            // Aggiungiamo il volontario solo se non è già presente nella lista
-            if (!volontariDisponibili.contains(volontario)) {
-                volontariDisponibili.add(volontario);
-            }
-        } else {
-            // Rimuoviamo il volontario dalla lista di disponibilità per quella data
-            volontariDisponibili.remove(volontario);
-            
-            // Se la lista diventa vuota, possiamo rimuovere la chiave dalla mappa per ottimizzare la memoria
-            if (volontariDisponibili.isEmpty()) {
-                disponibilitaVolontari.remove(data);
-            }
-        }
-    }    
+        disponibilitaVolontari.putIfAbsent(data, new HashMap<>());
+        disponibilitaVolontari.get(data).put(volontario.getNome(), disponibile);
+    }
 
-    public void salvaDati() {
-        System.out.println("salvati i seguenti tipi di visita");
-        for (int i = 0; i < listaVolontari.size(); i++) {
-            System.out.println(listaVolontari.get(i).getNome());
+    public void salvaDisponibilita() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_disponibilita_volontari))) {
+            oos.writeObject(disponibilitaVolontari);
+            System.out.println("salvata disponibilita");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    public void caricaDisponibilita() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Costants.file_disponibilita_volontari))) {
+            disponibilitaVolontari = (Map<LocalDate, Map<String, Boolean>>) ois.readObject();
+            System.out.println("Disponibilita caricata");
+        } catch (IOException | ClassNotFoundException e) {
+            disponibilitaVolontari = new HashMap<>();
+            System.out.println("Disponibilita vuota inizializata");
+        }
+    }
+
+    public boolean isDisponibile(LocalDate data, String username) {
+        if (disponibilitaVolontari == null || disponibilitaVolontari.isEmpty()) caricaDisponibilita();
+        return disponibilitaVolontari.containsKey(data) &&
+               disponibilitaVolontari.get(data).getOrDefault(username, false);
+    }
+
+    public void salvaVolontari() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_volontari))) {
             oos.writeObject(listaVolontari);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
-
 
     @SuppressWarnings("unchecked")
     private ArrayList<Volontario> caricaDati() {

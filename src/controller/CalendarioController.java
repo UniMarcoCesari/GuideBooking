@@ -35,6 +35,10 @@ public class CalendarioController {
         return calendario.getDataString();
     }
 
+    public LocalDate getDatacDateCorrenteLocalDate() {
+        return calendario.getData();
+    }
+
     public void avantiUnGiorno() {
         calendario.avantiUnGiorno();
         salvaCalendario();

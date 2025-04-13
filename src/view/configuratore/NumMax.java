@@ -5,29 +5,23 @@ import model.CorpoDati;
 import service.DataManager;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class Sezione7 extends JFrame {
-    private final CorpoDati corpoDati;
+public class NumMax extends JFrame {
+    private CorpoDati corpoDati; // Rimosso il modificatore 'final'
 
-    public Sezione7() {
+    public NumMax() {
         initializeFrame();
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
-        // Se corpoDati è null, crea una nuova istanza
-        CorpoDati corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
-        if (corpoDati == null) {
-            corpoDati = new CorpoDati();
-            corpoDati.setMaxPersone("0"); // Imposta un valore di default
-        }
-        this.corpoDati = corpoDati;
+        // Inizializza corpoDati in modo sicuro
+        initializeCorpoDati();
 
         // Header
         JPanel headerPanel = Costants.createHeaderPanel("Lista volontari");
         JButton indietro = Costants.createSimpleButton("Indietro");
-        indietro.addActionListener(e -> {
+        indietro.addActionListener(_ -> {
             dispose();
             new PannelloConfiguratore().setVisible(true);
         });
@@ -55,10 +49,9 @@ public class Sezione7 extends JFrame {
         JPanel savePanel = new JPanel();
         JButton salvaBtn = new JButton("Salva");
         salvaBtn.setFont(new Font("Arial", Font.BOLD, 14));
-        CorpoDati finalCorpoDati = corpoDati;
-        salvaBtn.addActionListener(e -> {
-            finalCorpoDati.setMaxPersone(textField.getText());
-            DataManager.salvaCorpoDati(finalCorpoDati,Costants.file_corpo);
+        salvaBtn.addActionListener(_ -> {
+            corpoDati.setMaxPersone(textField.getText());
+            DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
             JOptionPane.showMessageDialog(this, "Dati salvati con successo!");
         });
 
@@ -75,6 +68,28 @@ public class Sezione7 extends JFrame {
 
         add(mainPanel);
         setVisible(true);
+    }
+
+    private void initializeCorpoDati() {
+        try {
+            corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
+            if (corpoDati == null) {
+                corpoDati = new CorpoDati();
+                corpoDati.setMaxPersone("0"); // Imposta un valore di default
+                corpoDati.setAmbito("Default"); // Imposta un valore di default per ambito
+                // Salva il nuovo corpoDati per evitare problemi futuri
+                DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+                System.out.println("[INFO] Creato nuovo CorpoDati con valori di default");
+            }
+        } catch (Exception e) {
+            // In caso di errore, crea un nuovo CorpoDati e continua
+            System.err.println("[ERRORE] Impossibile caricare CorpoDati: " + e.getMessage());
+            corpoDati = new CorpoDati();
+            corpoDati.setMaxPersone("0");
+            corpoDati.setAmbito("Default");
+            // Salva il nuovo corpoDati
+            DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+        }
     }
 
     private void initializeFrame() {

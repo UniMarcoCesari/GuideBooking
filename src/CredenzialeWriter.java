@@ -11,7 +11,8 @@ public class CredenzialeWriter {
         // Creiamo una credenziale di esempio
         Credenziale admin = new Credenziale("pre", "a", Costants.ruolo_PRE_configuratore);
         Credenziale gia = new Credenziale("a", "a", Costants.ruolo_configuratore);
-        Credenziale vol = new Credenziale("vol", "v", Costants.ruolo_volontario);
+        Credenziale vol = new Credenziale("marco", "m", Costants.ruolo_volontario);
+        Credenziale testvol = new Credenziale("testvolontario", "m", Costants.ruolo_volontario);
 
 
         List<Credenziale> credenzialeList = new ArrayList<>();

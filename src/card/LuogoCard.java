@@ -3,7 +3,6 @@ package card;
 import model.Luogo;
 import model.TipoVisita;
 import controller.LuoghiController;
-import view.corpoDati.CorpoDatiFase2;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -104,29 +103,6 @@ public class LuogoCard extends JPanel {
 
         return panel;
     }
-
-    private JPanel createButtonPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Layout verticale
-        panel.setOpaque(false);
-
-        JButton modificaButton = createIconButton("Modifica");
-        JButton eliminaButton = createIconButton("Elimina");
-
-        modificaButton.addActionListener(e -> modificaLuogo());
-        eliminaButton.addActionListener(e -> eliminaLuogo());
-
-        // Aggiungere spazio tra i pulsanti
-        modificaButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        eliminaButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        panel.add(modificaButton);
-        panel.add(Box.createVerticalStrut(10)); // Spazio tra i pulsanti
-        panel.add(eliminaButton);
-
-        return panel;
-    }
-
 
     private JButton createIconButton(String text) {
         JButton button = new JButton(text);

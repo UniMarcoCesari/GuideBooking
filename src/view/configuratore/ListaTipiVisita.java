@@ -12,20 +12,22 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Sezione5 extends JFrame {
+public class ListaTipiVisita extends JFrame {
     private JTextField textArea;
     private JPanel listPanel;
     private LuoghiController luoghiController;
 
-    public Sezione5(LuoghiController luoghiController) {
+    public ListaTipiVisita(LuoghiController luoghiController) {
         this.luoghiController = luoghiController;
         initializeFrame();
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         // Header
-        JPanel headerPanel = Costants.createHeaderPanel("Lista luoghi");
+        JPanel headerPanel = Costants.createHeaderPanel("Lista tipi visita");
         JButton indietro = Costants.createSimpleButton("Indietro");
         indietro.addActionListener(e -> {
             dispose();
@@ -54,11 +56,21 @@ public class Sezione5 extends JFrame {
         listPanel.removeAll();  // Clear the current list of places
         List<Luogo> luoghi = luoghiController.getLuoghi();  // Fetch the list of places
 
+        // Usa una mappa per tenere traccia dei tipi di visita già aggiunti
+        // La chiave è il titolo del tipo di visita, il valore è il tipo di visita stesso
+        Map<String, TipoVisita> tipiVisitaUnici = new HashMap<>();
+
+        // Raccogli tutti i tipi di visita unici
         for (Luogo luogo : luoghi) {
-            for (TipoVisita tipoVisita :luogo.getTipiVisita())
-            {
-                addTipoVisitaCard(tipoVisita);
+            for (TipoVisita tipoVisita : luogo.getTipiVisita()) {
+                // Aggiungi solo se non è già presente nella mappa
+                tipiVisitaUnici.putIfAbsent(tipoVisita.getTitolo(), tipoVisita);
             }
+        }
+
+        // Aggiungi i tipi di visita unici al pannello
+        for (TipoVisita tipoVisita : tipiVisitaUnici.values()) {
+            addTipoVisitaCard(tipoVisita);
         }
 
         listPanel.revalidate();
@@ -82,5 +94,4 @@ public class Sezione5 extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
 }

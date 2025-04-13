@@ -124,15 +124,15 @@ public class PannelloConfiguratore extends JFrame {
 
         button4.addActionListener(e -> {
             dispose();
-            new Sezione4(luoghiController);
+            new ListaLuoghi(luoghiController);
         });
         button5.addActionListener(e -> {
             dispose();
-            new Sezione5(luoghiController);
+            new ListaTipiVisita(luoghiController);
         });
         button6.addActionListener(e -> {
             dispose();
-            new Sezione6(luoghiController);
+            new ListaVolonati(luoghiController);
         });
 
         secondBottomPanel.add(button4);
@@ -151,7 +151,7 @@ public class PannelloConfiguratore extends JFrame {
 
         button7.addActionListener(e -> {
             dispose();
-            new Sezione7();
+            new NumMax();
         });
         button8.addActionListener(e -> {
             dispose();
