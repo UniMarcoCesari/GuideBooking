@@ -6,9 +6,7 @@ import costants.Costants;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 
@@ -66,7 +64,7 @@ public class DatePrecluseSezione extends JFrame {
         JPanel headerPanel = Costants.createHeaderPanel("Inserisci date per il mese di " + monthName);
 
         JButton backButton = Costants.createSimpleButton("Indietro");
-        backButton.addActionListener(e -> navigateBack());
+        backButton.addActionListener(_ -> navigateBack());
         headerPanel.add(backButton, BorderLayout.WEST);
 
         return headerPanel;
@@ -84,7 +82,7 @@ public class DatePrecluseSezione extends JFrame {
         JLabel dateLabel = new JLabel("Inserisci data (dd/MM/yyyy):");
         dateInputField = new JTextField(10);
         JButton addButton = Costants.createSimpleButton("Aggiungi");
-        addButton.addActionListener(e -> addDate());
+        addButton.addActionListener(_ -> addDate());
 
         inputPanel.add(dateLabel);
         inputPanel.add(dateInputField);
@@ -112,11 +110,12 @@ public class DatePrecluseSezione extends JFrame {
     }
 
     private void validateAndAddDate(LocalDate inputDate) {
-        // Verifica se la data è nel mese selezionato
-        if (inputDate.getMonth() != selectedMonth.getMonth()) {
+        // Verifica se la data è nel mese selezionato e nell anno selezionato
+        if(inputDate.getMonth() != selectedMonth.getMonth() || inputDate.getYear() != selectedMonth.getYear()) {
             showMonthMismatchError();
             return;
         }
+        
 
         // Controlla se la data è già presente nella lista
         String formattedDate = inputDate.format(DATE_FORMATTER);

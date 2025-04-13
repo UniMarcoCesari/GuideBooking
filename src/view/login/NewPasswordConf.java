@@ -1,7 +1,6 @@
 package view.login;
 
 import controller.AuthController;
-import view.corpoDati.CorpoDatiFase1;
 
 import javax.swing.*;
 import java.awt.*;

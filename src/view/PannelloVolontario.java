@@ -10,13 +10,11 @@ import view.volontario.VisualizzaTipiVisitaVolontarioFrame; // Import new frame
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.time.LocalDate;
-import java.util.Locale;
 
 public class PannelloVolontario extends JFrame {
     private final CalendarioController calendarioController;
     private JTextField textArea;
-    private JButton button1, button2, button3;
+    private JButton button1, button2;
     private CorpoDati corpoDati;
     private String username; // Add username field
 
@@ -81,10 +79,10 @@ public class PannelloVolontario extends JFrame {
         textArea.setEditable(false);
 
         JButton indietroBtn = new JButton("<");
-        indietroBtn.addActionListener(e -> aggiornaData(-1));
+        indietroBtn.addActionListener(_ -> aggiornaData(-1));
 
         JButton avantiBtn = new JButton(">");
-        avantiBtn.addActionListener(e -> aggiornaData(1));
+        avantiBtn.addActionListener(_ -> aggiornaData(1));
 
         topPanel.add(indietroBtn, BorderLayout.WEST);
         topPanel.add(textArea, BorderLayout.CENTER);
@@ -100,11 +98,11 @@ public class PannelloVolontario extends JFrame {
         button2 = Costants.createSimpleButton("Gestisci Disponibilità"); // Changed text
         // button3 = Costants.createSimpleButton("Altro"); // Removed button3
 
-        button1.addActionListener(e -> {
+        button1.addActionListener(_ -> {
             dispose();
             new VisualizzaTipiVisitaVolontarioFrame(this.username).setVisible(true); // Open frame
         });
-        button2.addActionListener(e -> {
+        button2.addActionListener(_ -> {
             dispose();
             new GestisciDisponibilitaFrame(this.username).setVisible(true); // Open frame
         });

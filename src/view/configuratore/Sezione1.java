@@ -2,18 +2,15 @@ package view.configuratore;
 
 import controller.CalendarioController;
 import costants.Costants;
-import model.Calendario;
 
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import javax.swing.*;
 
 public class Sezione1 extends JFrame {
     private final LocalDate mese;
-    private JTextField textArea;
 
     public Sezione1(CalendarioController calendarioController) {
         initializeFrame();

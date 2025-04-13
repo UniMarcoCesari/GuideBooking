@@ -37,7 +37,7 @@ public class VisualizzaTipiVisitaVolontarioFrame extends JFrame {
         
         // Pulsante indietro
         JButton indietroButton = Costants.createSimpleButton("Indietro");
-        indietroButton.addActionListener(e -> {
+        indietroButton.addActionListener(_ -> {
             dispose();
             new PannelloVolontario(username).setVisible(true);
         });

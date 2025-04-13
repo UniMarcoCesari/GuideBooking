@@ -1,7 +1,6 @@
 package controller;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
 
@@ -9,8 +8,6 @@ import costants.Costants;
 import model.Calendario;
 import model.CorpoDati;
 import service.DataManager;
-
-import java.io.Serializable;
 
 public class CalendarioController {
     private final Calendario calendario;
@@ -23,9 +20,6 @@ public class CalendarioController {
         this.datePrecluse = DataManager.caricaDatePrecluse(Costants.file_date);
     }
 
-    private Calendario caricaCalendario() {
-        return (Calendario) DataManager.caricaDati(CALENDARIO_FILE);
-    }
 
     private void salvaCalendario() {
         DataManager.salvaDati(calendario, CALENDARIO_FILE);

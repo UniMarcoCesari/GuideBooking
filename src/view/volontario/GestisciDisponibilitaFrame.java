@@ -12,15 +12,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicToggleButtonUI;
 
 import java.awt.*;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class GestisciDisponibilitaFrame extends JFrame {
 
@@ -99,7 +96,7 @@ public class GestisciDisponibilitaFrame extends JFrame {
         
         // Pulsante indietro
         JButton indietroButton = Costants.createSimpleButton("Indietro");
-        indietroButton.addActionListener(e -> {
+        indietroButton.addActionListener(_ -> {
             dispose();
             new PannelloVolontario(username).setVisible(true);
         });
@@ -157,7 +154,7 @@ public class GestisciDisponibilitaFrame extends JFrame {
         actionPanel.setBackground(Costants.BACKGROUND_COLOR);
         
         JButton salvaButton = Costants.createSimpleButton("Salva Disponibilità");
-        salvaButton.addActionListener(e -> salvaDisponibilita());
+        salvaButton.addActionListener(_ -> salvaDisponibilita());
         
         actionPanel.add(salvaButton);
         

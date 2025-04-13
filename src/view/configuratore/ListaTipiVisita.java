@@ -1,8 +1,6 @@
 package view.configuratore;
 
-import card.LuogoCard;
 import card.TipoVisitaCard;
-import controller.CalendarioController;
 import controller.LuoghiController;
 import costants.Costants;
 import model.Luogo;
@@ -16,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ListaTipiVisita extends JFrame {
-    private JTextField textArea;
     private JPanel listPanel;
     private LuoghiController luoghiController;
 
@@ -29,7 +26,7 @@ public class ListaTipiVisita extends JFrame {
         // Header
         JPanel headerPanel = Costants.createHeaderPanel("Lista tipi visita");
         JButton indietro = Costants.createSimpleButton("Indietro");
-        indietro.addActionListener(e -> {
+        indietro.addActionListener(_ -> {
             dispose();
             new PannelloConfiguratore().setVisible(true);
         });

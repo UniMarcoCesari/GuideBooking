@@ -21,7 +21,6 @@ public class CorpoDatiFase2 extends JFrame {
     private static final int FRAME_HEIGHT = 800;
     private static final Color BACKGROUND_COLOR = new Color(245, 248, 250);
     private static final Color ACCENT_COLOR = new Color(49, 130, 189);
-    private static final Color TEXT_COLOR = new Color(255, 255, 255);
     private static final Color BORDER_COLOR = new Color(220, 220, 220);
 
 
@@ -109,7 +108,7 @@ public class CorpoDatiFase2 extends JFrame {
 
         // bottone
         JButton salvaButton = Costants.createSimpleButton("Avvia applicazione");
-        salvaButton.addActionListener(e -> {salvaEMandaPannello();});
+        salvaButton.addActionListener(_ -> {salvaEMandaPannello();});
         footerPanel.add(salvaButton);
 
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
@@ -124,6 +123,7 @@ public class CorpoDatiFase2 extends JFrame {
     {
         //TODO:salva dati app 2
         DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+        DataManager.creaCredenzialiVolontari(luoghiController.getLuoghi());
         dispose();
         new PannelloConfiguratore().setVisible(true);
     }

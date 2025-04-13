@@ -67,9 +67,9 @@ public class VolontariFrame extends JFrame {
         // Footer con i pulsanti
         JPanel footerPanel = Costants.createFooterPanel("");
         JButton salvaButton = Costants.createSimpleButton("Salva Volontario");
-        salvaButton.addActionListener(e -> aggiungiVolontario());
+        salvaButton.addActionListener(_ -> aggiungiVolontario());
         JButton annullaButton = Costants.createSimpleButton("Annulla");
-        annullaButton.addActionListener(e -> chiudiEmandaIndietro());
+        annullaButton.addActionListener(_ -> chiudiEmandaIndietro());
 
         footerPanel.add(salvaButton, BorderLayout.CENTER);
         footerPanel.add(annullaButton, BorderLayout.EAST);

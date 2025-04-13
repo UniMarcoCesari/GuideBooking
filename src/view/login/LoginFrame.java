@@ -7,12 +7,9 @@ import service.DataManager;
 import view.PannelloVolontario;
 import view.configuratore.PannelloConfiguratore;
 import view.corpoDati.CorpoDatiFase1;
-import view.corpoDati.CorpoDatiFase2;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoginFrame extends JFrame {
     private final JTextField usernameField;
@@ -101,7 +98,7 @@ public class LoginFrame extends JFrame {
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.setMaximumSize(loginButton.getPreferredSize()); // Adatta la larghezza al testo
 
-        loginButton.addActionListener(e -> {
+        loginButton.addActionListener(_ -> {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
             authenticate(username, password);

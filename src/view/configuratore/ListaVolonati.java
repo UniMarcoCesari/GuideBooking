@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ListaVolonati extends JFrame {
-    private JTextField textArea;
     private JPanel listPanel;
     private LuoghiController luoghiController;
 
