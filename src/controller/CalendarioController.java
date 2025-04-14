@@ -103,7 +103,11 @@ public class CalendarioController {
 
     // Metodo per rimuovere una data dalla lista delle date precluse
     public void rimuoviDataPreclusa(LocalDate data) {
-        datePrecluse.remove(data);
+        boolean removed = datePrecluse.remove(data);
+        if (removed) { // Only save if a date was actually removed
+            DataManager.salvaDatePrecluse(datePrecluse, Costants.file_date);
+            System.out.println("Saved precluded dates after removing: " + data); // Optional log
+        }
     }
 
     // Metodo per controllare se una data è preclusa

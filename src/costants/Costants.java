@@ -11,12 +11,6 @@ import javax.swing.border.LineBorder;
 public class Costants
 {
 
-    //File salvataggio dati
-//    public static final String  file_luoghi = "GuideBooking/src/data/luoghi.dat";
-//    public static final String  file_credenziali = "GuideBooking/src/data/credenziali.dat";
-//    public static final String  file_tipi_visita = "GuideBooking/src/data/tipiVisita.dat";
-//    public static final String  file_volontari = "GuideBooking/src/data/volontari.dat";
-
       public static final String  file_luoghi = "src/data/luoghi.dat";
       public static final String  file_credenziali = "src/data/credenziali.dat";
       public static final String  file_tipi_visita = "src/data/tipiVisita.dat";
