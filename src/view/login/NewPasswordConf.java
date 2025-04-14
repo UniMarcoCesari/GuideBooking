@@ -14,11 +14,23 @@ public class NewPasswordConf extends JFrame {
     private final JButton loginButton;
 
     private final String username;
+    private final String ruolo;
 
-    public NewPasswordConf(String username) {
+    public NewPasswordConf(String username, String ruolo) {
         this.username = username;
+        this.ruolo = ruolo;
 
-        setTitle("Inizializzazione Configuratore");
+        String titleText;
+        String labelText;
+        if (ruolo.equals("configuratore")) {
+            titleText = "Inizializzazione Configuratore";
+            labelText = "Primo Accesso Configuratore";
+        } else {
+            titleText = "Inizializzazione Volontario";
+            labelText = "Primo Accesso Volontario";
+        }
+
+        setTitle(titleText);
         setSize(700, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -30,7 +42,7 @@ public class NewPasswordConf extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titleLabel = new JLabel("Primo Accesso Configuratore");
+        JLabel titleLabel = new JLabel(labelText);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -96,7 +108,11 @@ public class NewPasswordConf extends JFrame {
         }
 
         JOptionPane.showMessageDialog(this, "✅ Credenziali salvate con successo!");
-        AuthController.setNewPassConfiguratore(username, password);
+        if (ruolo.equals("configuratore")) {
+            AuthController.setNewPassConfiguratore(username, password);
+        } else {
+            AuthController.setNewPassVolontario(username, password);
+        }
         dispose();  // Chiude la finestra
         new LoginFrame().setVisible(true);
     }

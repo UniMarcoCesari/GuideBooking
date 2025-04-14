@@ -133,10 +133,13 @@ public class LoginFrame extends JFrame {
 
         } else if (verifica == 1) { //PRE-configuratore
             dispose();
-            new NewPasswordConf(username).setVisible(true);
+            new NewPasswordConf(username, "configuratore").setVisible(true);
         } else if (verifica == 2) { //volontario
             dispose();
             new PannelloVolontario(username).setVisible(true); // Pass username
+        } else if (verifica == 3) { //preVolontario
+            dispose();
+            new NewPasswordConf(username, "volontario").setVisible(true);
         }
     }
 

@@ -30,6 +30,8 @@ public class AuthController
                    return 0;
                if (Objects.equals(credenziale.getRuolo(), Costants.ruolo_volontario))
                    return 2;
+               if (Objects.equals(credenziale.getRuolo(), Costants.ruolo_pre_volontario))
+                   return 3;
            }
         }
         return -1;

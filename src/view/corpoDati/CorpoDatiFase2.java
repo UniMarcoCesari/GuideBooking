@@ -123,7 +123,6 @@ public class CorpoDatiFase2 extends JFrame {
     {
         //TODO:salva dati app 2
         DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
-        DataManager.creaCredenzialiVolontari(luoghiController.getLuoghi());
         dispose();
         new PannelloConfiguratore().setVisible(true);
     }

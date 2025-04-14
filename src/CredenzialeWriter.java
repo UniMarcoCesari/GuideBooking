@@ -14,15 +14,23 @@ public class CredenzialeWriter {
         // Creiamo una credenziale di esempio
         Credenziale admin = new Credenziale("pre", "a", Costants.ruolo_PRE_configuratore);
         Credenziale gia = new Credenziale("a", "a", Costants.ruolo_configuratore);
+        Credenziale vol1 = new Credenziale("vol1", "v", Costants.ruolo_volontario);
+        Credenziale preVol = new Credenziale("preVolontario", "pv", Costants.ruolo_pre_volontario);
 
         List<Credenziale> credenzialeList = new ArrayList<>();
         credenzialeList.add(admin);
         credenzialeList.add(gia);
+        credenzialeList.add(vol1);
+        credenzialeList.add(preVol);
 
         // Scriviamo l'oggetto nel file
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_credenziali))) {
             oos.writeObject(credenzialeList);
             System.out.println("✅ File credenziali.dat creato con successo!");
+            System.out.println("Credenziali salvate:");
+            for (Credenziale c : credenzialeList) {
+                System.out.println(c.getUsername() + " - " + c.getPassword() + " - " + c.getRuolo());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
