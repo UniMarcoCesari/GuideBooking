@@ -5,6 +5,7 @@ import controller.LuoghiController;
 import costants.Costants;
 import model.CorpoDati;
 import service.DataManager;
+import view.configuratore.ListaLuoghi;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -124,7 +125,7 @@ public class PannelloConfiguratore extends JFrame {
 
         button4.addActionListener(e -> {
             dispose();
-            new ListaLuoghi(luoghiController);
+            new ListaLuoghi(corpoDati);
         });
         button5.addActionListener(e -> {
             dispose();

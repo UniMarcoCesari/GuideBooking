@@ -1,188 +1,113 @@
 package card;
 
+import controller.LuoghiController;
 import model.Luogo;
 import model.TipoVisita;
-import controller.LuoghiController;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LuogoCard extends JPanel {
-    private static final int CARD_WIDTH = 400;
-    private static final int CARD_HEIGHT = 120;
-    private static final Color BORDER_COLOR = new Color(200, 200, 200);
-    private static final Color ACCENT_COLOR = new Color(49, 130, 189);
-    private static final Color DARK_TEXT = new Color(50, 50, 50);
-    private static final Color LIGHT_TEXT = new Color(100, 100, 100);
-    private static final Color BACKGROUND_HOVER = new Color(235, 245, 255);
-    private static final Font TITLE_FONT = new Font("Segoe UI", Font.BOLD, 16);
-    private static final Font NORMAL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
-
     private final Luogo luogo;
-    private final LuoghiController controller;
-    private final JPanel contentPanel;
+    private final LuoghiController luoghiController;
+    private boolean isSelected = false;
+    private static final Color BORDER_COLOR = new Color(220, 220, 220);
+    private static final Color SELECTED_COLOR = new Color(49, 130, 189);
 
-    public LuogoCard(Luogo luogo, LuoghiController controller) {
+    public LuogoCard(Luogo luogo, LuoghiController luoghiController) {
         this.luogo = luogo;
-        this.controller = controller;
+        this.luoghiController = luoghiController;
+        setupUI();
+    }
 
-        // Configurazione panel
-        setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, CARD_HEIGHT));
-
-        setLayout(new BorderLayout());
+    private void setupUI() {
+        setLayout(new BorderLayout(10, 5));
         setBackground(Color.WHITE);
-        setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
-
-        // Contenitore principale
-        contentPanel = new JPanel(new BorderLayout(15, 0));
-        contentPanel.setOpaque(false);
-        contentPanel.setBorder(new EmptyBorder(12, 15, 12, 15));
-
-
-
-        // Area informazioni
-        JPanel infoPanel = createInfoPanel();
-
-        // Area pulsanti
-        //JPanel actionPanel = createButtonPanel();
-
-        // Assembly
-
-        contentPanel.add(infoPanel, BorderLayout.CENTER);
-        //contentPanel.add(actionPanel, BorderLayout.EAST);
-        add(contentPanel);
-
-        // Effetto hover
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                setBackground(BACKGROUND_HOVER);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                setBackground(Color.WHITE);
-            }
-        });
-    }
-
-    private JPanel createInfoPanel() {
-        JPanel panel = new JPanel(new GridLayout(4, 1, 0, 3));
-        panel.setOpaque(false);
-
-        // Nome
-        JLabel nomeLabel = new JLabel(luogo.getNome());
-        nomeLabel.setFont(TITLE_FONT);
-        nomeLabel.setForeground(DARK_TEXT);
-
+        setBorder(createDefaultBorder());
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+        
+        // Titolo e descrizione
+        JPanel infoPanel = new JPanel(new BorderLayout(5, 2));
+        infoPanel.setBackground(Color.WHITE);
+        
+        JLabel nameLabel = new JLabel(luogo.getNome());
+        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        
+        JTextArea descriptionArea = new JTextArea(luogo.getDescrizione());
+        descriptionArea.setEditable(false);
+        descriptionArea.setWrapStyleWord(true);
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setBackground(Color.WHITE);
+        descriptionArea.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        descriptionArea.setBorder(null);
+        
+        infoPanel.add(nameLabel, BorderLayout.NORTH);
+        infoPanel.add(descriptionArea, BorderLayout.CENTER);
+        
         // Posizione
-        JLabel posizioneLabel = new JLabel("Posizione: " + luogo.getPosizione());
-        posizioneLabel.setFont(NORMAL_FONT);
-        posizioneLabel.setForeground(LIGHT_TEXT);
-
-        // Descrizione
-        JLabel descrizioneLabel = new JLabel("Descrizione: " + (luogo.getDescrizione().isEmpty() ? "Nessuna descrizione" : luogo.getDescrizione()));
-        descrizioneLabel.setFont(NORMAL_FONT);
-        descrizioneLabel.setForeground(LIGHT_TEXT);
-
-        // Tipi di Visita
-        JLabel tipiVisitaLabel = new JLabel("Tipi di visita associati: " + formatTipiVisita(luogo.getTipiVisita()));
-        tipiVisitaLabel.setFont(NORMAL_FONT);
-        tipiVisitaLabel.setForeground(LIGHT_TEXT);
-
-        panel.add(nomeLabel);
-        panel.add(posizioneLabel);
-        panel.add(descrizioneLabel);
-        panel.add(tipiVisitaLabel);
-
-        return panel;
-    }
-
-    private JButton createIconButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        button.setForeground(Color.BLACK);
-        button.setBackground(ACCENT_COLOR);
-        button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        return button;
-    }
-
-    private void modificaLuogo() {
-        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
-        panel.setBorder(new EmptyBorder(15, 15, 5, 15));
-
-        JTextField nomeField = new JTextField(luogo.getNome(), 20);
-        JTextField posizioneField = new JTextField(luogo.getPosizione(), 20);
-        JTextField descrizioneField = new JTextField(luogo.getDescrizione(), 20);
-
-        panel.add(new JLabel("Nome:"));
-        panel.add(nomeField);
-        panel.add(new JLabel("Posizione:"));
-        panel.add(posizioneField);
-        panel.add(new JLabel("Descrizione:"));
-        panel.add(descrizioneField);
-
-        int result = JOptionPane.showConfirmDialog(this, panel,
-                "Modifica Luogo", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-
-        if (result == JOptionPane.OK_OPTION) {
-            String nuovoNome = nomeField.getText().trim();
-            String nuovaPosizione = posizioneField.getText().trim();
-            String nuovaDescrizione = descrizioneField.getText().trim();
-
-            if (isValidInput(nuovoNome, nuovaPosizione)) {
-                updateLuogo(nuovoNome, nuovaPosizione, nuovaDescrizione);
-                controller.salvaDati();
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Nome e Posizione sono obbligatori!",
-                        "Errore",
-                        JOptionPane.ERROR_MESSAGE);
+        JLabel positionLabel = new JLabel("Posizione: " + luogo.getPosizione());
+        positionLabel.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+        infoPanel.add(positionLabel, BorderLayout.SOUTH);
+        
+        // Tipi di visita
+        JPanel tipiVisitaPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        tipiVisitaPanel.setBackground(Color.WHITE);
+        tipiVisitaPanel.setBorder(new EmptyBorder(2, 0, 0, 0));
+        
+        JLabel tipiLabel = new JLabel("Tipi di visita: ");
+        tipiLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        tipiVisitaPanel.add(tipiLabel);
+        
+        List<TipoVisita> tipiVisita = luogo.getTipiVisita();
+        if (tipiVisita != null && !tipiVisita.isEmpty()) {
+            for (int i = 0; i < tipiVisita.size(); i++) {
+                if (i > 0) {
+                    tipiVisitaPanel.add(new JLabel(", "));
+                }
+                JLabel tagLabel = new JLabel(tipiVisita.get(i).getTitolo());
+                tagLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+                tipiVisitaPanel.add(tagLabel);
             }
+        } else {
+            tipiVisitaPanel.add(new JLabel("Nessuno"));
         }
+        
+        // Aggiungi tutto al pannello principale
+        add(infoPanel, BorderLayout.CENTER);
+        add(tipiVisitaPanel, BorderLayout.SOUTH);
+        
+        setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
-
-    private boolean isValidInput(String nome, String posizione) {
-        return nome != null && !nome.trim().isEmpty() &&
-                posizione != null && !posizione.trim().isEmpty();
-    }
-
-    private void updateLuogo(String nome, String posizione, String descrizione) {
-        luogo.setNome(nome);
-        luogo.setPosizione(posizione);
-        luogo.setDescrizione(descrizione);
-    }
-
-    private void eliminaLuogo() {
-        int conferma = JOptionPane.showConfirmDialog(this,
-                "Sei sicuro di voler eliminare il luogo '" + luogo.getNome() + "'?",
-                "Conferma Eliminazione",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
-
-        if (conferma == JOptionPane.YES_OPTION) {
-            controller.getLuoghi().remove(luogo);
-            controller.salvaDati();
-            //frame.aggiornaListaLuoghi();
+    
+    public void setSelected(boolean selected) {
+        this.isSelected = selected;
+        if (selected) {
+            setBorder(new CompoundBorder(
+                new LineBorder(SELECTED_COLOR, 2),
+                new EmptyBorder(8, 8, 8, 8)
+            ));
+        } else {
+            setBorder(createDefaultBorder());
         }
+        repaint();
+    }
+    
+    private CompoundBorder createDefaultBorder() {
+        return new CompoundBorder(
+            new LineBorder(BORDER_COLOR, 1),
+            new EmptyBorder(10, 10, 10, 10)
+        );
+    }
+    
+    public boolean isSelected() {
+        return isSelected;
     }
 
-    private String formatTipiVisita(List<TipoVisita> tipiVisita) {
-        if (tipiVisita == null || tipiVisita.isEmpty()) {
-            return "Nessun tipo di visita";
-        }
-        return tipiVisita.stream()
-                .map(TipoVisita::getTitolo)
-                .collect(Collectors.joining(", "));
+    public Luogo getLuogo() {
+        return luogo;
     }
 }
