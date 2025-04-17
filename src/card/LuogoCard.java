@@ -13,14 +13,12 @@ import java.util.List;
 
 public class LuogoCard extends JPanel {
     private final Luogo luogo;
-    private final LuoghiController luoghiController;
     private boolean isSelected = false;
     private static final Color BORDER_COLOR = new Color(220, 220, 220);
     private static final Color SELECTED_COLOR = new Color(49, 130, 189);
 
-    public LuogoCard(Luogo luogo, LuoghiController luoghiController) {
+    public LuogoCard(Luogo luogo) {
         this.luogo = luogo;
-        this.luoghiController = luoghiController;
         setupUI();
     }
 
@@ -36,9 +34,11 @@ public class LuogoCard extends JPanel {
         
         JLabel nameLabel = new JLabel(luogo.getNome());
         nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        nameLabel.setFocusable(false); // Prevent text selection
         
         JTextArea descriptionArea = new JTextArea(luogo.getDescrizione());
         descriptionArea.setEditable(false);
+        descriptionArea.setFocusable(false); // Prevent text selection
         descriptionArea.setWrapStyleWord(true);
         descriptionArea.setLineWrap(true);
         descriptionArea.setBackground(Color.WHITE);
@@ -51,6 +51,7 @@ public class LuogoCard extends JPanel {
         // Posizione
         JLabel positionLabel = new JLabel("Posizione: " + luogo.getPosizione());
         positionLabel.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+        positionLabel.setFocusable(false); // Prevent text selection
         infoPanel.add(positionLabel, BorderLayout.SOUTH);
         
         // Tipi di visita
@@ -60,6 +61,7 @@ public class LuogoCard extends JPanel {
         
         JLabel tipiLabel = new JLabel("Tipi di visita: ");
         tipiLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        tipiLabel.setFocusable(false); // Prevent text selection
         tipiVisitaPanel.add(tipiLabel);
         
         List<TipoVisita> tipiVisita = luogo.getTipiVisita();
@@ -70,6 +72,7 @@ public class LuogoCard extends JPanel {
                 }
                 JLabel tagLabel = new JLabel(tipiVisita.get(i).getTitolo());
                 tagLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+                tagLabel.setFocusable(false); // Prevent text selection
                 tipiVisitaPanel.add(tagLabel);
             }
         } else {

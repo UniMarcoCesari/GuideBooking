@@ -2,6 +2,7 @@ package view.corpoDati;
 
 import card.LuogoCard;
 import controller.TipiVisitaController;
+import controller.VolontariController;
 import costants.Costants;
 import model.CorpoDati;
 import model.Luogo;
@@ -39,10 +40,12 @@ public class CorpoDatiFase2 extends JFrame {
 
     private final LuoghiController luoghiController;
     private final TipiVisitaController tipoVisitaController;
+    private final VolontariController volontariController;
 
     public CorpoDatiFase2(CorpoDati corpoDati) {
         this.luoghiController = new LuoghiController();
         this.tipoVisitaController = new TipiVisitaController();
+        this.volontariController = new VolontariController();
         this.corpoDati = corpoDati;
 
         initializeFrame();
@@ -282,7 +285,7 @@ public class CorpoDatiFase2 extends JFrame {
     }
 
     private void openTipoVisitaDialog() {
-        new NuovoTipoVisitaFrame(this, tipoVisitaController).setVisible(true);
+        new NuovoTipoVisitaFrame(this, tipoVisitaController,volontariController).setVisible(true);
     }
 
     private JTextField createStyledTextField() {
@@ -348,7 +351,7 @@ public class CorpoDatiFase2 extends JFrame {
 
     private void addLuogoCard(Luogo luogo) {
         listaPanel.add(Box.createVerticalStrut(6));
-        listaPanel.add(new LuogoCard(luogo, luoghiController));
+        listaPanel.add(new LuogoCard(luogo));
     }
 
     private void aggiungiLuogo() {
@@ -394,10 +397,6 @@ public class CorpoDatiFase2 extends JFrame {
         descrizioneField.setText("");
         posizioneField.setText("");
         tipiVisitaModel.clear();
-    }
-
-    public static void main(String[] args) {
-        new CorpoDatiFase2(new CorpoDati("",""));
     }
 
 }

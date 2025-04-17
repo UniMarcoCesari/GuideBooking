@@ -3,6 +3,7 @@ import costants.*;
 import java.util.ArrayList;
 import java.util.List;
 import model.Luogo;
+import model.TipoVisita;
 import service.DataManager;
 
 public class LuoghiController {
@@ -27,5 +28,22 @@ public class LuoghiController {
 
     public void salvaDati() {
         DataManager.salvaDati(luoghi, Costants.file_luoghi);
+    }
+
+    public Boolean aggiungiTipoVisita(Luogo luogoSelezionato, TipoVisita tipoVisita) {
+        for (Luogo luogo : luoghi) {
+            if(luogo.equals(luogoSelezionato)) {
+                for (TipoVisita tipo : luogo.getTipiVisita()) {
+                    if (tipo.equals(tipoVisita)) {
+                        return false;
+                    }
+                }
+                luogo.aggiungiTipoVisita(tipoVisita);
+                salvaDati();
+                return true;
+            }
+        }
+        return false;
+    
     }
 }

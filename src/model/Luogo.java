@@ -27,4 +27,9 @@ public class Luogo implements Serializable {
     public void setDescrizione(String descrizione) {this.descrizione = descrizione; }
     public void setPosizione (String posizione) { this.posizione = posizione; }
     public void setTipiVisita(ArrayList<TipoVisita> tipiVisita) { this.tipiVisita = tipiVisita; }
+
+
+    public void aggiungiTipoVisita(TipoVisita tipoVisita) {
+        tipiVisita.add(tipoVisita);
+    }
 }

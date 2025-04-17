@@ -1,17 +1,14 @@
 package card;
 
 import costants.Costants;
-import model.Luogo;
 import model.TipoVisita;
-import controller.LuoghiController;
-import view.corpoDati.CorpoDatiFase2;
+import model.Volontario; // Import Volontario
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,12 +24,10 @@ public class TipoVisitaCard extends JPanel {
     private static final Font NORMAL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
 
     private final TipoVisita tipoVisita;
-    private final LuoghiController controller;
     private final JPanel contentPanel;
 
-    public TipoVisitaCard(TipoVisita tipoVisita, LuoghiController controller) {
+    public TipoVisitaCard(TipoVisita tipoVisita) {
         this.tipoVisita = tipoVisita;
-        this.controller = controller;
 
         System.out.println(tipoVisita.getGiorniSettimana().toString());
         System.out.println(tipoVisita.getVolontari().toString());
@@ -78,7 +73,7 @@ public class TipoVisitaCard extends JPanel {
     }
 
     private JPanel createInfoPanel() {
-        JPanel panel = new JPanel(new GridLayout(4, 1, 0, 3));
+        JPanel panel = new JPanel(new GridLayout(5, 1, 0, 3)); // Increased rows to 5
         panel.setOpaque(false);
 
         // Titolo
@@ -99,9 +94,16 @@ public class TipoVisitaCard extends JPanel {
         descrizioneLabel.setForeground(LIGHT_TEXT);
 
 
+        // Volontari associati
+        String volontariStr = formatVolontari(tipoVisita.getVolontari());
+        JLabel volontariLabel = new JLabel("Volontari: " + volontariStr);
+        volontariLabel.setFont(NORMAL_FONT);
+        volontariLabel.setForeground(LIGHT_TEXT);
+
         panel.add(nomeLabel);
         panel.add(posizioneLabel);
         panel.add(descrizioneLabel);
+        panel.add(volontariLabel); // Add the volunteers label
 
 
         return panel;
@@ -157,6 +159,16 @@ public class TipoVisitaCard extends JPanel {
         }
         return tipiVisita.stream()
                 .map(TipoVisita::getTitolo)
+                .collect(Collectors.joining(", "));
+    }
+
+    // Helper method to format volunteer names
+    private String formatVolontari(List<Volontario> volontari) {
+        if (volontari == null || volontari.isEmpty()) {
+            return "Nessuno";
+        }
+        return volontari.stream()
+                .map(Volontario::getNome) // Get username
                 .collect(Collectors.joining(", "));
     }
 }

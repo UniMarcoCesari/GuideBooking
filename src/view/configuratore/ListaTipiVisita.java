@@ -1,24 +1,21 @@
 package view.configuratore;
 
 import card.TipoVisitaCard;
-import controller.LuoghiController;
+import controller.TipiVisitaController;
 import costants.Costants;
-import model.Luogo;
 import model.TipoVisita;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ListaTipiVisita extends JFrame {
     private JPanel listPanel;
-    private LuoghiController luoghiController;
+    private TipiVisitaController tipiVisitaController;
 
-    public ListaTipiVisita(LuoghiController luoghiController) {
-        this.luoghiController = luoghiController;
+    public ListaTipiVisita(TipiVisitaController tipiVisitaController) {
+        this.tipiVisitaController = tipiVisitaController;
         initializeFrame();
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -39,8 +36,11 @@ public class ListaTipiVisita extends JFrame {
         mainContentPanel.add(listPanel);  // Add the listPanel to mainContentPanel
         mainPanel.add(mainContentPanel, BorderLayout.CENTER);
 
-        // Footer (se necessario)
-        JPanel footerPanel = Costants.createFooterPanel("Footer");
+        // Footer
+        JPanel footerPanel = Costants.createFooterPanel(""); // Clear default text
+        JButton aggiungiButton = Costants.createSimpleButton("Aggiungi");
+        aggiungiButton.addActionListener(_ -> apriDialogAggiungiTipoVisita()); // Placeholder action
+        footerPanel.add(aggiungiButton); // Add the button to the footer
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -51,22 +51,10 @@ public class ListaTipiVisita extends JFrame {
 
     public void aggiornaListaTipiVisita() {
         listPanel.removeAll();  // Clear the current list of places
-        List<Luogo> luoghi = luoghiController.getLuoghi();  // Fetch the list of places
-
-        // Usa una mappa per tenere traccia dei tipi di visita già aggiunti
-        // La chiave è il titolo del tipo di visita, il valore è il tipo di visita stesso
-        Map<String, TipoVisita> tipiVisitaUnici = new HashMap<>();
-
-        // Raccogli tutti i tipi di visita unici
-        for (Luogo luogo : luoghi) {
-            for (TipoVisita tipoVisita : luogo.getTipiVisita()) {
-                // Aggiungi solo se non è già presente nella mappa
-                tipiVisitaUnici.putIfAbsent(tipoVisita.getTitolo(), tipoVisita);
-            }
-        }
+        List<TipoVisita> tipiVisita = tipiVisitaController.getTipiVisita();  // Fetch the list of places
 
         // Aggiungi i tipi di visita unici al pannello
-        for (TipoVisita tipoVisita : tipiVisitaUnici.values()) {
+        for (TipoVisita tipoVisita : tipiVisita) {
             addTipoVisitaCard(tipoVisita);
         }
 
@@ -83,12 +71,19 @@ public class ListaTipiVisita extends JFrame {
 
     private void addTipoVisitaCard(TipoVisita tipoVisita) {
         listPanel.add(Box.createVerticalStrut(6));
-        listPanel.add(new TipoVisitaCard(tipoVisita, luoghiController));  // Add a card for each place
+        // Instantiate and add the card for the given TipoVisita
+        listPanel.add(new TipoVisitaCard(tipoVisita));  // Add a card for each place
     }
 
     private void initializeFrame() {
         setSize(1200, 800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    // Placeholder method for the "Aggiungi" button action
+    private void apriDialogAggiungiTipoVisita() {
+        dispose();
+        new NuovoTipoVisitaSecondo(this, tipiVisitaController).setVisible(true);
     }
 }

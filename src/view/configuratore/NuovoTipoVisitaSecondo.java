@@ -1,5 +1,6 @@
-package view.corpoDati;
+package view.configuratore;
 
+import controller.LuoghiController;
 import controller.TipiVisitaController;
 import controller.VolontariController;
 import costants.Costants;
@@ -15,7 +16,7 @@ import model.TipoVisita;
 import model.Volontario;
 import view.VolontariFrame;
 
-public class NuovoTipoVisitaFrame extends JFrame {
+public class NuovoTipoVisitaSecondo extends JFrame {
     private final JTextField titoloField, descrizioneField, puntoIncontroField;
     private final JSpinner dataInizioSpinner, dataFineSpinner, oraInizioSpinner;
     private JSpinner durataSpinner, minPartecipantiSpinner, maxPartecipantiSpinner;
@@ -28,9 +29,9 @@ public class NuovoTipoVisitaFrame extends JFrame {
     private final TipiVisitaController tipiVisitaController;
     private final  VolontariController volontariController;
 
-    private final CorpoDatiFase2 parent;
+    private final ListaTipiVisita parent;
 
-    public NuovoTipoVisitaFrame(CorpoDatiFase2 parent, TipiVisitaController tipoVisitaController,VolontariController volontariController) {
+    public NuovoTipoVisitaSecondo(ListaTipiVisita parent, TipiVisitaController tipiVisitaController) {
         setSize(1200, 900);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -38,8 +39,8 @@ public class NuovoTipoVisitaFrame extends JFrame {
         setTitle("Nuovo Tipo Visita");
 
         this.parent = parent;
-        this.tipiVisitaController = tipoVisitaController;
-        this.volontariController = volontariController;
+        this.tipiVisitaController = tipiVisitaController;
+        this.volontariController = new VolontariController();
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -189,9 +190,9 @@ public class NuovoTipoVisitaFrame extends JFrame {
         // Pulsante aggiungi volontario
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.setBackground(Costants.BACKGROUND_COLOR);
-        JButton aggiungiVolontarioButton = new JButton("Aggiungi Nuovo Volontario");
-        aggiungiVolontarioButton.addActionListener(e -> creaNuovoVolontario());
-        buttonPanel.add(aggiungiVolontarioButton);
+        // JButton aggiungiVolontarioButton = new JButton("Aggiungi Nuovo Volontario");
+        // aggiungiVolontarioButton.addActionListener(e -> creaNuovoVolontario());
+        // buttonPanel.add(aggiungiVolontarioButton);
 
         labelGbc.gridy = 15;
         labelGbc.gridx = 0;
@@ -252,10 +253,6 @@ public class NuovoTipoVisitaFrame extends JFrame {
         return volontariList;
     }
 
-    private void creaNuovoVolontario() {
-        new VolontariFrame(this, volontariController).setVisible(true);
-        aggiornaListaVolontari();
-    }
 
     private void salvaVisita() {
         String titolo = titoloField.getText().trim();
@@ -340,7 +337,7 @@ public class NuovoTipoVisitaFrame extends JFrame {
 
         tipiVisitaController.aggiungiVisita(nuovaVisita);
 
-        // Aggiorna la lista dei tipi di visita nel frame padre
+        // TODO Aggiorna la lista dei tipi di visita nel frame padre
         parent.aggiornaListaTipiVisita();
 
         // Mostra messaggio di conferma
@@ -352,6 +349,7 @@ public class NuovoTipoVisitaFrame extends JFrame {
 
     private void chiudiEmandaIndietro() {
         dispose();
+        new ListaTipiVisita(tipiVisitaController).setVisible(true);
     }
 
     private LocalDate convertToLocalDate(Object spinnerValue) {

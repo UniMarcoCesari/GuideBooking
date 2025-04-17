@@ -47,6 +47,33 @@ public class VolontariController {
         return true;
     }
 
+    /**
+     * Aggiunge un nuovo volontario alla lista controllando se esiste già.
+     * Mostra un messaggio di errore se il volontario esiste già.
+     *
+     * @param username L'username del nuovo volontario.
+     * @param parent   Il componente genitore per il dialogo di errore (può essere null).
+     * @return true se il volontario è stato aggiunto con successo, false altrimenti.
+     */
+    public boolean aggiungiVolontario(String username, java.awt.Component parent) {
+        // Controlla se esiste già un volontario con lo stesso username (ignorando maiuscole/minuscole)
+        for (Volontario esistente : listaVolontari) {
+            if (esistente.getNome().equalsIgnoreCase(username)) {
+                javax.swing.JOptionPane.showMessageDialog(parent,
+                        "Esiste già un volontario con l'username '" + username + "'.",
+                        "Errore Aggiunta Volontario",
+                        javax.swing.JOptionPane.ERROR_MESSAGE);
+                return false; // Volontario già esistente
+            }
+        }
+
+        // Se non esiste, crea e aggiungi il nuovo volontario
+        Volontario nuovoVolontario = new Volontario(username);
+        listaVolontari.add(nuovoVolontario);
+        salvaVolontari(); // Salva la lista aggiornata
+        return true; // Volontario aggiunto con successo
+    }
+
     public void rimuoviVolonatario(Volontario volontario) {
         listaVolontari.remove(volontario);
         salvaVolontari();

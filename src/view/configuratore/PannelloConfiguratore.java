@@ -2,10 +2,11 @@ package view.configuratore;
 
 import controller.CalendarioController;
 import controller.LuoghiController;
+import controller.TipiVisitaController;
+import controller.VolontariController;
 import costants.Costants;
 import model.CorpoDati;
 import service.DataManager;
-import view.configuratore.ListaLuoghi;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +17,8 @@ import java.util.Locale;
 public class PannelloConfiguratore extends JFrame {
     private final CalendarioController calendarioController;
     private final LuoghiController luoghiController;
+    private final TipiVisitaController tipoVisitaController;
+    private final VolontariController volontariController;
     private JTextField textArea;
     private JButton button1, button2, button3, button4, button5, button6, button7, button8, button9;
     private CorpoDati corpoDati;
@@ -26,6 +29,8 @@ public class PannelloConfiguratore extends JFrame {
         //inizializziamo controller qui
         calendarioController = new CalendarioController();
         this.luoghiController = new LuoghiController();
+        this.tipoVisitaController = new TipiVisitaController();
+        this.volontariController = new VolontariController();
         this.corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
@@ -125,15 +130,15 @@ public class PannelloConfiguratore extends JFrame {
 
         button4.addActionListener(e -> {
             dispose();
-            new ListaLuoghi(corpoDati);
+            new ListaLuoghi(luoghiController,tipoVisitaController);
         });
         button5.addActionListener(e -> {
             dispose();
-            new ListaTipiVisita(luoghiController);
+            new ListaTipiVisita(tipoVisitaController);
         });
         button6.addActionListener(e -> {
             dispose();
-            new ListaVolonati(luoghiController);
+            new ListaVolonari(volontariController, tipoVisitaController);
         });
 
         secondBottomPanel.add(button4);

@@ -3,13 +3,11 @@ package view.configuratore;
 import card.LuogoCard;
 import controller.TipiVisitaController;
 import costants.Costants;
-import model.CorpoDati;
 import model.Luogo;
 import controller.LuoghiController;
 import model.TipoVisita;
-import service.DataManager;
-import view.corpoDati.NuovoTipoVisitaFrame;
-import view.corpoDati.CorpoDatiFase2;
+// Removed: import view.corpoDati.NuovoTipoVisitaFrame;
+// Removed: import view.corpoDati.CorpoDatiFase2;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -25,7 +23,6 @@ public class ListaLuoghi extends JFrame {
     private static final Color BACKGROUND_COLOR = new Color(245, 248, 250);
     private static final Color ACCENT_COLOR = new Color(49, 130, 189);
     private static final Color BORDER_COLOR = new Color(220, 220, 220);
-    private static final Color SELECTED_COLOR = new Color(49, 130, 189);
 
     private static final Font LABEL_FONT = new Font("Segoe UI", Font.PLAIN, 14);
     private static final int SPACING = 12;
@@ -41,24 +38,28 @@ public class ListaLuoghi extends JFrame {
     private JButton clearButton;
 
     private Luogo selectedLuogo;
-    private CorpoDati corpoDati;
 
     private final LuoghiController luoghiController;
     private final TipiVisitaController tipoVisitaController;
 
-    public ListaLuoghi(CorpoDati corpoDati) {
-        this.luoghiController = new LuoghiController();
-        this.tipoVisitaController = new TipiVisitaController();
-        this.corpoDati = corpoDati;
+    public ListaLuoghi(LuoghiController luoghiController, TipiVisitaController tipoVisitaController) { // Add TipiVisitaController parameter
+        this.luoghiController = luoghiController;
+        this.tipoVisitaController = tipoVisitaController; // Initialize the field
 
         initializeFrame();
+
+        // Crea l'intestazione
+        JPanel headerPanel = Costants.createHeaderPanel("Lista dei Luoghi");
+
+        // Add "Back" button
+        JButton backButton = createStyledButton("Indietro");
+        backButton.addActionListener(e -> dispose());
+        headerPanel.add(backButton);
 
         // Crea un pannello principale con BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout(SPACING, SPACING));
         mainPanel.setBackground(BACKGROUND_COLOR);
 
-        // Crea l'intestazione
-        JPanel headerPanel = Costants.createHeaderPanel("Creazione corpo dei dati - Fase 2");
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Crea un pannello per il contenuto con un JSplitPane
@@ -85,14 +86,14 @@ public class ListaLuoghi extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 // Converti le coordinate del mouse in coordinate relative al listaPanel
                 Point clickPoint = e.getPoint();
-                
+
                 // Itera attraverso tutti i componenti del listaPanel
                 for (Component comp : listaPanel.getComponents()) {
                     // Verifica se il componente è una LuogoCard e se contiene il punto cliccato
                     if (comp instanceof LuogoCard && comp.getBounds().contains(clickPoint)) {
                         LuogoCard luogoCard = (LuogoCard) comp;
                         Luogo luogo = luogoCard.getLuogo();
-                        
+
                         // Seleziona visivamente la card
                         for (Component otherComp : listaPanel.getComponents()) {
                             if (otherComp instanceof LuogoCard) {
@@ -100,23 +101,23 @@ public class ListaLuoghi extends JFrame {
                             }
                         }
                         luogoCard.setSelected(true);
-                        
+
                         // Popola i campi di input con i dati del luogo selezionato
                         nomeField.setText(luogo.getNome());
                         descrizioneField.setText(luogo.getDescrizione());
                         posizioneField.setText(luogo.getPosizione());
-                        
+
                         // Popola la lista dei tipi di visita selezionati
                         tipiVisitaModel.clear();
                         for (TipoVisita tipoVisita : luogo.getTipiVisita()) {
                             tipiVisitaModel.addElement(tipoVisita.getTitolo());
                         }
-                        
+
                         selectedLuogo = luogo;
-                        
+
                         // Aggiorna il testo del pulsante di salvataggio
                         salvaButton.setText("Aggiorna Luogo");
-                        
+
                         listaPanel.repaint();
                         break;
                     }
@@ -154,7 +155,6 @@ public class ListaLuoghi extends JFrame {
 
         // Crea l'intestazione
         JPanel footerPanel = Costants.createFooterPanel("");
-
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -162,15 +162,8 @@ public class ListaLuoghi extends JFrame {
         setVisible(true);
     }
 
-    private void salvaEMandaPannello() {
-        //TODO:salva dati app 2
-        DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
-        dispose();
-        new PannelloConfiguratore().setVisible(true);
-    }
-
     private void initializeFrame() {
-        setTitle("Gestione Luoghi");
+        setTitle("Lista Luoghi");
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -241,10 +234,11 @@ public class ListaLuoghi extends JFrame {
         addTipoVisitaButton.setToolTipText("Aggiungi il tipo di visita selezionato alla lista");
         addTipoVisitaButton.addActionListener(e -> aggiungiTipoVisita());
 
-        JButton addNewTipoVisitaButton = createStyledButton("Nuovo Tipo");
-        addNewTipoVisitaButton.setFont(buttonFont);
-        addNewTipoVisitaButton.setToolTipText("Crea un nuovo tipo di visita");
-        addNewTipoVisitaButton.addActionListener(e -> openTipoVisitaDialog());
+        // Removed "Nuovo Tipo" button
+        // JButton addNewTipoVisitaButton = createStyledButton("Nuovo Tipo");
+        // addNewTipoVisitaButton.setFont(buttonFont);
+        // addNewTipoVisitaButton.setToolTipText("Crea un nuovo tipo di visita");
+        // addNewTipoVisitaButton.addActionListener(e -> openTipoVisitaDialog());
 
         salvaButton = createStyledButton("Salva Luogo");
         salvaButton.setFont(new Font("Segoe UI", Font.BOLD, 14));  // Font più grande per il bottone principale
@@ -254,7 +248,6 @@ public class ListaLuoghi extends JFrame {
         clearButton = createStyledButton("Annulla");
         clearButton.setFont(buttonFont);
         clearButton.setBackground(new Color(220, 53, 69));  // Rosso per il bottone annulla
-        clearButton.setForeground(Color.WHITE);
         clearButton.setToolTipText("Annulla la selezione corrente");
         clearButton.addActionListener(e -> {
             selectedLuogo = null;
@@ -292,7 +285,6 @@ public class ListaLuoghi extends JFrame {
 
         // Seconda riga - Descrizione
         gbc.gridx = 0; gbc.gridy = 1;
-        gbc.gridwidth = 1;
         panel.add(descrizioneLabel, gbc);
 
         gbc.gridx = 1;
@@ -301,7 +293,6 @@ public class ListaLuoghi extends JFrame {
 
         // Terza riga - Posizione
         gbc.gridx = 0; gbc.gridy = 2;
-        gbc.gridwidth = 1;
         panel.add(posizioneLabel, gbc);
 
         gbc.gridx = 1;
@@ -321,7 +312,7 @@ public class ListaLuoghi extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(addTipoVisitaButton);
-        buttonPanel.add(addNewTipoVisitaButton);
+        // Removed: buttonPanel.add(addNewTipoVisitaButton);
 
         gbc.gridx = 2;
         panel.add(buttonPanel, gbc);
@@ -360,24 +351,7 @@ public class ListaLuoghi extends JFrame {
         return panel;
     }
 
-    private void openTipoVisitaDialog() {
-        // Trova il frame CorpoDatiFase2
-        Frame[] frames = JFrame.getFrames();
-        CorpoDatiFase2 corpoDatiFase2 = null;
-        for (Frame frame : frames) {
-            if (frame instanceof CorpoDatiFase2) {
-                corpoDatiFase2 = (CorpoDatiFase2) frame;
-                break;
-            }
-        }
-
-        // Apri la dialog NuovoTipoVisitaFrame con il frame CorpoDatiFase2 trovato
-        if (corpoDatiFase2 != null) {
-            new NuovoTipoVisitaFrame(corpoDatiFase2, tipoVisitaController).setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Errore: Frame non trovato.", "Errore", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+    // Removed openTipoVisitaDialog method
 
     private JTextField createStyledTextField() {
         JTextField field = new JTextField();
@@ -442,19 +416,16 @@ public class ListaLuoghi extends JFrame {
 
     private void addLuogoCard(Luogo luogo) {
         listaPanel.add(Box.createVerticalStrut(6));
-        LuogoCard card = new LuogoCard(luogo, luoghiController);
-        
-        // Aggiungi metodo setSelected alla LuogoCard (se non esiste già)
-        if (card instanceof LuogoCard) {
-            listaPanel.add(card);
-        }
+        LuogoCard card = new LuogoCard(luogo);
+
+        listaPanel.add(card);
     }
 
     private void aggiungiLuogo() {
         String nome = nomeField.getText().trim();
         String descrizione = descrizioneField.getText().trim();
         String posizione = posizioneField.getText().trim();
-        
+
         // Validazione input
         if (!validateInput(nome, posizione)) {
             return;
@@ -473,7 +444,7 @@ public class ListaLuoghi extends JFrame {
         }
 
         if (tipiVisita.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Inserisci almeno un tipo visita", 
+            JOptionPane.showMessageDialog(this, "Inserisci almeno un tipo visita",
                 "Errore di validazione", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -485,21 +456,21 @@ public class ListaLuoghi extends JFrame {
             selectedLuogo.setPosizione(posizione);
             selectedLuogo.setTipiVisita(tipiVisita);
             luoghiController.salvaDati();
-            JOptionPane.showMessageDialog(this, "Luogo modificato con successo!", 
+            JOptionPane.showMessageDialog(this, "Luogo modificato con successo!",
                 "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
         } else {
             // Aggiungi un nuovo luogo
             luoghiController.aggiungiLuogo(new Luogo(nome, descrizione, posizione, tipiVisita));
-            JOptionPane.showMessageDialog(this, "Luogo aggiunto con successo!", 
+            JOptionPane.showMessageDialog(this, "Luogo aggiunto con successo!",
                 "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
         }
-        
+
         // Aggiorna la lista dei luoghi e ripulisci i campi
         aggiornaListaLuoghi();
         clearFields();
         selectedLuogo = null;
         salvaButton.setText("Salva Luogo");
-        
+
         // Deseleziona tutte le card
         for (Component comp : listaPanel.getComponents()) {
             if (comp instanceof LuogoCard) {

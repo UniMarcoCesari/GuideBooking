@@ -1,6 +1,5 @@
 package card;
 
-import controller.LuoghiController;
 import model.TipoVisita;
 import model.Volontario;
 
@@ -16,7 +15,6 @@ public class VolontarioCard extends JPanel {
     private static final int CARD_WIDTH = 400;
     private static final int CARD_HEIGHT = 120;
     private static final Color BORDER_COLOR = new Color(200, 200, 200);
-    private static final Color ACCENT_COLOR = new Color(49, 130, 189);
     private static final Color DARK_TEXT = new Color(50, 50, 50);
     private static final Color LIGHT_TEXT = new Color(100, 100, 100);
     private static final Color BACKGROUND_HOVER = new Color(235, 245, 255);
@@ -25,11 +23,9 @@ public class VolontarioCard extends JPanel {
 
     private final Volontario volontario;
     private final List<TipoVisita> listaTipoVisita;
-    private final LuoghiController controller;
 
-    public VolontarioCard(Volontario volontario, List<TipoVisita> listaTipoVisita, LuoghiController controller) {
+    public VolontarioCard(Volontario volontario, List<TipoVisita> listaTipoVisita) {
         this.volontario = volontario;
-        this.controller = controller;
         this.listaTipoVisita = listaTipoVisita;
 
         // Configurazione panel
