@@ -155,11 +155,6 @@ public class ListaLuoghi extends JFrame {
         // Crea l'intestazione
         JPanel footerPanel = Costants.createFooterPanel("");
 
-        // bottone
-        JButton avviaButton = Costants.createSimpleButton("Avvia applicazione");
-        avviaButton.addActionListener(_ -> {salvaEMandaPannello();});
-        footerPanel.add(avviaButton);
-
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
