@@ -14,12 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListaVolonari extends JFrame {
+public class ListaVolontari extends JFrame {
     private JPanel listPanel;
     private VolontariController volontariController;
     private TipiVisitaController tipiVisitaController;
 
-    public ListaVolonari(VolontariController volontariController, TipiVisitaController tipiVisitaController) {
+    public ListaVolontari(VolontariController volontariController, TipiVisitaController tipiVisitaController) {
         this.volontariController = volontariController;
         this.tipiVisitaController = tipiVisitaController;
         initializeFrame();
@@ -76,8 +76,10 @@ public class ListaVolonari extends JFrame {
             ArrayList<TipoVisita> listaTipiVisita = new ArrayList<>();
 
             for (TipoVisita tipoVisita : tipiVisitaController.getTipiVisita()) {
-                if (tipoVisita.getVolontari().contains(volontario)) {
-                    listaTipiVisita.add(tipoVisita);
+                for (Volontario v : tipoVisita.getVolontari()) {
+                    if (v.getNome().equals(volontario.getNome())) {
+                        listaTipiVisita.add(tipoVisita);
+                    }
                 }
             }
 

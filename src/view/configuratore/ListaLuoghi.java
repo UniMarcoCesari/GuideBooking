@@ -53,7 +53,10 @@ public class ListaLuoghi extends JFrame {
 
         // Add "Back" button
         JButton backButton = createStyledButton("Indietro");
-        backButton.addActionListener(e -> dispose());
+        backButton.addActionListener(e -> {
+            dispose();
+            new PannelloConfiguratore();
+        });
         headerPanel.add(backButton);
 
         // Crea un pannello principale con BorderLayout

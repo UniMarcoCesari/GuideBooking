@@ -309,7 +309,6 @@ public class NuovoTipoVisitaFrame extends JFrame {
         for (String v : volontari) {
             sb.append(v).append(", ");
         }
-        System.out.println(sb);
 
         // Ottiene i valori dai nuovi campi
         int minPartecipanti = (int) minPartecipantiSpinner.getValue();

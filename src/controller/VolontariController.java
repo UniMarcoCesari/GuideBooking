@@ -8,8 +8,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import model.Volontario;
+import costants.Credenziale;
+import java.util.List;
 
 public class VolontariController {
+
+    public static void creaCredenzialiVolontari(String username) {
+        List<Credenziale> credenziali = CredenzialeWriter.caricaCredenziali();
+        Credenziale nuovaCredenziale = new Credenziale(username, "pw", Costants.ruolo_volontario);
+        credenziali.add(nuovaCredenziale);
+        CredenzialeWriter.salvaCredenziali(credenziali);
+    }
     private ArrayList<Volontario> listaVolontari;
     private Map<LocalDate, Map<String, Boolean>> disponibilitaVolontari;
 
@@ -71,6 +80,7 @@ public class VolontariController {
         Volontario nuovoVolontario = new Volontario(username);
         listaVolontari.add(nuovoVolontario);
         salvaVolontari(); // Salva la lista aggiornata
+        creaCredenzialiVolontari(nuovoVolontario.getNome());
         return true; // Volontario aggiunto con successo
     }
 

@@ -1,6 +1,7 @@
 package controller;
 
 import model.TipoVisita;
+import model.Volontario;
 import costants.Costants;
 
 import java.io.*;
@@ -50,6 +51,15 @@ public class TipiVisitaController {
             oos.writeObject(tipiVisita);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        System.out.println("Ho salvato i seguenti tipi visita: "); 
+        for (TipoVisita visita : tipiVisita) {
+            System.out.print(visita.getTitolo());
+            System.out.print(" Volontari: {");
+            for (Volontario volontario : visita.getVolontari()) {
+                System.out.print(volontario.getNome());
+            }
+            System.out.println("}");
         }
     }
 
