@@ -31,10 +31,9 @@ public class ListaTipiVisita extends JFrame {
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Contenuto principale
-        JPanel mainContentPanel = new JPanel();
         listPanel = createListPanel();
-        mainContentPanel.add(listPanel);  // Add the listPanel to mainContentPanel
-        mainPanel.add(mainContentPanel, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(listPanel);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Footer
         JPanel footerPanel = Costants.createFooterPanel(""); // Clear default text

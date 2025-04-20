@@ -94,7 +94,7 @@ public class VolontariFrame extends JFrame {
         }
 
         // Aggiungi il volontario al controller
-        boolean aggiuntaConfermata = controller.aggiungiVolontario(new Volontario(nomeVolontario));
+        boolean aggiuntaConfermata = controller.aggiungiVolontario(nomeVolontario);
         if (!aggiuntaConfermata) {
             JOptionPane.showMessageDialog(this, "Errore: Esiste già un volontario con questo nome!", "Errore", JOptionPane.ERROR_MESSAGE);
             return;

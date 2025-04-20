@@ -7,9 +7,12 @@ import service.DataManager;
 import view.volontario.GestisciDisponibilitaFrame; // Import new frame
 import view.volontario.VisualizzaTipiVisitaVolontarioFrame; // Import new frame
 
+import controller.TipiVisitaController;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+
 
 public class PannelloVolontario extends JFrame {
     private final CalendarioController calendarioController;
@@ -17,9 +20,11 @@ public class PannelloVolontario extends JFrame {
     private JButton button1, button2;
     private CorpoDati corpoDati;
     private String username; // Add username field
+    private TipiVisitaController tipiVisitaController;
 
     public PannelloVolontario(String username) { // Update constructor
         this.username = username; // Store username
+        this.tipiVisitaController = new TipiVisitaController();
         initializeFrame();
 
         //inizializziamo controller qui
@@ -100,20 +105,15 @@ public class PannelloVolontario extends JFrame {
 
         button1.addActionListener(_ -> {
             dispose();
-            new VisualizzaTipiVisitaVolontarioFrame(this.username).setVisible(true); // Open frame
+            new VisualizzaTipiVisitaVolontarioFrame(this.username, this.tipiVisitaController).setVisible(true); // Open frame
         });
         button2.addActionListener(_ -> {
             dispose();
             new GestisciDisponibilitaFrame(this.username).setVisible(true); // Open frame
         });
-        // button3.addActionListener(e -> { // Removed listener for button3
-        //     dispose();
-        //     //new SezioneAltro(calendarioController);
-        // });
 
         bottomPanel.add(button1);
         bottomPanel.add(button2);
-        // bottomPanel.add(button3); // Removed button3
 
         contentPanel.add(bottomPanel, gbc);
 
@@ -131,8 +131,5 @@ public class PannelloVolontario extends JFrame {
         repaint();
     }
 
-    public static void main(String[] args) {
-        // Pass a dummy username for testing if run directly
-        new PannelloVolontario("testVolontario");
-    }
+   
 }

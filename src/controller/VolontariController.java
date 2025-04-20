@@ -15,7 +15,7 @@ public class VolontariController {
 
     public static void creaCredenzialiVolontari(String username) {
         List<Credenziale> credenziali = CredenzialeWriter.caricaCredenziali();
-        Credenziale nuovaCredenziale = new Credenziale(username, "pw", Costants.ruolo_volontario);
+        Credenziale nuovaCredenziale = new Credenziale(username, "pw", Costants.ruolo_pre_volontario);
         credenziali.add(nuovaCredenziale);
         CredenzialeWriter.salvaCredenziali(credenziali);
     }
@@ -45,33 +45,20 @@ public class VolontariController {
         this.disponibilitaVolontari = disponibilitaVolontari;
     }
 
-    public boolean aggiungiVolontario(Volontario volontario) {
-        for (int i = 0; i < listaVolontari.size(); i++) {
-            if (listaVolontari.get(i).getNome().equals(volontario.getNome())) {
-                return false;
-            }
-        }
-        listaVolontari.add(volontario);
-        salvaVolontari();
-        return true;
-    }
 
     /**
      * Aggiunge un nuovo volontario alla lista controllando se esiste già.
      * Mostra un messaggio di errore se il volontario esiste già.
      *
      * @param username L'username del nuovo volontario.
-     * @param parent   Il componente genitore per il dialogo di errore (può essere null).
      * @return true se il volontario è stato aggiunto con successo, false altrimenti.
      */
-    public boolean aggiungiVolontario(String username, java.awt.Component parent) {
+    public boolean aggiungiVolontario(String username) {
         // Controlla se esiste già un volontario con lo stesso username (ignorando maiuscole/minuscole)
         for (Volontario esistente : listaVolontari) {
             if (esistente.getNome().equalsIgnoreCase(username)) {
-                javax.swing.JOptionPane.showMessageDialog(parent,
-                        "Esiste già un volontario con l'username '" + username + "'.",
-                        "Errore Aggiunta Volontario",
-                        javax.swing.JOptionPane.ERROR_MESSAGE);
+                // Utilizza System.err per stampare il messaggio di errore
+                System.err.println("Esiste già un volontario con l'username '" + username + "'.");
                 return false; // Volontario già esistente
             }
         }

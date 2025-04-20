@@ -122,12 +122,13 @@ public class ListaVolontari extends JFrame {
         if (username != null && !username.trim().isEmpty()) {
             username = username.trim();
             // Call the controller method to add the volunteer
-            boolean aggiunto = volontariController.aggiungiVolontario(username, this); // Pass 'this' for error dialog parent
+            boolean aggiunto = volontariController.aggiungiVolontario(username); // Pass 'this' for error dialog parent
             if (aggiunto) {
                 aggiornaListaVolontari(); // Refresh the list if added successfully
                 JOptionPane.showMessageDialog(this, "Volontario '" + username + "' aggiunto con successo.", "Successo", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Impossibile aggiungere il volontario '" + username + "'.", "Errore", JOptionPane.ERROR_MESSAGE);
             }
-            // Error message is handled within the controller method
         } else if (username != null) {
             // User entered empty or whitespace only
             JOptionPane.showMessageDialog(this, "L'username non può essere vuoto.", "Errore", JOptionPane.ERROR_MESSAGE);

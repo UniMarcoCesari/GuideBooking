@@ -79,4 +79,14 @@ public class TipiVisitaController {
             return new ArrayList<>();
         }
     }
+
+    public List<TipoVisita> getTipiVisitaPerVolontario(String username) {
+        List<TipoVisita> tipiVisitaPerVolontario = new ArrayList<>();
+        for (TipoVisita tipoVisita : tipiVisita) {
+            if (tipoVisita.getVolontari().stream().anyMatch(volontario -> volontario.getNome().equalsIgnoreCase(username))) {
+                tipiVisitaPerVolontario.add(tipoVisita);
+            }
+        }
+        return tipiVisitaPerVolontario;
+    }
 }
