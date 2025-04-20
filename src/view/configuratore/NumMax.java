@@ -50,9 +50,15 @@ public class NumMax extends JFrame {
         JButton salvaBtn = new JButton("Salva");
         salvaBtn.setFont(new Font("Arial", Font.BOLD, 14));
         salvaBtn.addActionListener(_ -> {
-            corpoDati.setMaxPersone(textField.getText());
-            DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
-            JOptionPane.showMessageDialog(this, "Dati salvati con successo!");
+            String nuovoValore = textField.getText();
+            try {
+                int nuovoNumero = Integer.parseInt(nuovoValore);
+                corpoDati.setMaxPersone(String.valueOf(nuovoNumero));
+                DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+                JOptionPane.showMessageDialog(this, "Dati salvati con successo!");
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Il valore inserito non è un numero!", "Errore", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         savePanel.add(salvaBtn);
@@ -98,3 +104,4 @@ public class NumMax extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
+

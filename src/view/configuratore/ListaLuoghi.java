@@ -419,7 +419,7 @@ public class ListaLuoghi extends JFrame {
 
     private void addLuogoCard(Luogo luogo) {
         listaPanel.add(Box.createVerticalStrut(6));
-        LuogoCard card = new LuogoCard(luogo);
+        LuogoCard card = new LuogoCard(luogo,luoghiController,this);
 
         listaPanel.add(card);
     }

@@ -12,8 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LoginFrame extends JFrame {
-    private final JTextField usernameField;
-    private final JPasswordField passwordField;
+    private final JTextField usernameField = new JTextField("pre", 15);
+    private final JPasswordField passwordField = new JPasswordField("test", 15);
     private final JButton loginButton;
 
     public LoginFrame() {
@@ -38,7 +38,7 @@ public class LoginFrame extends JFrame {
 
         headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Allinea l'header al centro
 
-        JLabel logoLabel = new JLabel("🏥");
+        JLabel logoLabel = new JLabel(" "); // Logo
         logoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 40));
 
         // Pannello per il titolo
@@ -76,7 +76,6 @@ public class LoginFrame extends JFrame {
         gbc.gridy = 0;
         formPanel.add(new JLabel("Username:"), gbc);
 
-        usernameField = new JTextField(15);
         gbc.gridx = 1;
         formPanel.add(usernameField, gbc);
 
@@ -84,7 +83,6 @@ public class LoginFrame extends JFrame {
         gbc.gridx = 0;
         formPanel.add(new JLabel("Password:"), gbc);
 
-        passwordField = new JPasswordField(15);
         gbc.gridx = 1;
         formPanel.add(passwordField, gbc);
 
@@ -147,3 +145,4 @@ public class LoginFrame extends JFrame {
         SwingUtilities.invokeLater(LoginFrame::new);
     }
 }
+

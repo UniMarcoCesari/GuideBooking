@@ -99,7 +99,7 @@ public class ListaVolontari extends JFrame {
 
     private void addVolontarioCard(Volontario volontario, List<TipoVisita> tipiVisita) {
         listPanel.add(Box.createVerticalStrut(6));
-        listPanel.add(new VolontarioCard(volontario, tipiVisita));
+        listPanel.add(new VolontarioCard(volontario, tipiVisita, volontariController,tipiVisitaController, this));
     }
 
 

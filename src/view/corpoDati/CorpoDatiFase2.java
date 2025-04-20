@@ -351,7 +351,7 @@ public class CorpoDatiFase2 extends JFrame {
 
     private void addLuogoCard(Luogo luogo) {
         listaPanel.add(Box.createVerticalStrut(6));
-        listaPanel.add(new LuogoCard(luogo));
+        listaPanel.add(new LuogoCard(luogo,luoghiController));
     }
 
     private void aggiungiLuogo() {

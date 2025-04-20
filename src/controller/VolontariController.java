@@ -125,4 +125,9 @@ public class VolontariController {
             return new ArrayList<>();
         }
     }
+
+    public void rimuoviVolontario(Volontario volontario) {
+        listaVolontari.remove(volontario);
+        salvaVolontari();
+    }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Luogo;
 import model.TipoVisita;
+import model.Volontario;
 import service.DataManager;
 
 public class LuoghiController {
@@ -23,8 +24,48 @@ public class LuoghiController {
     }
 
     public List<Luogo> getLuoghi() {
+        pulisciDati();
         return luoghi;
     }
+
+    private void pulisciDati() {
+        // Carica i luoghi e i tipi visita dal file
+        List<Luogo> luoghi = DataManager.caricaDati(Costants.file_luoghi);
+        List<TipoVisita> tipiVisitaGlobali = DataManager.caricaDati(Costants.file_tipi_visita);
+    
+        if (luoghi == null || tipiVisitaGlobali == null) return;
+    
+        // Scorri i luoghi (copia per evitare ConcurrentModificationException)
+        for (Luogo luogo : new ArrayList<>(luoghi)) {
+            // Scorri i tipi visita del luogo (anche qui uso una copia)
+            for (TipoVisita tipo : new ArrayList<>(luogo.getTipiVisita())) {
+                // Trova il tipo visita completo nel file globale
+                boolean esiste = false;
+                for (TipoVisita tipoGlobale : tipiVisitaGlobali) {
+                    if (tipo.equals(tipoGlobale)) {
+                        esiste = true;
+                        break;
+                    }
+                }
+                // Se non esiste, rimuovi dal luogo
+                if (!esiste) {
+                    luogo.getTipiVisita().remove(tipo);
+                }
+            }
+    
+            // Se il luogo non ha più tipi visita, rimuovilo dalla lista
+            if (luogo.getTipiVisita().isEmpty()) {
+                luoghi.remove(luogo);
+            }
+        }
+    
+        // Aggiorna l'attributo e salva
+        this.luoghi = luoghi;
+        salvaDati();
+    }
+    
+    
+    
 
     public void salvaDati() {
         DataManager.salvaDati(luoghi, Costants.file_luoghi);
@@ -46,4 +87,31 @@ public class LuoghiController {
         return false;
     
     }
+
+    public void rimuoviVolonatario(Volontario volontario, List<TipoVisita> tipiVisitaDaRimuovere) {
+        for (Luogo luogo : luoghi) {
+            for (TipoVisita tipoVisita : luogo.getTipiVisita()) {
+                tipoVisita.rimuoviVolontario(volontario);
+                if (tipoVisita.getVolontari().isEmpty()) {
+                    tipiVisitaDaRimuovere.add(tipoVisita);
+                }
+            }
+            luogo.getTipiVisita().removeAll(tipiVisitaDaRimuovere);
+        }
+
+
+        // rimuovi luoghi senza tipi visita
+        luoghi.removeIf(l -> l.getTipiVisita().isEmpty());
+        
+
+
+        salvaDati();
+    }
+
+    public void rimuoviLuogo(Luogo luogo) {
+        luoghi.remove(luogo);
+        salvaDati();
+    }
+
+    
 }

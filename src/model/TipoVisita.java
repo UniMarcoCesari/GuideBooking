@@ -133,4 +133,8 @@ public class TipoVisita implements Serializable {
     public ArrayList<Volontario> getVolontari() {
         return volontari;
     }
+
+    public void rimuoviVolontario(Volontario volontario) {
+        volontari.removeIf(v -> v.getNome().equals(volontario.getNome()));
+    }
 }

@@ -71,7 +71,7 @@ public class ListaTipiVisita extends JFrame {
     private void addTipoVisitaCard(TipoVisita tipoVisita) {
         listPanel.add(Box.createVerticalStrut(6));
         // Instantiate and add the card for the given TipoVisita
-        listPanel.add(new TipoVisitaCard(tipoVisita));  // Add a card for each place
+        listPanel.add(new TipoVisitaCard(this,tipoVisita,tipiVisitaController));  // Add a card for each place
     }
 
     private void initializeFrame() {
@@ -83,6 +83,13 @@ public class ListaTipiVisita extends JFrame {
     // Placeholder method for the "Aggiungi" button action
     private void apriDialogAggiungiTipoVisita() {
         dispose();
-        new NuovoTipoVisitaSecondo(this, tipiVisitaController).setVisible(true);
+        new NuovoTipoVisita(this, tipiVisitaController).setVisible(true);
+    }
+
+    public void rimuoviTipoVisita(TipoVisita tipoVisita) {
+        tipiVisitaController.rimuoviTipoVisita(tipoVisita);
+        aggiornaListaTipiVisita();
+        dispose();
+        new PannelloConfiguratore().setVisible(true);
     }
 }

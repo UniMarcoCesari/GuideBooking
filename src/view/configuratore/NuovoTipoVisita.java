@@ -1,6 +1,5 @@
 package view.configuratore;
 
-import controller.LuoghiController;
 import controller.TipiVisitaController;
 import controller.VolontariController;
 import costants.Costants;
@@ -11,12 +10,12 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.*;
 import model.TipoVisita;
 import model.Volontario;
-import view.VolontariFrame;
 
-public class NuovoTipoVisitaSecondo extends JFrame {
+public class NuovoTipoVisita extends JFrame {
     private final JTextField titoloField, descrizioneField, puntoIncontroField;
     private final JSpinner dataInizioSpinner, dataFineSpinner, oraInizioSpinner;
     private JSpinner durataSpinner, minPartecipantiSpinner, maxPartecipantiSpinner;
@@ -27,26 +26,35 @@ public class NuovoTipoVisitaSecondo extends JFrame {
     private DefaultListModel<String> volontariListModel;
 
     private final TipiVisitaController tipiVisitaController;
-    private final  VolontariController volontariController;
+    private final VolontariController volontariController;
 
     private final ListaTipiVisita parent;
+    private final TipoVisita tipoVisitaDaModificare;
+    private final boolean isModifica;
 
-    public NuovoTipoVisitaSecondo(ListaTipiVisita parent, TipiVisitaController tipiVisitaController) {
+    public NuovoTipoVisita(ListaTipiVisita parent, TipiVisitaController tipiVisitaController) {
+        this(parent, tipiVisitaController, null);
+    }
+
+    public NuovoTipoVisita(ListaTipiVisita parent, TipiVisitaController tipiVisitaController, TipoVisita tipoVisitaDaModificare) {
+        this.isModifica = (tipoVisitaDaModificare != null);
         setSize(1200, 900);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
-        setTitle("Nuovo Tipo Visita");
+        setTitle(isModifica ? "Modifica Tipo Visita" : "Nuovo Tipo Visita");
 
         this.parent = parent;
         this.tipiVisitaController = tipiVisitaController;
         this.volontariController = new VolontariController();
+        this.tipoVisitaDaModificare = tipoVisitaDaModificare;
 
+        // Pannello principale con layout BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         // Pannello superiore con titolo e tasto indietro
-        JPanel headerPanel = Costants.createHeaderPanel("Nuovo tipo visita");
+        JPanel headerPanel = Costants.createHeaderPanel(isModifica ? "Modifica tipo visita" : "Nuovo tipo visita");
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Pannello per il form - usando GridBagLayout per un controllo migliore
@@ -200,12 +208,11 @@ public class NuovoTipoVisitaSecondo extends JFrame {
         formPanel.add(buttonPanel, labelGbc);
 
         //footer e annulla
-        JButton salvaButton = Costants.createSimpleButton("Salva Visita");
+        JButton salvaButton = Costants.createSimpleButton(isModifica ? "Salva Modifiche" : "Salva Visita");
         salvaButton.addActionListener(e -> salvaVisita());
 
         JButton annullaButton = Costants.createSimpleButton("Annulla");
         annullaButton.addActionListener(e -> chiudiEmandaIndietro());
-
 
         JPanel footerPanel = Costants.createFooterPanel("");
         footerPanel.add(salvaButton, BorderLayout.CENTER);
@@ -214,8 +221,40 @@ public class NuovoTipoVisitaSecondo extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
+        // Se stiamo modificando un tipo visita esistente, popoliamo i campi
+        if (isModifica) {
+            popolaCampiDaModificare();
+        }
+
         add(mainPanel);
         setVisible(true);
+    }
+
+    private void popolaCampiDaModificare() {
+        titoloField.setText(tipoVisitaDaModificare.getTitolo());
+        descrizioneField.setText(tipoVisitaDaModificare.getDescrizione());
+        puntoIncontroField.setText(tipoVisitaDaModificare.getPuntoIncontro());
+        dataInizioSpinner.setValue(Date.from(tipoVisitaDaModificare.getDataInizio().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        dataFineSpinner.setValue(Date.from(tipoVisitaDaModificare.getDataFine().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        oraInizioSpinner.setValue(Date.from(tipoVisitaDaModificare.getOraInizio().atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant()));
+        durataSpinner.setValue(tipoVisitaDaModificare.getDurataMinuti());
+        minPartecipantiSpinner.setValue(tipoVisitaDaModificare.getMinPartecipanti());
+        maxPartecipantiSpinner.setValue(tipoVisitaDaModificare.getMaxPartecipanti());
+        bigliettoCheckbox.setSelected(tipoVisitaDaModificare.isBigliettoNecessario());
+
+        // Seleziona i volontari nella lista
+        List<String> volontariSelezionati = tipoVisitaDaModificare.getVolontari().stream().map(Volontario::getNome).collect(Collectors.toList());
+        int[] selectedIndices = new int[volontariSelezionati.size()];
+        for (int i = 0; i < volontariSelezionati.size(); i++) {
+            String nomeVolontario = volontariSelezionati.get(i);
+            for (int j = 0; j < volontariListModel.getSize(); j++) {
+                if (volontariListModel.getElementAt(j).equals(nomeVolontario)) {
+                    selectedIndices[i] = j;
+                    break;
+                }
+            }
+        }
+        volontariList.setSelectedIndices(selectedIndices);
     }
 
     private JLabel createLabel(String text) {
@@ -236,7 +275,6 @@ public class NuovoTipoVisitaSecondo extends JFrame {
         sectionLabel.setFont(new Font("Dialog", Font.BOLD, 14));
         sectionLabel.setForeground(new Color(0, 102, 204));
         panel.add(sectionLabel, gbc);
-
     }
 
     // Metodo che aggiorna la lista dei volontari nella JList
@@ -252,7 +290,6 @@ public class NuovoTipoVisitaSecondo extends JFrame {
     public JList<String> getVolontariList() {
         return volontariList;
     }
-
 
     private void salvaVisita() {
         String titolo = titoloField.getText().trim();
@@ -282,8 +319,8 @@ public class NuovoTipoVisitaSecondo extends JFrame {
 
         LocalTime oraInizio = convertToLocalTime(oraInizioSpinner.getValue());
 
-        // Controllo se il titolo esiste già
-        if (tipiVisitaController.titoloEsiste(titolo)) {
+        // Controllo se il titolo esiste già (solo per nuove visite)
+        if (!isModifica && tipiVisitaController.titoloEsiste(titolo)) {
             JOptionPane.showMessageDialog(this, "Errore: Esiste già una visita con questo titolo!", "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -297,15 +334,8 @@ public class NuovoTipoVisitaSecondo extends JFrame {
             listaVolontari.add(new Volontario(nomeVolontario));
         }
 
-
         // Aggiungi i volontari alla visita
         ArrayList<String> volontari = new ArrayList<>(volontariSelezionati);
-
-        // Messaggio di debug per verificare i volontari selezionati
-        StringBuilder sb = new StringBuilder("Volontari selezionati: ");
-        for (String v : volontari) {
-            sb.append(v).append(", ");
-        }
 
         // Ottiene i valori dai nuovi campi
         int minPartecipanti = (int) minPartecipantiSpinner.getValue();
@@ -334,21 +364,25 @@ public class NuovoTipoVisitaSecondo extends JFrame {
                 listaVolontari
         );
 
-        tipiVisitaController.aggiungiVisita(nuovaVisita);
+        if (isModifica) {
+            // Modifica il tipo visita esistente
+            tipiVisitaController.modificaTipoVisita(nuovaVisita);
+            JOptionPane.showMessageDialog(this, "Tipo di visita modificato con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Aggiungi nuovo tipo visita
+            tipiVisitaController.aggiungiVisita(nuovaVisita);
+            JOptionPane.showMessageDialog(this, "Tipo di visita aggiunto con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
+        }
 
-        // TODO Aggiorna la lista dei tipi di visita nel frame padre
+        // Aggiorna la lista dei tipi di visita nel frame padre
         parent.aggiornaListaTipiVisita();
-
-        // Mostra messaggio di conferma
-        JOptionPane.showMessageDialog(this, "Tipo di visita aggiunto con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
-
+        
         chiudiEmandaIndietro();
     }
 
-
     private void chiudiEmandaIndietro() {
         dispose();
-        new ListaTipiVisita(tipiVisitaController).setVisible(true);
+        parent.setVisible(true);
     }
 
     private LocalDate convertToLocalDate(Object spinnerValue) {

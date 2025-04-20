@@ -20,6 +20,11 @@ public class TipiVisitaController {
         return tipiVisita;
     }
 
+    public void rimuoviTipoVisita(TipoVisita tipoVisita) {
+        tipiVisita.remove(tipoVisita);
+        salvaDati();
+    }
+
     public TipoVisita getTipoVisita(String titolo) {
         caricaDati();
 
@@ -88,5 +93,24 @@ public class TipiVisitaController {
             }
         }
         return tipiVisitaPerVolontario;
+    }
+
+    public void modificaTipoVisita(TipoVisita nuovaVisita) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'modificaTipoVisita'");
+    }
+
+    public void rimuoviVolonatario(Volontario volontario) {
+        List<TipoVisita> tipiVisitaDaRimuovere = new ArrayList<>();
+        for (TipoVisita tipoVisita : tipiVisita) {
+            tipoVisita.rimuoviVolontario(volontario);
+            if (tipoVisita.getVolontari().isEmpty()) {
+                tipiVisitaDaRimuovere.add(tipoVisita);
+            }
+        }
+        tipiVisita.removeAll(tipiVisitaDaRimuovere);
+        LuoghiController luoghiController = new LuoghiController();
+        luoghiController.rimuoviVolonatario(volontario,tipiVisitaDaRimuovere);
+        salvaDati();
     }
 }

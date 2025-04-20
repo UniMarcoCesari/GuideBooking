@@ -17,9 +17,18 @@ public class LuogoCard extends JPanel {
     private static final Color BORDER_COLOR = new Color(220, 220, 220);
     private static final Color SELECTED_COLOR = new Color(49, 130, 189);
 
-    public LuogoCard(Luogo luogo) {
+    private final LuoghiController luoghiController;
+    private final view.configuratore.ListaLuoghi parent;
+
+    public LuogoCard(Luogo luogo, LuoghiController luoghiController, view.configuratore.ListaLuoghi parent) {
+        this.luoghiController = luoghiController;
         this.luogo = luogo;
+        this.parent = parent;
         setupUI();
+    }
+
+    public LuogoCard(Luogo luogo, LuoghiController luoghiController) {
+        this(luogo, luoghiController, null);
     }
 
     private void setupUI() {
@@ -80,10 +89,28 @@ public class LuogoCard extends JPanel {
         }
         
         // Aggiungi tutto al pannello principale
+        JPanel buttonPanel = createButtonPanel();
         add(infoPanel, BorderLayout.CENTER);
         add(tipiVisitaPanel, BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.EAST);
         
         setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+
+    private JPanel createButtonPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        panel.setOpaque(false);
+
+        JButton deleteButton = new JButton("Elimina");
+        deleteButton.addActionListener(e -> {luoghiController.rimuoviLuogo(luogo);
+            if(parent != null) {
+                parent.aggiornaListaLuoghi();
+            }});
+        panel.add(deleteButton);
+        
+
+        return panel;
     }
     
     public void setSelected(boolean selected) {

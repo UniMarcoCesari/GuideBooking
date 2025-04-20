@@ -2,9 +2,15 @@ package card;
 
 import model.TipoVisita;
 import model.Volontario;
+import view.configuratore.ListaVolontari;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import controller.LuoghiController;
+import controller.TipiVisitaController;
+import controller.VolontariController;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -23,10 +29,16 @@ public class VolontarioCard extends JPanel {
 
     private final Volontario volontario;
     private final List<TipoVisita> listaTipoVisita;
+    private final VolontariController volontarioController;
+    private final TipiVisitaController tipoVisitaController;
+    private final ListaVolontari parent;
 
-    public VolontarioCard(Volontario volontario, List<TipoVisita> listaTipoVisita) {
+    public VolontarioCard(Volontario volontario, List<TipoVisita> listaTipoVisita, VolontariController volontarioController,TipiVisitaController tipoVisitaController,ListaVolontari parent) {
         this.volontario = volontario;
         this.listaTipoVisita = listaTipoVisita;
+        this.volontarioController = volontarioController;
+        this.tipoVisitaController = tipoVisitaController;
+        this.parent = parent;
 
         // Configurazione panel
         setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
@@ -45,7 +57,9 @@ public class VolontarioCard extends JPanel {
         JPanel infoPanel = createInfoPanel();
 
         // Assembly
+        JPanel buttonPanel = createButtonPanel();
         contentPanel.add(infoPanel, BorderLayout.CENTER);
+        contentPanel.add(buttonPanel, BorderLayout.EAST);
         add(contentPanel);
 
         // Effetto hover
@@ -89,5 +103,38 @@ public class VolontarioCard extends JPanel {
         return tipiVisita.stream()
                 .map(TipoVisita::getTitolo)
                 .collect(Collectors.joining(", "));
+    }
+
+    private JPanel createButtonPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Layout verticale
+        panel.setOpaque(false);
+
+        JButton eliminaButton = createIconButton("Elimina");
+        eliminaButton.addActionListener(e -> {
+            volontarioController.rimuoviVolontario(volontario);
+            tipoVisitaController.rimuoviVolonatario(volontario);
+            parent.aggiornaListaVolontari();
+            System.out.println("Elimina button clicked for " + volontario.getNome());
+        });
+
+        // Aggiungere spazio tra i pulsanti
+        eliminaButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        panel.add(eliminaButton);
+
+        return panel;
+    }
+
+    private JButton createIconButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        button.setForeground(Color.BLACK);
+        button.setBackground(new Color(49, 130, 189));
+        button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        return button;
     }
 }

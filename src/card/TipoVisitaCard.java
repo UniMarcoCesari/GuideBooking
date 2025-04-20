@@ -2,7 +2,10 @@ package card;
 
 import costants.Costants;
 import model.TipoVisita;
-import model.Volontario; // Import Volontario
+import model.Volontario;
+import view.configuratore.ListaTipiVisita;
+import view.configuratore.NuovoTipoVisita;
+import controller.TipiVisitaController; // Added import for TipiVisitaController
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -25,13 +28,16 @@ public class TipoVisitaCard extends JPanel {
 
     private final TipoVisita tipoVisita;
     private final JPanel contentPanel;
+    private final TipiVisitaController tipiVisitaController;
+    private final ListaTipiVisita parent;
 
-    public TipoVisitaCard(TipoVisita tipoVisita) {
+    public TipoVisitaCard(ListaTipiVisita parent,TipoVisita tipoVisita, TipiVisitaController tipiVisitaController) {
         this.tipoVisita = tipoVisita;
+        this.parent = parent;
+        this.tipiVisitaController = tipiVisitaController;
 
         System.out.println(tipoVisita.getGiorniSettimana().toString());
         System.out.println(tipoVisita.getVolontari().toString());
-
 
         // Configurazione panel
         setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
@@ -46,16 +52,15 @@ public class TipoVisitaCard extends JPanel {
         contentPanel.setOpaque(false);
         contentPanel.setBorder(new EmptyBorder(12, 15, 12, 15));
 
-
         // Area informazioni
         JPanel infoPanel = createInfoPanel();
 
-
+        // Action buttons
+        JPanel buttonPanel = createButtonPanel(tipoVisita);
 
         // Assembly
-
         contentPanel.add(infoPanel, BorderLayout.CENTER);
-        //contentPanel.add(actionPanel, BorderLayout.EAST);
+        contentPanel.add(buttonPanel, BorderLayout.EAST);
         add(contentPanel);
 
         // Effetto hover
@@ -93,7 +98,6 @@ public class TipoVisitaCard extends JPanel {
         descrizioneLabel.setFont(NORMAL_FONT);
         descrizioneLabel.setForeground(LIGHT_TEXT);
 
-
         // Volontari associati
         String volontariStr = formatVolontari(tipoVisita.getVolontari());
         JLabel volontariLabel = new JLabel("Volontari: " + volontariStr);
@@ -105,18 +109,30 @@ public class TipoVisitaCard extends JPanel {
         panel.add(descrizioneLabel);
         panel.add(volontariLabel); // Add the volunteers label
 
-
         return panel;
     }
 
-    private JPanel createButtonPanel() {
+    private JPanel createButtonPanel(TipoVisita tipoVisita) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Layout verticale
         panel.setOpaque(false);
 
         JButton modificaButton = createIconButton("Modifica");
+        modificaButton.addActionListener(e -> {
+            
+            
+            // Open the NuovoTipoVisita frame in edit mode by passing the tipo visita to modify
+            new NuovoTipoVisita(parent, tipiVisitaController, tipoVisita);
+            
+            // Hide the parent frame since the new frame will be displayed
+            parent.setVisible(false);
+        });
+        
         JButton eliminaButton = createIconButton("Elimina");
-
+        eliminaButton.addActionListener(e -> {
+            tipiVisitaController.rimuoviTipoVisita(tipoVisita);
+            parent.aggiornaListaTipiVisita();});
+       
 
         // Aggiungere spazio tra i pulsanti
         modificaButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -128,7 +144,6 @@ public class TipoVisitaCard extends JPanel {
 
         return panel;
     }
-
 
     private JButton createIconButton(String text) {
         JButton button = new JButton(text);
@@ -142,25 +157,6 @@ public class TipoVisitaCard extends JPanel {
         return button;
     }
 
-
-
-    private boolean isValidInput(String nome, String posizione) {
-        return nome != null && !nome.trim().isEmpty() &&
-                posizione != null && !posizione.trim().isEmpty();
-    }
-
-
-
-
-
-    private String formatTipiVisita(List<TipoVisita> tipiVisita) {
-        if (tipiVisita == null || tipiVisita.isEmpty()) {
-            return "Nessun tipo di visita";
-        }
-        return tipiVisita.stream()
-                .map(TipoVisita::getTitolo)
-                .collect(Collectors.joining(", "));
-    }
 
     // Helper method to format volunteer names
     private String formatVolontari(List<Volontario> volontari) {
