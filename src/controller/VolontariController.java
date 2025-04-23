@@ -24,12 +24,13 @@ public class VolontariController {
 
     public VolontariController() {
         listaVolontari = caricaDati();
-        disponibilitaVolontari = new HashMap<>();
+        disponibilitaVolontari = caricaDisponibilita();;
     }
 
     public boolean isDisponibile(Volontario volontario, LocalDate data) {
-        if (!disponibilitaVolontari.containsKey(data)) return false;
-        return disponibilitaVolontari.get(data).getOrDefault(volontario.getNome(), false);
+        Map<String, Boolean> disponibilitaGiorno = disponibilitaVolontari.get(data);
+        if (disponibilitaGiorno == null) return false;
+        return disponibilitaGiorno.getOrDefault(volontario.getNome(), false);
     }
 
     public ArrayList<Volontario> getListaVolontari() {
@@ -91,13 +92,13 @@ public class VolontariController {
         }
     }
 
-    public void caricaDisponibilita() {
+    public Map<LocalDate, Map<String, Boolean>> caricaDisponibilita() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Costants.file_disponibilita_volontari))) {
-            disponibilitaVolontari = (Map<LocalDate, Map<String, Boolean>>) ois.readObject();
             System.out.println("Disponibilita caricata");
+            return (Map<LocalDate, Map<String, Boolean>>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             disponibilitaVolontari = new HashMap<>();
-            System.out.println("Disponibilita vuota inizializata");
+            return new HashMap<>();
         }
     }
 
