@@ -18,6 +18,7 @@ public class Costants
       public static final String  file_corpo = "src/data/corpo.dat";
       public static String file_date = "src/data/date.dat";
       public static String file_disponibilita_volontari = "src/data/disponibilitaVolontari.dat";
+      public static String file_visite = "src/data/visite.dat";
 
 
     // Header

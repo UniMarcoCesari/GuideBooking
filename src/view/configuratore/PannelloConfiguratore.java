@@ -3,6 +3,7 @@ package view.configuratore;
 import controller.CalendarioController;
 import controller.LuoghiController;
 import controller.TipiVisitaController;
+import controller.VisiteController;
 import controller.VolontariController;
 import costants.Costants;
 import model.CorpoDati;
@@ -19,6 +20,7 @@ public class PannelloConfiguratore extends JFrame {
     private final LuoghiController luoghiController;
     private final TipiVisitaController tipoVisitaController;
     private final VolontariController volontariController;
+    private final VisiteController visiteController;
     private JTextField textArea;
     private JButton button1, button2, button3, button4, button5, button6, button7, button8, button9;
     private CorpoDati corpoDati;
@@ -32,6 +34,9 @@ public class PannelloConfiguratore extends JFrame {
         this.tipoVisitaController = new TipiVisitaController();
         this.volontariController = new VolontariController();
         this.corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
+
+        //inizializziamo il controller delle visite
+        this.visiteController = new VisiteController(calendarioController, tipoVisitaController, volontariController);
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -105,7 +110,7 @@ public class PannelloConfiguratore extends JFrame {
 
         button1.addActionListener(e -> {
             dispose();
-            new Sezione1(calendarioController);
+            new Sezione1(visiteController,calendarioController);
         });
         button3.addActionListener(e -> {
             dispose();
@@ -190,18 +195,13 @@ public class PannelloConfiguratore extends JFrame {
     }
 
     private void aggiornaBottoni() {
-        LocalDate firstModifiableMonth = calendarioController.getNomeMesePrimoCheSiPuoModificare();
-        if (calendarioController.isButtonLocked()) {
-            button1.setEnabled(false);
-        } else {
-            button1.setEnabled(true);
-        }
-
         java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ITALIAN);
 
-        button1.setText("Modifiche per " + firstModifiableMonth.format(formatter));
+        LocalDate firstModifiableMonth = calendarioController.getNomeMesePrimoCheSiPuoModificare();
+               
+        button1.setText("Visite per " + firstModifiableMonth.format(formatter));
         button2.setText("Modifiche per " + firstModifiableMonth.plusMonths(1).format(formatter));
-        button3.setText("Date precluse " + firstModifiableMonth.plusMonths(2).format(formatter)); // Changed to plusMonths(2) to reflect the user's request for a 3-month difference
+        button3.setText("Date precluse " + firstModifiableMonth.plusMonths(2).format(formatter));
     }
 
     public static void main(String[] args) {

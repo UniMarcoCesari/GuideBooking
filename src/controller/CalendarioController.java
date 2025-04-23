@@ -114,4 +114,17 @@ public class CalendarioController {
     public boolean isDataPreclusa(LocalDate data) {
         return datePrecluse.contains(data);
     }
+    
+    public  boolean isGiornoDiGenerazioneVisite() {
+        LocalDate oggi = getDatacDateCorrenteLocalDate();
+        if (oggi.getDayOfMonth() < 16 || isDataPreclusa(oggi)) return false;
+    
+        LocalDate primoFeriale = oggi.withDayOfMonth(16);
+        while (primoFeriale.getDayOfWeek().getValue() > 5 || isDataPreclusa(primoFeriale)) {
+            primoFeriale = primoFeriale.plusDays(1);
+        }
+    
+        return oggi.equals(primoFeriale);
+    }
+    
 }

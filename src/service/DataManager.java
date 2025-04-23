@@ -3,6 +3,7 @@ package service;
 import model.Calendario;
 import model.CorpoDati;
 import model.Luogo;
+import model.Visita;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -127,6 +128,31 @@ public class DataManager {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return new ArrayList<>();
+        }
+    }
+
+    public static List<Visita> leggiDatiVisite(){
+        File file = new File(Costants.file_visite);
+
+        if (!file.exists()) {
+            return new ArrayList<>();
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            List<Visita> visits = (List<Visita>) ois.readObject();
+            return visits;
+        }
+        catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public static void scriviDatiVisite(List<Visita> visite) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_visite))) {
+            oos.writeObject(visite);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -4,12 +4,15 @@ import controller.TipiVisitaController;
 import controller.VolontariController;
 import costants.Costants;
 import java.awt.*;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
 import javax.swing.*;
 import model.TipoVisita;
 import model.Volontario;
@@ -322,13 +325,17 @@ public class NuovoTipoVisitaFrame extends JFrame {
             return;
         }
 
+        Set<DayOfWeek> giorniSettimana = Set.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+
+        //TODO  sistema quetso come l altro
+
         TipoVisita nuovaVisita = new TipoVisita(
                 titolo,
                 descrizione,
                 puntoIncontro,
                 dataInizio,
                 dataFine,
-                volontari,
+                giorniSettimana,
                 oraInizio,
                 (int) durataSpinner.getValue(),
                 richiedeBiglietto,

@@ -1,10 +1,11 @@
 package model;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 public class TipoVisita implements Serializable {
 
@@ -13,7 +14,7 @@ public class TipoVisita implements Serializable {
     private String puntoIncontro;
     private LocalDate dataInizio;
     private LocalDate dataFine;
-    private List<String> giorniSettimana;
+    private Set<DayOfWeek> giorniSettimana;
     private LocalTime oraInizio;
     private int durataMinuti;
     private boolean bigliettoNecessario;
@@ -24,7 +25,7 @@ public class TipoVisita implements Serializable {
 
 
     public TipoVisita(String titolo, String descrizione, String puntoIncontro,
-                      LocalDate dataInizio, LocalDate dataFine, List<String> giorniSettimana,
+                      LocalDate dataInizio, LocalDate dataFine, Set<DayOfWeek> giorniSettimana,
                       LocalTime oraInizio, int durataMinuti, boolean bigliettoNecessario,
                       int minPartecipanti, int maxPartecipanti, ArrayList<Volontario> volontari) {
         this.titolo = titolo;
@@ -82,11 +83,11 @@ public class TipoVisita implements Serializable {
         this.dataFine = dataFine;
     }
 
-    public List<String> getGiorniSettimana() {
+    public Set<DayOfWeek> getGiorniSettimana() {
         return giorniSettimana;
     }
 
-    public void setGiorniSettimana(List<String> giorniSettimana) {
+    public void setGiorniSettimana(Set<DayOfWeek> giorniSettimana) {
         this.giorniSettimana = giorniSettimana;
     }
 
@@ -136,5 +137,9 @@ public class TipoVisita implements Serializable {
 
     public void rimuoviVolontario(Volontario volontario) {
         volontari.removeIf(v -> v.getNome().equals(volontario.getNome()));
+    }
+
+    public String getNome() {
+        return titolo;
     }
 }
