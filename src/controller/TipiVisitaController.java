@@ -96,8 +96,23 @@ public class TipiVisitaController {
     }
 
     public void modificaTipoVisita(TipoVisita nuovaVisita) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'modificaTipoVisita'");
+        for (TipoVisita tipoVisita : tipiVisita) {
+            if (tipoVisita.getTitolo().equals(nuovaVisita.getTitolo())) {
+                tipoVisita.setDescrizione(nuovaVisita.getDescrizione());
+                tipoVisita.setPuntoIncontro(nuovaVisita.getPuntoIncontro());
+                tipoVisita.setDataInizio(nuovaVisita.getDataInizio());
+                tipoVisita.setDataFine(nuovaVisita.getDataFine());
+                tipoVisita.setGiorniSettimana(nuovaVisita.getGiorniSettimana());
+                tipoVisita.setOraInizio(nuovaVisita.getOraInizio());
+                tipoVisita.setDurataMinuti(nuovaVisita.getDurataMinuti());
+                tipoVisita.setBigliettoNecessario(nuovaVisita.isBigliettoNecessario());
+                tipoVisita.setVolontari(nuovaVisita.getVolontari());
+                tipoVisita.setMinPartecipanti(nuovaVisita.getMinPartecipanti());
+                tipoVisita.setMaxPartecipanti(nuovaVisita.getMaxPartecipanti());
+                break;
+            }
+        }
+        salvaDati();
     }
 
     public void rimuoviVolonatario(Volontario volontario) {

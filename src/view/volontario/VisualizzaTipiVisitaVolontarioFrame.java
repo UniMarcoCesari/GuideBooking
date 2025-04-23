@@ -3,14 +3,15 @@ package view.volontario;
 import controller.VolontariController;
 import costants.Costants;
 import model.TipoVisita;
-import model.Volontario;
+
 import view.PannelloVolontario;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
+import java.time.DayOfWeek;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class VisualizzaTipiVisitaVolontarioFrame extends JFrame {
 
@@ -137,7 +138,9 @@ public class VisualizzaTipiVisitaVolontarioFrame extends JFrame {
         tipoVisitaPanel.add(dateLabel);
 
         // Giorni della settimana
-        JLabel giorniLabel = new JLabel("Giorni: " + String.join(", ", tipoVisita.getGiorniSettimana()));
+        JLabel giorniLabel = new JLabel("Giorni: " + tipoVisita.getGiorniSettimana().stream()
+                .map(DayOfWeek::name)
+                .collect(Collectors.joining(", ")));
         giorniLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         tipoVisitaPanel.add(giorniLabel);
 

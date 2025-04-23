@@ -36,7 +36,7 @@ public class PannelloConfiguratore extends JFrame {
         this.corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
 
         //inizializziamo il controller delle visite
-        this.visiteController = new VisiteController(calendarioController, tipoVisitaController, volontariController);
+        this.visiteController = new VisiteController(calendarioController, luoghiController, tipoVisitaController, volontariController);
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);

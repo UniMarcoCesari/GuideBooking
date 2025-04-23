@@ -24,7 +24,7 @@ public class LuoghiController {
     }
 
     public List<Luogo> getLuoghi() {
-        pulisciDati();
+        //pulisciDati()
         return luoghi;
     }
 
@@ -55,6 +55,7 @@ public class LuoghiController {
     
             // Se il luogo non ha più tipi visita, rimuovilo dalla lista
             if (luogo.getTipiVisita().isEmpty()) {
+                System.out.println("luogo pulito");
                 luoghi.remove(luogo);
             }
         }

@@ -135,6 +135,11 @@ public class TipoVisita implements Serializable {
         return volontari;
     }
 
+    
+    public void setVolontari(ArrayList<Volontario> volontari) {
+        this.volontari = volontari;
+    }
+
     public void rimuoviVolontario(Volontario volontario) {
         volontari.removeIf(v -> v.getNome().equals(volontario.getNome()));
     }

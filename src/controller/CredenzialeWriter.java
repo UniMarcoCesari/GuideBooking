@@ -50,4 +50,16 @@ public class CredenzialeWriter {
             return new ArrayList<>();
         }
     }
+
+
+    public static void eliminaCredenzialiVolontari(String nome) {
+        List<Credenziale> credenzialeList = caricaCredenziali();
+        for (Credenziale c : credenzialeList) {
+            if (c.getUsername().equals(nome) && c.getRuolo().equals(Costants.ruolo_volontario)) {
+                c.setRuolo(Costants.ruolo_eliminato);
+            }
+        }
+        salvaCredenziali(credenzialeList);
+        System.out.println("✅ Credenziali per il ruolo 'volontario' marcate come 'eliminato' per l'utente " + nome);
+    }
 }

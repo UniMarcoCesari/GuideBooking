@@ -73,6 +73,7 @@ public class VolontariController {
 
     public void rimuoviVolonatario(Volontario volontario) {
         listaVolontari.remove(volontario);
+        CredenzialeWriter.eliminaCredenzialiVolontari(volontario.getNome());
         salvaVolontari();
     }
 
@@ -129,5 +130,9 @@ public class VolontariController {
     public void rimuoviVolontario(Volontario volontario) {
         listaVolontari.remove(volontario);
         salvaVolontari();
+    }
+
+    public boolean volontarioEsiste(String nomeVolontario) {
+        return listaVolontari.stream().anyMatch(v -> v.getNome().equalsIgnoreCase(nomeVolontario));
     }
 }

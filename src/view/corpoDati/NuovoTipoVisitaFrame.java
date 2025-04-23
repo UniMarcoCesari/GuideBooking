@@ -1,39 +1,49 @@
 package view.corpoDati;
 
-import controller.TipiVisitaController;
-import controller.VolontariController;
-import costants.Costants;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+import controller.TipiVisitaController;
+import controller.VolontariController;
+import costants.Costants;
 import model.TipoVisita;
 import model.Volontario;
-import view.VolontariFrame;
 
 public class NuovoTipoVisitaFrame extends JFrame {
     private final JTextField titoloField, descrizioneField, puntoIncontroField;
+    private final JSpinner durataSpinner, minPartecipantiSpinner, maxPartecipantiSpinner;
     private final JSpinner dataInizioSpinner, dataFineSpinner, oraInizioSpinner;
-    private JSpinner durataSpinner, minPartecipantiSpinner, maxPartecipantiSpinner;
     private JCheckBox bigliettoCheckbox;
+    
+    // Aggiunta delle variabili per i giorni della settimana
+    private DefaultListModel<String> giorniListModel;
+    private JList<String> giorniList;
+    
+    // Aggiunta delle variabili per la lista dei volontari
+    private DefaultListModel<String> volontariListModelVolontari;
+    private JList<String> volontariListVolontari;
 
-    // Sostituiamo il ComboBox con una JList e un modello per selezioni multiple
-    private JList<String> volontariList;
-    private DefaultListModel<String> volontariListModel;
-
-    private final TipiVisitaController tipiVisitaController;
-    private final  VolontariController volontariController;
+    private boolean isModifica = false;
+    private TipoVisita tipoVisitaDaModificare = null;
 
     private final CorpoDatiFase2 parent;
+    private final TipiVisitaController tipiVisitaController;
+    private final VolontariController volontariController;
 
-    public NuovoTipoVisitaFrame(CorpoDatiFase2 parent, TipiVisitaController tipoVisitaController,VolontariController volontariController) {
+    public NuovoTipoVisitaFrame(CorpoDatiFase2 parent, TipiVisitaController tipoVisitaController, VolontariController volontariController) {
         setSize(1200, 900);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -166,25 +176,49 @@ public class NuovoTipoVisitaFrame extends JFrame {
         fieldGbc.gridy = 12;
         formPanel.add(bigliettoCheckbox, fieldGbc);
 
-        // Sezione 4: Volontari
-        addSectionLabel(formPanel, "Gestione Volontari", 13);
+        // Sezione 4: Giorni della settimana
+        addSectionLabel(formPanel, "Giorni della settimana", 13);
 
-        // Lista di volontari con selezione multipla
+        // Lista dei giorni della settimana con selezione multipla
         labelGbc.gridy = 14;
-        formPanel.add(createLabel("Seleziona Volontari:"), labelGbc);
+        formPanel.add(createLabel("Seleziona giorni:"), labelGbc);
 
-        // Inizializza la lista con selezione multipla
-        volontariListModel = new DefaultListModel<>();
-        volontariList = new JList<>(volontariListModel);
-        volontariList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        giorniListModel = new DefaultListModel<>();
+        giorniList = new JList<>(giorniListModel);
+        giorniList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-        // Aggiungi un bordo alla lista
-        JScrollPane volontariScrollPane = new JScrollPane(volontariList);
-        volontariScrollPane.setPreferredSize(new Dimension(250, 100));
-        volontariScrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        giorniListModel.addElement("Lunedì");
+        giorniListModel.addElement("Martedì");
+        giorniListModel.addElement("Mercoledì");
+        giorniListModel.addElement("Giovedì");
+        giorniListModel.addElement("Venerdì");
+        giorniListModel.addElement("Sabato");
+        giorniListModel.addElement("Domenica");
+
+        JScrollPane giorniScrollPane = new JScrollPane(giorniList);
+        giorniScrollPane.setPreferredSize(new Dimension(250, 100));
+        giorniScrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         fieldGbc.gridy = 14;
-        formPanel.add(volontariScrollPane, fieldGbc);
+        formPanel.add(giorniScrollPane, fieldGbc);
+
+        // Sezione 5: Volontari
+        addSectionLabel(formPanel, "Gestione Volontari", 15);
+
+        // Lista di volontari con selezione multipla
+        labelGbc.gridy = 16;
+        formPanel.add(createLabel("Seleziona Volontari:"), labelGbc);
+
+        volontariListModelVolontari = new DefaultListModel<>();
+        volontariListVolontari = new JList<>(volontariListModelVolontari);
+        volontariListVolontari.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        JScrollPane volontariScrollPaneVolontari = new JScrollPane(volontariListVolontari);
+        volontariScrollPaneVolontari.setPreferredSize(new Dimension(250, 100));
+        volontariScrollPaneVolontari.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        fieldGbc.gridy = 16;
+        formPanel.add(volontariScrollPaneVolontari, fieldGbc);
 
         // Aggiorna la lista dei volontari
         aggiornaListaVolontari();
@@ -192,22 +226,137 @@ public class NuovoTipoVisitaFrame extends JFrame {
         // Pulsante aggiungi volontario
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.setBackground(Costants.BACKGROUND_COLOR);
-        JButton aggiungiVolontarioButton = new JButton("Aggiungi Nuovo Volontario");
-        aggiungiVolontarioButton.addActionListener(e -> creaNuovoVolontario());
+        
+        JButton aggiungiVolontarioButton = Costants.createSimpleButton("Aggiungi Volontario");
+        aggiungiVolontarioButton.addActionListener(e -> {
+            String nomeVolontario = JOptionPane.showInputDialog(this, "Inserisci il nome del nuovo volontario:", "Aggiungi Volontario", JOptionPane.PLAIN_MESSAGE);
+            if (nomeVolontario != null && !nomeVolontario.trim().isEmpty()) {
+                nomeVolontario = nomeVolontario.trim();
+                // Verifica se il volontario esiste già
+                if (volontariController.volontarioEsiste(nomeVolontario)) {
+                    JOptionPane.showMessageDialog(this, "Questo volontario esiste già!", "Errore", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                // Aggiunge il nuovo volontario
+                Volontario nuovoVolontario = new Volontario(nomeVolontario);
+                volontariController.aggiungiVolontario(nuovoVolontario.getNome());
+                
+                // Aggiorna la lista dei volontari
+                aggiornaListaVolontari();
+                
+                // Seleziona il nuovo volontario nella lista
+                int index = -1;
+                for (int i = 0; i < volontariListModelVolontari.getSize(); i++) {
+                    if (volontariListModelVolontari.getElementAt(i).equals(nomeVolontario)) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index >= 0) {
+                    volontariListVolontari.addSelectionInterval(index, index);
+                }
+            }
+        });
+        
         buttonPanel.add(aggiungiVolontarioButton);
 
-        labelGbc.gridy = 15;
+        labelGbc.gridy = 17;
         labelGbc.gridx = 0;
         labelGbc.gridwidth = 2;
         formPanel.add(buttonPanel, labelGbc);
 
         //footer e annulla
         JButton salvaButton = Costants.createSimpleButton("Salva Visita");
-        salvaButton.addActionListener(e -> salvaVisita());
+        salvaButton.addActionListener(e -> {
+            List<String> giorniSettimanaSelezionati = giorniList.getSelectedValuesList();
+            Set<DayOfWeek> giorniSettimana = giorniSettimanaSelezionati.stream()
+                    .map(this::convertToDayOfWeek)
+                    .collect(Collectors.toSet());
+
+            List<String> volontariSelezionati = volontariListVolontari.getSelectedValuesList();
+            ArrayList<Volontario> listaVolontari = new ArrayList<>();
+            for (String nomeVolontario : volontariSelezionati) {
+                listaVolontari.add(new Volontario(nomeVolontario));
+            }
+
+            String titolo = titoloField.getText().trim();
+            String descrizione = descrizioneField.getText().trim();
+            String puntoIncontro = puntoIncontroField.getText().trim();
+
+            if (titolo.isEmpty() || descrizione.isEmpty() || puntoIncontro.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Errore: Tutti i campi devono essere compilati!", "Errore", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (volontariListVolontari.getSelectedIndices().length == 0) {
+                JOptionPane.showMessageDialog(this, "Errore: Seleziona almeno un volontario!", "Errore", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (giorniList.getSelectedIndices().length == 0) {
+                JOptionPane.showMessageDialog(this, "Errore: Seleziona almeno un giorno della settimana!", "Errore", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            LocalDate dataInizio = convertToLocalDate(dataInizioSpinner.getValue());
+            LocalDate dataFine = convertToLocalDate(dataFineSpinner.getValue());
+
+            if (dataInizio.isAfter(dataFine)) {
+                JOptionPane.showMessageDialog(this, "Errore: La data di inizio non può essere dopo la data di fine!", "Errore", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            LocalTime oraInizio = convertToLocalTime(oraInizioSpinner.getValue());
+
+            if (!isModifica && tipiVisitaController.titoloEsiste(titolo)) {
+                JOptionPane.showMessageDialog(this, "Errore: Esiste già una visita con questo titolo!", "Errore", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int minPartecipanti = (int) minPartecipantiSpinner.getValue();
+            int maxPartecipanti = (int) maxPartecipantiSpinner.getValue();
+            boolean richiedeBiglietto = bigliettoCheckbox.isSelected();
+
+            if (minPartecipanti > maxPartecipanti) {
+                JOptionPane.showMessageDialog(this, "Errore: Il numero minimo di partecipanti non può essere maggiore del massimo!",
+                        "Errore", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            TipoVisita nuovaVisita = new TipoVisita(
+                    titolo,
+                    descrizione,
+                    puntoIncontro,
+                    dataInizio,
+                    dataFine,
+                    giorniSettimana,
+                    oraInizio,
+                    (int) durataSpinner.getValue(),
+                    richiedeBiglietto,
+                    minPartecipanti,
+                    maxPartecipanti,
+                    listaVolontari
+            );
+
+            if (isModifica) {
+                tipiVisitaController.modificaTipoVisita(nuovaVisita);
+            } else {
+                tipiVisitaController.aggiungiVisita(nuovaVisita);
+            }
+
+            // Aggiorna la lista dei tipi di visita nel frame padre
+            parent.aggiornaListaTipiVisita();
+
+            // Mostra messaggio di conferma
+            String messaggio = isModifica ? "Tipo di visita modificato con successo!" : "Tipo di visita aggiunto con successo!";
+            JOptionPane.showMessageDialog(this, messaggio, "Successo", JOptionPane.INFORMATION_MESSAGE);
+
+            chiudiEmandaIndietro();
+        });
 
         JButton annullaButton = Costants.createSimpleButton("Annulla");
         annullaButton.addActionListener(e -> chiudiEmandaIndietro());
-
 
         JPanel footerPanel = Costants.createFooterPanel("");
         footerPanel.add(salvaButton, BorderLayout.CENTER);
@@ -217,7 +366,68 @@ public class NuovoTipoVisitaFrame extends JFrame {
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
+        
+        // Se è in modalità modifica, popola i campi
+        if (isModifica && tipoVisitaDaModificare != null) {
+            popolaCampiDaModificare();
+        }
+        
         setVisible(true);
+    }
+
+    // Costruttore per modificare un tipo visita esistente
+    public NuovoTipoVisitaFrame(CorpoDatiFase2 parent, TipiVisitaController tipoVisitaController, 
+                               VolontariController volontariController, TipoVisita tipoVisitaDaModificare) {
+        this(parent, tipoVisitaController, volontariController);
+        this.isModifica = true;
+        this.tipoVisitaDaModificare = tipoVisitaDaModificare;
+        setTitle("Modifica Tipo Visita");
+        popolaCampiDaModificare();
+    }
+
+    private void popolaCampiDaModificare() {
+        titoloField.setText(tipoVisitaDaModificare.getTitolo());
+        descrizioneField.setText(tipoVisitaDaModificare.getDescrizione());
+        puntoIncontroField.setText(tipoVisitaDaModificare.getPuntoIncontro());
+        dataInizioSpinner.setValue(Date.from(tipoVisitaDaModificare.getDataInizio().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        dataFineSpinner.setValue(Date.from(tipoVisitaDaModificare.getDataFine().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        oraInizioSpinner.setValue(Date.from(tipoVisitaDaModificare.getOraInizio().atDate(LocalDate.now()).atZone(ZoneId.systemDefault()).toInstant()));
+        durataSpinner.setValue(tipoVisitaDaModificare.getDurataMinuti());
+        minPartecipantiSpinner.setValue(tipoVisitaDaModificare.getMinPartecipanti());
+        maxPartecipantiSpinner.setValue(tipoVisitaDaModificare.getMaxPartecipanti());
+        bigliettoCheckbox.setSelected(tipoVisitaDaModificare.isBigliettoNecessario());
+
+        // Seleziona i giorni della settimana
+        Set<DayOfWeek> giorniSelezionati = tipoVisitaDaModificare.getGiorniSettimana();
+        List<Integer> indiciGiorniSelezionati = new ArrayList<>();
+
+        for (int i = 0; i < giorniListModel.getSize(); i++) {
+            String giorno = giorniListModel.getElementAt(i);
+            DayOfWeek dayOfWeek = convertToDayOfWeek(giorno);
+            if (giorniSelezionati.contains(dayOfWeek)) {
+                indiciGiorniSelezionati.add(i);
+            }
+        }
+
+        int[] indiciArray = indiciGiorniSelezionati.stream().mapToInt(Integer::intValue).toArray();
+        giorniList.setSelectedIndices(indiciArray);
+
+        // Seleziona i volontari
+        List<String> volontariSelezionati = tipoVisitaDaModificare.getVolontari().stream()
+                .map(Volontario::getNome)
+                .collect(Collectors.toList());
+
+        List<Integer> indiciVolontariSelezionati = new ArrayList<>();
+
+        for (int i = 0; i < volontariListModelVolontari.getSize(); i++) {
+            String nomeVolontario = volontariListModelVolontari.getElementAt(i);
+            if (volontariSelezionati.contains(nomeVolontario)) {
+                indiciVolontariSelezionati.add(i);
+            }
+        }
+
+        int[] indiciVolontariArray = indiciVolontariSelezionati.stream().mapToInt(Integer::intValue).toArray();
+        volontariListVolontari.setSelectedIndices(indiciVolontariArray);
     }
 
     private JLabel createLabel(String text) {
@@ -238,133 +448,66 @@ public class NuovoTipoVisitaFrame extends JFrame {
         sectionLabel.setFont(new Font("Dialog", Font.BOLD, 14));
         sectionLabel.setForeground(new Color(0, 102, 204));
         panel.add(sectionLabel, gbc);
-
     }
 
     // Metodo che aggiorna la lista dei volontari nella JList
     public void aggiornaListaVolontari() {
-        volontariListModel.clear(); // Rimuove gli elementi esistenti
+        volontariListModelVolontari.clear(); // Rimuove gli elementi esistenti
         ArrayList<Volontario> volontari = volontariController.getListaVolontari();
         for (Volontario volontario : volontari) {
-            volontariListModel.addElement(volontario.getNome());
+            volontariListModelVolontari.addElement(volontario.getNome());
         }
     }
 
     // Getter per accedere alla lista volontari da altre classi
     public JList<String> getVolontariList() {
-        return volontariList;
+        return volontariListVolontari;
     }
 
-    private void creaNuovoVolontario() {
-        new VolontariFrame(this, volontariController).setVisible(true);
-        aggiornaListaVolontari();
+    private DayOfWeek convertToDayOfWeek(String dayOfWeek) {
+        switch (dayOfWeek.toLowerCase()) {
+            case "lunedì":
+                return DayOfWeek.MONDAY;
+            case "martedì":
+                return DayOfWeek.TUESDAY;
+            case "mercoledì":
+                return DayOfWeek.WEDNESDAY;
+            case "giovedì":
+                return DayOfWeek.THURSDAY;
+            case "venerdì":
+                return DayOfWeek.FRIDAY;
+            case "sabato":
+                return DayOfWeek.SATURDAY;
+            case "domenica":
+                return DayOfWeek.SUNDAY;
+            default:
+                throw new IllegalArgumentException("Giorno della settimana non valido: " + dayOfWeek);
+        }
     }
-
-    private void salvaVisita() {
-        String titolo = titoloField.getText().trim();
-        String descrizione = descrizioneField.getText().trim();
-        String puntoIncontro = puntoIncontroField.getText().trim();
-
-        // Controllo che tutti i campi siano compilati
-        if (titolo.isEmpty() || descrizione.isEmpty() || puntoIncontro.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Errore: Tutti i campi devono essere compilati!", "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Verifica che sia stato selezionato almeno un volontario
-        if (volontariList.getSelectedIndices().length == 0) {
-            JOptionPane.showMessageDialog(this, "Errore: Seleziona almeno un volontario!", "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        LocalDate dataInizio = convertToLocalDate(dataInizioSpinner.getValue());
-        LocalDate dataFine = convertToLocalDate(dataFineSpinner.getValue());
-
-        // Controllo validità delle date
-        if (dataInizio.isAfter(dataFine)) {
-            JOptionPane.showMessageDialog(this, "Errore: La data di inizio non può essere dopo la data di fine!", "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        LocalTime oraInizio = convertToLocalTime(oraInizioSpinner.getValue());
-
-        // Controllo se il titolo esiste già
-        if (tipiVisitaController.titoloEsiste(titolo)) {
-            JOptionPane.showMessageDialog(this, "Errore: Esiste già una visita con questo titolo!", "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Recupera i volontari selezionati
-        List<String> volontariSelezionati = volontariList.getSelectedValuesList();
-
-        ArrayList<Volontario> listaVolontari = new ArrayList<>();
-
-        for (String nomeVolontario : volontariSelezionati) {
-            listaVolontari.add(new Volontario(nomeVolontario));
-        }
-
-
-        // Aggiungi i volontari alla visita
-        ArrayList<String> volontari = new ArrayList<>(volontariSelezionati);
-
-        // Messaggio di debug per verificare i volontari selezionati
-        StringBuilder sb = new StringBuilder("Volontari selezionati: ");
-        for (String v : volontari) {
-            sb.append(v).append(", ");
-        }
-
-        // Ottiene i valori dai nuovi campi
-        int minPartecipanti = (int) minPartecipantiSpinner.getValue();
-        int maxPartecipanti = (int) maxPartecipantiSpinner.getValue();
-        boolean richiedeBiglietto = bigliettoCheckbox.isSelected();
-
-        // Verifica che il minimo non superi il massimo
-        if (minPartecipanti > maxPartecipanti) {
-            JOptionPane.showMessageDialog(this, "Errore: Il numero minimo di partecipanti non può essere maggiore del massimo!",
-                    "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Set<DayOfWeek> giorniSettimana = Set.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
-
-        //TODO  sistema quetso come l altro
-
-        TipoVisita nuovaVisita = new TipoVisita(
-                titolo,
-                descrizione,
-                puntoIncontro,
-                dataInizio,
-                dataFine,
-                giorniSettimana,
-                oraInizio,
-                (int) durataSpinner.getValue(),
-                richiedeBiglietto,
-                minPartecipanti,
-                maxPartecipanti,
-                listaVolontari
-        );
-
-        tipiVisitaController.aggiungiVisita(nuovaVisita);
-
-        // Aggiorna la lista dei tipi di visita nel frame padre
-        parent.aggiornaListaTipiVisita();
-
-        // Mostra messaggio di conferma
-        JOptionPane.showMessageDialog(this, "Tipo di visita aggiunto con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
-
-        chiudiEmandaIndietro();
-    }
-
 
     private void chiudiEmandaIndietro() {
         dispose();
+        parent.setVisible(true);
     }
 
-    private LocalDate convertToLocalDate(Object spinnerValue) {
-        return ((Date) spinnerValue).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    public static LocalDate convertToLocalDate(Object spinnerValue) {
+        if (spinnerValue instanceof java.util.Date) {
+            java.util.Date date = (java.util.Date) spinnerValue;
+            return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        } else {
+            throw new IllegalArgumentException("Il valore dello spinner non è una data valida");
+        }
     }
 
     private LocalTime convertToLocalTime(Object spinnerValue) {
-        return ((Date) spinnerValue).toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+        if (spinnerValue instanceof java.util.Date) {
+            java.util.Date date = (java.util.Date) spinnerValue;
+            return date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+        } else {
+            throw new IllegalArgumentException("Il valore dello spinner non è un orario valido");
+        }
     }
+    
+    
+    
 }

@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import costants.Costants;
 import model.TipoVisita;
 import model.Visita;
 import model.Volontario;
@@ -21,14 +19,16 @@ public class VisiteController {
     private final CalendarioController calendarioController;
     private final TipiVisitaController tipiVisitaController;
     private final VolontariController volontariController;
+    private final LuoghiController luoghiController;
 
 
     private List<Visita> visite;
     
     public VisiteController(CalendarioController calendarioController,
-            TipiVisitaController tipiVisitaController,VolontariController volontariController) {
+            LuoghiController luoghiController, TipiVisitaController tipiVisitaController,VolontariController volontariController) {
         this.calendarioController = calendarioController;
         this.tipiVisitaController = tipiVisitaController;
+        this.luoghiController = luoghiController;
         this.volontariController = volontariController;
         this.visite = DataManager.leggiDatiVisite();
     }
@@ -42,10 +42,9 @@ public class VisiteController {
     
         // Mese target: il prossimo
         LocalDate meseTarget = oggi.plusMonths(1).withDayOfMonth(1);
-        List<LocalDate> datePrecluse = calendarioController.getDatePrecluse(meseTarget);
     
-        List<TipoVisita> tipiVisita = tipiVisitaController.getTipiVisita();
-        List<Volontario> volontari = volontariController.getListaVolontari();
+        List<TipoVisita> tipiVisita = new ArrayList<>();
+        luoghiController.getLuoghi().forEach(l -> tipiVisita.addAll(l.getTipiVisita()));
         List<Visita> nuoveVisite = new ArrayList<>();
     
         LocalDate data = meseTarget;
@@ -90,8 +89,6 @@ public class VisiteController {
                            meseTarget.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN));
     }
     
-
-
     
     public List<Visita> getVisite() {
         return visite;
