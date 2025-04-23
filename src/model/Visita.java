@@ -4,20 +4,20 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Visita implements Serializable{
-    public enum Stato {
+    public enum STATO_VISITA {
         PROPOSTA, COMPLETA, CONFERMATA, CANCELLATA, EFFETTUATA
     }
 
     private TipoVisita tipo;
     private LocalDate data;
     private Volontario guidaAssegnata;
-    private Stato stato;
+    private STATO_VISITA stato;
 
     public Visita(TipoVisita tipo, LocalDate data, Volontario guidaAssegnata) {
         this.tipo = tipo;
         this.data = data;
         this.guidaAssegnata = guidaAssegnata;
-        this.stato = Stato.PROPOSTA;
+        this.stato = STATO_VISITA.PROPOSTA;
     }
 
     public TipoVisita getTipo() {
@@ -44,11 +44,11 @@ public class Visita implements Serializable{
         this.guidaAssegnata = guidaAssegnata;
     }
 
-    public Stato getStato() {
+    public STATO_VISITA getStato() {
         return stato;
     }
 
-    public void setStato(Stato stato) {
+    public void setStato(STATO_VISITA stato) {
         this.stato = stato;
     }
 }

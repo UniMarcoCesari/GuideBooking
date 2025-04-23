@@ -4,10 +4,14 @@ import controller.CalendarioController;
 import costants.Costants;
 import model.CorpoDati;
 import service.DataManager;
-import view.volontario.GestisciDisponibilitaFrame; // Import new frame
-import view.volontario.VisualizzaTipiVisitaVolontarioFrame; // Import new frame
+import view.volontario.GestisciDisponibilitaFrame;
+import view.volontario.VisualizzaMieVisiteFrame; // Importa il nuovo frame
+import view.volontario.VisualizzaTipiVisitaVolontarioFrame;
 
 import controller.TipiVisitaController;
+import controller.VisiteController; // Importa VisiteController
+import controller.LuoghiController; // Importa LuoghiController (necessario per VisiteController)
+import controller.VolontariController; // Importa VolontariController (necessario per VisiteController)
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -17,18 +21,23 @@ import java.awt.*;
 public class PannelloVolontario extends JFrame {
     private final CalendarioController calendarioController;
     private JTextField textArea;
-    private JButton button1, button2;
+    private JButton button1, button2, button3; // Aggiunto button3
     private CorpoDati corpoDati;
-    private String username; // Add username field
+    private String username;
     private TipiVisitaController tipiVisitaController;
+    private VisiteController visiteController; // Aggiunto VisiteController
 
     public PannelloVolontario(String username) { // Update constructor
-        this.username = username; // Store username
+        this.username = username;
         this.tipiVisitaController = new TipiVisitaController();
         initializeFrame();
 
-        //inizializziamo controller qui
+        // Inizializziamo i controller qui
         calendarioController = new CalendarioController();
+        // Istanziazione semplificata dei controller necessari per VisiteController
+        LuoghiController luoghiController = new LuoghiController();
+        VolontariController volontariController = new VolontariController();
+        this.visiteController = new VisiteController(calendarioController, luoghiController, tipiVisitaController, volontariController);
         this.corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
@@ -97,11 +106,11 @@ public class PannelloVolontario extends JFrame {
 
         // Pannello inferiore (Bottoni equidistanti)
         gbc.gridy = 1;
-        JPanel bottomPanel = new JPanel(new GridLayout(1, 2, 20, 0)); // Changed columns to 2
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 3, 20, 0)); // Cambiato a 3 colonne
 
-        button1 = Costants.createSimpleButton("Visualizza Tipi Visita"); // Changed text
-        button2 = Costants.createSimpleButton("Gestisci Disponibilità"); // Changed text
-        // button3 = Costants.createSimpleButton("Altro"); // Removed button3
+        button1 = Costants.createSimpleButton("Visualizza Tipi Visita");
+        button2 = Costants.createSimpleButton("Gestisci Disponibilità");
+        button3 = Costants.createSimpleButton("Visualizza Mie Visite"); // Nuovo pulsante
 
         button1.addActionListener(_ -> {
             dispose();
@@ -109,11 +118,16 @@ public class PannelloVolontario extends JFrame {
         });
         button2.addActionListener(_ -> {
             dispose();
-            new GestisciDisponibilitaFrame(this.username).setVisible(true); // Open frame
+            new GestisciDisponibilitaFrame(this.username).setVisible(true);
+        });
+        button3.addActionListener(_ -> { // ActionListener per il nuovo pulsante
+            dispose();
+            new VisualizzaMieVisiteFrame(this.username, this.visiteController).setVisible(true); // Apri il nuovo frame
         });
 
         bottomPanel.add(button1);
         bottomPanel.add(button2);
+        bottomPanel.add(button3); // Aggiungi il nuovo pulsante
 
         contentPanel.add(bottomPanel, gbc);
 
@@ -133,3 +147,4 @@ public class PannelloVolontario extends JFrame {
 
    
 }
+

@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -12,10 +11,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import model.Luogo;
 import model.TipoVisita;
 import model.Visita;
+import model.Visita.STATO_VISITA;
 import model.Volontario;
 import service.DataManager;
 
@@ -63,6 +62,24 @@ public class VisiteController {
         LocalDate meseTarget = oggi.plusMonths(1).withDayOfMonth(1);
         List<Visita> nuoveVisite = new ArrayList<>();
         List<Luogo> luoghi = luoghiController.getLuoghi();
+
+
+        // Check if visits already exist for the target month
+        boolean visiteEsistenti = false;
+        for (Visita v : visite) {
+            if (v.getData().getMonth() == meseTarget.getMonth() && 
+                v.getData().getYear() == meseTarget.getYear()) {
+                visiteEsistenti = true;
+                break;
+            }
+        }
+        
+        if (visiteEsistenti) {
+            System.out.println("ATTENZIONE: Visite già generate per il mese di " + 
+                            meseTarget.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN) + 
+                            ". Operazione annullata.");
+            return; // Exit method if visits already exist
+        }
 
         LocalDate data = meseTarget;
         while (data.getMonth() == meseTarget.getMonth()) {
@@ -173,14 +190,60 @@ public class VisiteController {
     }
 
 
-    public List<Visita> getVisite() {
-        // Potrebbe essere utile restituire una copia per evitare modifiche esterne non controllate
-        return new ArrayList<>(visite);
+    public List<Visita> getVisite(LocalDate meseTarget) {
+        List<Visita> visiteFiltrate = new ArrayList<>();
+        for (Visita v : visite) {
+            if (v.getData().getMonthValue() == meseTarget.getMonthValue() && v.getData().getYear() == meseTarget.getYear()) {
+                visiteFiltrate.add(v);
+            }
+        }
+        return visiteFiltrate;
     }
 
-    // Questo metodo sembra ridondante dato che DataManager è usato internamente.
-    // Potrebbe essere rimosso se non chiamato dall'esterno.
-    // public List<Visita> leggiDatiVisite() throws IOException, ClassNotFoundException {
-    //     return DataManager.leggiDatiVisite();
-    // }
+    public List<Visita> getVisiteDisponibili(LocalDate meseTarget) {
+        List<Visita> visiteFiltrate = new ArrayList<>();
+        for (Visita v : visite) {
+            if (v.getData().getMonthValue() == meseTarget.getMonthValue() && v.getData().getYear() == meseTarget.getYear()) {
+                if (v.getStato() == STATO_VISITA.PROPOSTA || v.getStato() == STATO_VISITA.CONFERMATA) {
+                    
+                }
+            }
+        }
+        return visiteFiltrate;
+    }
+
+    public void eliminaVisiteConVolontario(Volontario volontario) {
+        List<Visita> visiteDaRimuovere = new ArrayList<>();
+        for (Visita v : visite) {
+            if (v.getTipo().getVolontari().stream().anyMatch(vol -> vol.getNome().equals(volontario.getNome()))) {
+                visiteDaRimuovere.add(v);
+            }
+        }
+        System.out.println("Eliminate " + visiteDaRimuovere.size() + " visite con volontario " + volontario.getNome());
+        visite.removeAll(visiteDaRimuovere);
+        DataManager.scriviDatiVisite(visite);
+    }
+
+    public void confermaVisitaOdierna(LocalDate data) {
+        for (Visita visita : visite) {
+            if (visita.getData().equals(data) && visita.getStato() == STATO_VISITA.PROPOSTA) {
+                System.out.println("Visita confermata: " + visita.getTipo().getTitolo() + " con " + visita.getGuidaAssegnata().getNome() + " alle " + visita.getTipo().getOraInizio());
+                visita.setStato(STATO_VISITA.CONFERMATA);
+            }
+        }
+        DataManager.scriviDatiVisite(visite);
+    }
+
+
+    public void controlla3Giorni(LocalDate data) 
+    {
+        for (Visita visita : visite) {
+            if (visita.getData().equals(data.plusDays(3)) && visita.getStato() == STATO_VISITA.PROPOSTA) {
+                System.out.println("Manca 3 giorni alla visita: " + visita.getTipo().getTitolo() + " con " + visita.getGuidaAssegnata().getNome() + " alle " + visita.getTipo().getOraInizio());
+                //TODO controlla numero partecipanti effettivi e min e max e in caso 
+                //positivo --> CONFERMATA
+                //negativo --> CANCELLATA
+            }
+        }
+    }
 }
