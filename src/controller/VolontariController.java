@@ -130,6 +130,7 @@ public class VolontariController {
 
     public void rimuoviVolontario(Volontario volontario) {
         listaVolontari.remove(volontario);
+        CredenzialeWriter.disabilitaCredenzialeVolontario(volontario.getNome());
         salvaVolontari();
     }
 

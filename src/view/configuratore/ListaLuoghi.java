@@ -268,6 +268,7 @@ public class ListaLuoghi extends JFrame {
             listaPanel.repaint();
         });
 
+        
         // disabilita
 
         if(!calendarioController.isFaseModificabile())
