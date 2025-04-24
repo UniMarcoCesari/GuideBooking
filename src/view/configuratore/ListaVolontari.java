@@ -1,6 +1,7 @@
 package view.configuratore;
 import card.VolontarioCard;
 import controller.TipiVisitaController;
+import controller.VisiteController;
 import controller.VolontariController;
 import costants.Costants;
 import model.TipoVisita;
@@ -18,10 +19,12 @@ public class ListaVolontari extends JFrame {
     private JPanel listPanel;
     private VolontariController volontariController;
     private TipiVisitaController tipiVisitaController;
+    private VisiteController visiteController;
 
-    public ListaVolontari(VolontariController volontariController, TipiVisitaController tipiVisitaController) {
+    public ListaVolontari(VolontariController volontariController, TipiVisitaController tipiVisitaController, VisiteController visiteController) {
         this.volontariController = volontariController;
         this.tipiVisitaController = tipiVisitaController;
+        this.visiteController = visiteController;
         initializeFrame();
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -99,7 +102,7 @@ public class ListaVolontari extends JFrame {
 
     private void addVolontarioCard(Volontario volontario, List<TipoVisita> tipiVisita) {
         listPanel.add(Box.createVerticalStrut(6));
-        listPanel.add(new VolontarioCard(volontario, tipiVisita, volontariController,tipiVisitaController, this));
+        listPanel.add(new VolontarioCard(volontario, tipiVisita, volontariController,tipiVisitaController,visiteController, this));
     }
 
 

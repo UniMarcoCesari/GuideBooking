@@ -22,6 +22,9 @@ public class AuthController
      */
     public static int checkCredentials(String username, String password) {
         List<Credenziale> credenzialeList = DataManager.caricaDati(file_credenziali);
+        if (credenzialeList == null) {
+            return -1;
+        }
         for (Credenziale credenziale : credenzialeList) {
            if (credenziale.getUsername().equals(username) && credenziale.getPassword().equals(password)) {
                if (Objects.equals(credenziale.getRuolo(), Costants.ruolo_PRE_configuratore))
@@ -32,6 +35,9 @@ public class AuthController
                    return 2;
                if (Objects.equals(credenziale.getRuolo(), Costants.ruolo_pre_volontario))
                    return 3;
+               if (Objects.equals(credenziale.getRuolo(), Costants.ruolo_eliminato)) {  
+                    return 4;
+                }
            }
         }
         return -1;

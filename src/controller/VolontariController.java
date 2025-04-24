@@ -74,7 +74,7 @@ public class VolontariController {
 
     public void rimuoviVolonatario(Volontario volontario) {
         listaVolontari.remove(volontario);
-        CredenzialeWriter.eliminaCredenzialiVolontari(volontario.getNome());
+        CredenzialeWriter.disabilitaCredenzialeVolontario(volontario.getNome());
         salvaVolontari();
     }
 

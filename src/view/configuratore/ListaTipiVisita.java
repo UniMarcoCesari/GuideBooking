@@ -2,6 +2,7 @@ package view.configuratore;
 
 import card.TipoVisitaCard;
 import controller.TipiVisitaController;
+import controller.VisiteController;
 import costants.Costants;
 import model.TipoVisita;
 
@@ -13,9 +14,11 @@ import java.util.List;
 public class ListaTipiVisita extends JFrame {
     private JPanel listPanel;
     private TipiVisitaController tipiVisitaController;
+    private VisiteController visiteController;
 
-    public ListaTipiVisita(TipiVisitaController tipiVisitaController) {
+    public ListaTipiVisita(TipiVisitaController tipiVisitaController, VisiteController visiteController) {
         this.tipiVisitaController = tipiVisitaController;
+        this.visiteController = visiteController;
         initializeFrame();
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -71,7 +74,7 @@ public class ListaTipiVisita extends JFrame {
     private void addTipoVisitaCard(TipoVisita tipoVisita) {
         listPanel.add(Box.createVerticalStrut(6));
         // Instantiate and add the card for the given TipoVisita
-        listPanel.add(new TipoVisitaCard(this,tipoVisita,tipiVisitaController));  // Add a card for each place
+        listPanel.add(new TipoVisitaCard(this,tipoVisita,tipiVisitaController,visiteController));  // Add a card for each place
     }
 
     private void initializeFrame() {

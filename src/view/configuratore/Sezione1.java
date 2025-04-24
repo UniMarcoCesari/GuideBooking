@@ -103,7 +103,6 @@ public class Sezione1 extends JFrame {
         generaVisiteButton.addActionListener(e -> {
             try {
                 visiteController.generaVisite();
-                JOptionPane.showMessageDialog(this, "Generazione visite completata.", "Successo", JOptionPane.INFORMATION_MESSAGE);
                 // Ricarica la pagina per vedere cambiamenti
                 dispose();
                 new Sezione1(visiteController, calendarioController).setVisible(true);

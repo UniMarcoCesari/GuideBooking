@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import javax.swing.JOptionPane;
+
 import model.Luogo;
 import model.TipoVisita;
 import model.Visita;
@@ -75,9 +78,11 @@ public class VisiteController {
         }
         
         if (visiteEsistenti) {
-            System.out.println("ATTENZIONE: Visite già generate per il mese di " + 
+            String message = "ATTENZIONE: Visite già generate per il mese di " + 
                             meseTarget.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN) + 
-                            ". Operazione annullata.");
+                            ". Operazione annullata.";
+            System.out.println(message);
+            JOptionPane.showMessageDialog(null, message, "Attenzione", JOptionPane.WARNING_MESSAGE);
             return; // Exit method if visits already exist
         }
 
@@ -109,6 +114,9 @@ public class VisiteController {
                     System.out.println("    Tipo Visita: " + tipo.getTitolo());
 
                     // 1. Controlla se il tipo di visita è attivo in questa data e giorno della settimana
+                    System.out.print("      Giorni settimana tipo visita: ");
+                    tipo.getGiorniSettimana().forEach(giorno -> System.out.print(giorno.getDisplayName(TextStyle.FULL, Locale.ITALIAN) + " "));
+                    System.out.println();
                     if (!tipo.getGiorniSettimana().contains(data.getDayOfWeek())) {
                         System.out.println("      Giorno settimana non valido.");
                         continue;
@@ -184,6 +192,7 @@ public class VisiteController {
         // visite.removeIf(v -> v.getData().getMonth() == meseTarget.getMonth() && v.getData().getYear() == meseTarget.getYear());
         visite.addAll(nuoveVisite);
         DataManager.scriviDatiVisite(visite);
+        
 
         System.out.println("\n✅ Generazione completata: " + nuoveVisite.size() + " nuove visite create per " +
                            meseTarget.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN) + " " + meseTarget.getYear());
@@ -215,14 +224,44 @@ public class VisiteController {
     public void eliminaVisiteConVolontario(Volontario volontario) {
         List<Visita> visiteDaRimuovere = new ArrayList<>();
         for (Visita v : visite) {
-            if (v.getTipo().getVolontari().stream().anyMatch(vol -> vol.getNome().equals(volontario.getNome()))) {
-                visiteDaRimuovere.add(v);
+            if (v.getStato() == STATO_VISITA.PROPOSTA || v.getStato() == STATO_VISITA.COMPLETA) {
+                if (v.getTipo().getVolontari().stream().anyMatch(vol -> vol.getNome().equals(volontario.getNome()))) {
+                    visiteDaRimuovere.add(v);
+                }
             }
         }
         System.out.println("Eliminate " + visiteDaRimuovere.size() + " visite con volontario " + volontario.getNome());
         visite.removeAll(visiteDaRimuovere);
         DataManager.scriviDatiVisite(visite);
     }
+
+    public void eliminaVisiteConTipoVisita(TipoVisita tipoVisita) {
+        List<Visita> visiteDaRimuovere = new ArrayList<>();
+        for (Visita v : visite) {
+            if (v.getStato() == STATO_VISITA.PROPOSTA || v.getStato() == STATO_VISITA.COMPLETA) {
+                if (v.getTipo().getTitolo().equals(tipoVisita.getTitolo())) {
+                    visiteDaRimuovere.add(v);
+                }
+            }
+        }
+        System.out.println("Eliminate " + visiteDaRimuovere.size() + " visite con tipo " + tipoVisita.getTitolo());
+        visite.removeAll(visiteDaRimuovere);
+        DataManager.scriviDatiVisite(visite);
+    }
+
+    // public void eliminaVisiteConLuogo(Luogo luogo) {
+    //     List<Visita> visiteDaRimuovere = new ArrayList<>();
+    //     for (Visita v : visite) {
+    //         if (v.getStato() == STATO_VISITA.PROPOSTA || v.getStato() == STATO_VISITA.COMPLETA) {
+    //             if (v.get().getTitolo().equals(luogo.getNome())) {
+    //                 visiteDaRimuovere.add(v);
+    //             }
+    //         }
+    //     }
+    //     System.out.println("Eliminate " + visiteDaRimuovere.size() + " visite nel luogo " + luogo.getNome());
+    //     visite.removeAll(visiteDaRimuovere);
+    //     DataManager.scriviDatiVisite(visite);
+    // }
 
     public void confermaVisitaOdierna(LocalDate data) {
         for (Visita visita : visite) {

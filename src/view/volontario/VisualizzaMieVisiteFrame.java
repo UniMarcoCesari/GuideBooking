@@ -29,7 +29,7 @@ public class VisualizzaMieVisiteFrame extends JFrame {
         initializeFrame();
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
-        mainPanel.setBorder(new EmptyBorder(Costants.SPACING, Costants.SPACING, Costants.SPACING, Costants.SPACING));
+        // mainPanel.setBorder(new EmptyBorder(Costants.SPACING, Costants.SPACING, Costants.SPACING, Costants.SPACING)); // Rimosso per eliminare padding esterno
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         // Header

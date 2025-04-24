@@ -23,6 +23,8 @@ public class TipiVisitaController {
     public void rimuoviTipoVisita(TipoVisita tipoVisita) {
         tipiVisita.remove(tipoVisita);
         salvaDati();
+        LuoghiController luoghiController = new LuoghiController();
+        luoghiController.rimuoviTipoVisita(tipoVisita);
     }
 
     public TipoVisita getTipoVisita(String titolo) {
@@ -98,21 +100,14 @@ public class TipiVisitaController {
     public void modificaTipoVisita(TipoVisita nuovaVisita) {
         for (TipoVisita tipoVisita : tipiVisita) {
             if (tipoVisita.getTitolo().equals(nuovaVisita.getTitolo())) {
-                tipoVisita.setDescrizione(nuovaVisita.getDescrizione());
-                tipoVisita.setPuntoIncontro(nuovaVisita.getPuntoIncontro());
-                tipoVisita.setDataInizio(nuovaVisita.getDataInizio());
-                tipoVisita.setDataFine(nuovaVisita.getDataFine());
-                tipoVisita.setGiorniSettimana(nuovaVisita.getGiorniSettimana());
-                tipoVisita.setOraInizio(nuovaVisita.getOraInizio());
-                tipoVisita.setDurataMinuti(nuovaVisita.getDurataMinuti());
-                tipoVisita.setBigliettoNecessario(nuovaVisita.isBigliettoNecessario());
-                tipoVisita.setVolontari(nuovaVisita.getVolontari());
-                tipoVisita.setMinPartecipanti(nuovaVisita.getMinPartecipanti());
-                tipoVisita.setMaxPartecipanti(nuovaVisita.getMaxPartecipanti());
+                tipoVisita.modifica(nuovaVisita);
                 break;
             }
         }
         salvaDati();
+        LuoghiController luoghiController = new LuoghiController();
+        luoghiController.modificaTipoVisita(nuovaVisita);
+
     }
 
     public void rimuoviVolonatario(Volontario volontario) {

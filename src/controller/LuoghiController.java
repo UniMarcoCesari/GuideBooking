@@ -66,7 +66,6 @@ public class LuoghiController {
     }
     
     
-    
 
     public void salvaDati() {
         DataManager.salvaDati(luoghi, Costants.file_luoghi);
@@ -103,14 +102,39 @@ public class LuoghiController {
 
         // rimuovi luoghi senza tipi visita
         luoghi.removeIf(l -> l.getTipiVisita().isEmpty());
-        
 
+        salvaDati();
+    }
 
+    public void rimuoviTipoVisita(TipoVisita nuovaVisita) 
+    {
+        for (Luogo luogo : luoghi) {
+            for (TipoVisita tipoVisita : luogo.getTipiVisita()) {
+                if (tipoVisita.getTitolo().equals(nuovaVisita.getTitolo())) 
+                {
+                    luogo.rimuoviTipoVisita(tipoVisita);   
+                }
+                
+            }
+            
+        }
+        luoghi.removeIf(l -> l.getTipiVisita().isEmpty());
         salvaDati();
     }
 
     public void rimuoviLuogo(Luogo luogo) {
         luoghi.remove(luogo);
+        salvaDati();
+    }
+
+    public void modificaTipoVisita(TipoVisita nuovaVisita) {
+        for (Luogo luogo : luoghi) {
+            for (TipoVisita tipoVisita : luogo.getTipiVisita()) {
+                if (tipoVisita.getTitolo().equals(nuovaVisita.getTitolo())) {
+                    tipoVisita.modifica(nuovaVisita);
+                }
+            }
+        }
         salvaDati();
     }
 

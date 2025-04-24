@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import controller.LuoghiController;
 import controller.TipiVisitaController;
+import controller.VisiteController;
 import controller.VolontariController;
 
 import java.awt.*;
@@ -31,13 +32,15 @@ public class VolontarioCard extends JPanel {
     private final List<TipoVisita> listaTipoVisita;
     private final VolontariController volontarioController;
     private final TipiVisitaController tipoVisitaController;
+    private final VisiteController visiteController;
     private final ListaVolontari parent;
 
-    public VolontarioCard(Volontario volontario, List<TipoVisita> listaTipoVisita, VolontariController volontarioController,TipiVisitaController tipoVisitaController,ListaVolontari parent) {
+    public VolontarioCard(Volontario volontario, List<TipoVisita> listaTipoVisita, VolontariController volontarioController,TipiVisitaController tipoVisitaController,VisiteController visiteController,ListaVolontari parent) {
         this.volontario = volontario;
         this.listaTipoVisita = listaTipoVisita;
         this.volontarioController = volontarioController;
         this.tipoVisitaController = tipoVisitaController;
+        this.visiteController = visiteController;
         this.parent = parent;
 
         // Configurazione panel
@@ -114,6 +117,7 @@ public class VolontarioCard extends JPanel {
         eliminaButton.addActionListener(e -> {
             volontarioController.rimuoviVolontario(volontario);
             tipoVisitaController.rimuoviVolonatario(volontario);
+            visiteController.eliminaVisiteConVolontario(volontario);
             parent.aggiornaListaVolontari();
             System.out.println("Elimina button clicked for " + volontario.getNome());
         });

@@ -139,11 +139,11 @@ public class PannelloConfiguratore extends JFrame {
         });
         button5.addActionListener(e -> {
             dispose();
-            new ListaTipiVisita(tipoVisitaController);
+            new ListaTipiVisita(tipoVisitaController,visiteController);
         });
         button6.addActionListener(e -> {
             dispose();
-            new ListaVolontari(volontariController, tipoVisitaController);
+            new ListaVolontari(volontariController, tipoVisitaController,visiteController);
         });
 
         secondBottomPanel.add(button4);

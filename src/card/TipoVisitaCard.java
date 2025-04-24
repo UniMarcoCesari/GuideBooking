@@ -6,6 +6,7 @@ import model.Volontario;
 import view.configuratore.ListaTipiVisita;
 import view.configuratore.NuovoTipoVisita;
 import controller.TipiVisitaController; // Added import for TipiVisitaController
+import controller.VisiteController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,12 +30,14 @@ public class TipoVisitaCard extends JPanel {
     private final TipoVisita tipoVisita;
     private final JPanel contentPanel;
     private final TipiVisitaController tipiVisitaController;
+    private final VisiteController visiteController;
     private final ListaTipiVisita parent;
 
-    public TipoVisitaCard(ListaTipiVisita parent,TipoVisita tipoVisita, TipiVisitaController tipiVisitaController) {
+    public TipoVisitaCard(ListaTipiVisita parent,TipoVisita tipoVisita, TipiVisitaController tipiVisitaController, VisiteController visiteController) {
         this.tipoVisita = tipoVisita;
         this.parent = parent;
         this.tipiVisitaController = tipiVisitaController;
+        this.visiteController = visiteController;
 
         System.out.println(tipoVisita.getGiorniSettimana().toString());
         System.out.println(tipoVisita.getVolontari().toString());
@@ -131,6 +134,7 @@ public class TipoVisitaCard extends JPanel {
         JButton eliminaButton = createIconButton("Elimina");
         eliminaButton.addActionListener(e -> {
             tipiVisitaController.rimuoviTipoVisita(tipoVisita);
+            visiteController.eliminaVisiteConTipoVisita(tipoVisita);
             parent.aggiornaListaTipiVisita();});
        
 

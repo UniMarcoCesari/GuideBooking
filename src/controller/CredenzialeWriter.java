@@ -49,15 +49,15 @@ public class CredenzialeWriter {
         }
     }
 
-
-    public static void eliminaCredenzialiVolontari(String nome) {
-        List<Credenziale> credenzialeList = caricaCredenziali();
-        for (Credenziale c : credenzialeList) {
+    //Imposta il ruolo di un volontario come "eliminato" in modo che al prossimo accesso non sia più possibile accedere al sistema
+    public static void disabilitaCredenzialeVolontario(String nome) {
+        List<Credenziale> listaCredenziali = caricaCredenziali();
+        for (Credenziale c : listaCredenziali) {
             if (c.getUsername().equals(nome) && c.getRuolo().equals(Costants.ruolo_volontario)) {
                 c.setRuolo(Costants.ruolo_eliminato);
             }
         }
-        salvaCredenziali(credenzialeList);
+        salvaCredenziali(listaCredenziali);
         System.out.println("✅ Credenziali per il ruolo 'volontario' marcate come 'eliminato' per l'utente " + nome);
     }
 }

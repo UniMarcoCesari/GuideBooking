@@ -147,4 +147,18 @@ public class TipoVisita implements Serializable {
     public String getNome() {
         return titolo;
     }
+
+    public void modifica(TipoVisita nuovaVisita) {
+        this.setDescrizione(nuovaVisita.getDescrizione());
+        this.setPuntoIncontro(nuovaVisita.getPuntoIncontro());
+        this.setDataInizio(nuovaVisita.getDataInizio());
+        this.setDataFine(nuovaVisita.getDataFine());
+        this.setGiorniSettimana(nuovaVisita.getGiorniSettimana());
+        this.setOraInizio(nuovaVisita.getOraInizio());
+        this.setDurataMinuti(nuovaVisita.getDurataMinuti());
+        this.setBigliettoNecessario(nuovaVisita.isBigliettoNecessario());
+        this.setVolontari(nuovaVisita.getVolontari());
+        this.setMinPartecipanti(nuovaVisita.getMinPartecipanti());
+        this.setMaxPartecipanti(nuovaVisita.getMaxPartecipanti());
+    }
 }

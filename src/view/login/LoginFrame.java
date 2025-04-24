@@ -113,7 +113,7 @@ public class LoginFrame extends JFrame {
         int verifica = AuthController.checkCredentials(username, password);
 
         if (verifica == -1) {  //errore
-            JOptionPane.showMessageDialog(this, "Credenziali errate", "Errore", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Nessun file credenziali trovato ", "Errore", JOptionPane.ERROR_MESSAGE);
         } else if (verifica == 0) {  //configuratore
             dispose();
 
@@ -138,6 +138,10 @@ public class LoginFrame extends JFrame {
         } else if (verifica == 3) { //preVolontario
             dispose();
             new NewPasswordConf(username, "volontario").setVisible(true);
+        } else if (verifica == 4) { //cancellato
+            JOptionPane.showMessageDialog(this, "Utente cancellato", "Errore", JOptionPane.ERROR_MESSAGE);
+            dispose();
+            new LoginFrame().setVisible(true);
         }
     }
 

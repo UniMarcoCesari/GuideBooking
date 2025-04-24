@@ -31,4 +31,8 @@ public class Luogo implements Serializable {
     public void aggiungiTipoVisita(TipoVisita tipoVisita) {
         tipiVisita.add(tipoVisita);
     }
+
+    public void rimuoviTipoVisita(TipoVisita tipoVisita){
+        tipiVisita.remove(tipoVisita);
+    }
 }
