@@ -9,21 +9,19 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import card.VisitaCard; // Assicurati che VisitaCard sia importata
 
-public class Sezione1 extends JFrame {
+public class GestioneVisite extends JFrame {
     private final YearMonth meseAnno; // Cambiato a YearMonth per chiarezza
     private final VisiteController visiteController;
     private final CalendarioController calendarioController;
 
-    public Sezione1(VisiteController visiteController, CalendarioController calendarioController) {
+    public GestioneVisite(VisiteController visiteController, CalendarioController calendarioController) {
         this.visiteController = visiteController;
         this.calendarioController = calendarioController;
 
@@ -105,7 +103,7 @@ public class Sezione1 extends JFrame {
                 visiteController.generaVisite();
                 // Ricarica la pagina per vedere cambiamenti
                 dispose();
-                new Sezione1(visiteController, calendarioController).setVisible(true);
+                new GestioneVisite(visiteController, calendarioController).setVisible(true);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Errore durante la generazione delle visite: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace(); // Log dell'errore

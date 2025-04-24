@@ -110,7 +110,7 @@ public class PannelloConfiguratore extends JFrame {
 
         button1.addActionListener(e -> {
             dispose();
-            new Sezione1(visiteController,calendarioController);
+            new GestioneVisite(visiteController,calendarioController);
         });
         button3.addActionListener(e -> {
             dispose();
