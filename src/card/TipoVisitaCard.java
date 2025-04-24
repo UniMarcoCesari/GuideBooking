@@ -5,6 +5,7 @@ import model.TipoVisita;
 import model.Volontario;
 import view.configuratore.ListaTipiVisita;
 import view.configuratore.NuovoTipoVisita;
+import controller.CalendarioController;
 import controller.TipiVisitaController; // Added import for TipiVisitaController
 import controller.VisiteController;
 
@@ -30,14 +31,14 @@ public class TipoVisitaCard extends JPanel {
     private final TipoVisita tipoVisita;
     private final JPanel contentPanel;
     private final TipiVisitaController tipiVisitaController;
-    private final VisiteController visiteController;
+    private final CalendarioController calendarioController;
     private final ListaTipiVisita parent;
 
-    public TipoVisitaCard(ListaTipiVisita parent,TipoVisita tipoVisita, TipiVisitaController tipiVisitaController, VisiteController visiteController) {
+    public TipoVisitaCard(ListaTipiVisita parent,TipoVisita tipoVisita, TipiVisitaController tipiVisitaController, CalendarioController calendarioController) {
         this.tipoVisita = tipoVisita;
         this.parent = parent;
         this.tipiVisitaController = tipiVisitaController;
-        this.visiteController = visiteController;
+        this.calendarioController = calendarioController;
 
         System.out.println(tipoVisita.getGiorniSettimana().toString());
         System.out.println(tipoVisita.getVolontari().toString());
@@ -122,8 +123,7 @@ public class TipoVisitaCard extends JPanel {
 
         JButton modificaButton = createIconButton("Modifica");
         modificaButton.addActionListener(e -> {
-            
-            
+
             // Open the NuovoTipoVisita frame in edit mode by passing the tipo visita to modify
             new NuovoTipoVisita(parent, tipiVisitaController, tipoVisita);
             
@@ -134,9 +134,14 @@ public class TipoVisitaCard extends JPanel {
         JButton eliminaButton = createIconButton("Elimina");
         eliminaButton.addActionListener(e -> {
             tipiVisitaController.rimuoviTipoVisita(tipoVisita);
-            visiteController.eliminaVisiteConTipoVisita(tipoVisita);
             parent.aggiornaListaTipiVisita();});
        
+        // Disabilita se non in fase modifica
+        if(!calendarioController.isFaseModificabile())
+        {
+            modificaButton.setEnabled(false);
+            eliminaButton.setEnabled(false);
+        }
 
         // Aggiungere spazio tra i pulsanti
         modificaButton.setAlignmentX(Component.CENTER_ALIGNMENT);

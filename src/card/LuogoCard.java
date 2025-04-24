@@ -1,5 +1,6 @@
 package card;
 
+import controller.CalendarioController;
 import controller.LuoghiController;
 import model.Luogo;
 import model.TipoVisita;
@@ -19,16 +20,18 @@ public class LuogoCard extends JPanel {
 
     private final LuoghiController luoghiController;
     private final view.configuratore.ListaLuoghi parent;
+    private final CalendarioController calendarioController;
 
-    public LuogoCard(Luogo luogo, LuoghiController luoghiController, view.configuratore.ListaLuoghi parent) {
+    public LuogoCard(Luogo luogo, LuoghiController luoghiController, CalendarioController calendarioController,view.configuratore.ListaLuoghi parent) {
         this.luoghiController = luoghiController;
+        this.calendarioController = calendarioController;
         this.luogo = luogo;
         this.parent = parent;
         setupUI();
     }
 
-    public LuogoCard(Luogo luogo, LuoghiController luoghiController) {
-        this(luogo, luoghiController, null);
+    public LuogoCard(Luogo luogo, LuoghiController luoghiController, CalendarioController calendarioController) {
+        this(luogo, luoghiController, calendarioController,null);
     }
 
     private void setupUI() {
@@ -102,12 +105,20 @@ public class LuogoCard extends JPanel {
         panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         panel.setOpaque(false);
 
-        JButton deleteButton = new JButton("Elimina");
-        deleteButton.addActionListener(e -> {luoghiController.rimuoviLuogo(luogo);
+        JButton eliminaButton = new JButton("Elimina");
+        eliminaButton.addActionListener(e -> {luoghiController.rimuoviLuogo(luogo);
             if(parent != null) {
                 parent.aggiornaListaLuoghi();
             }});
-        panel.add(deleteButton);
+        panel.add(eliminaButton);
+
+        if(calendarioController != null)
+        {
+            if(!calendarioController.isFaseModificabile())
+            {
+                eliminaButton.setEnabled(false);
+            }
+        }
         
 
         return panel;

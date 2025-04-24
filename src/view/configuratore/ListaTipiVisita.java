@@ -1,6 +1,7 @@
 package view.configuratore;
 
 import card.TipoVisitaCard;
+import controller.CalendarioController;
 import controller.TipiVisitaController;
 import controller.VisiteController;
 import costants.Costants;
@@ -15,10 +16,12 @@ public class ListaTipiVisita extends JFrame {
     private JPanel listPanel;
     private TipiVisitaController tipiVisitaController;
     private VisiteController visiteController;
+    private CalendarioController calendarioController;
 
-    public ListaTipiVisita(TipiVisitaController tipiVisitaController, VisiteController visiteController) {
+    public ListaTipiVisita(TipiVisitaController tipiVisitaController, VisiteController visiteController, CalendarioController calendarioController) {
         this.tipiVisitaController = tipiVisitaController;
         this.visiteController = visiteController;
+        this.calendarioController = calendarioController;
         initializeFrame();
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -41,6 +44,10 @@ public class ListaTipiVisita extends JFrame {
         // Footer
         JPanel footerPanel = Costants.createFooterPanel(""); // Clear default text
         JButton aggiungiButton = Costants.createSimpleButton("Aggiungi");
+        if(!calendarioController.isFaseModificabile())
+        {
+            aggiungiButton.setEnabled(false);
+        }
         aggiungiButton.addActionListener(_ -> apriDialogAggiungiTipoVisita()); // Placeholder action
         footerPanel.add(aggiungiButton); // Add the button to the footer
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
@@ -74,7 +81,7 @@ public class ListaTipiVisita extends JFrame {
     private void addTipoVisitaCard(TipoVisita tipoVisita) {
         listPanel.add(Box.createVerticalStrut(6));
         // Instantiate and add the card for the given TipoVisita
-        listPanel.add(new TipoVisitaCard(this,tipoVisita,tipiVisitaController,visiteController));  // Add a card for each place
+        listPanel.add(new TipoVisitaCard(this,tipoVisita,tipiVisitaController,calendarioController));  // Add a card for each place
     }
 
     private void initializeFrame() {

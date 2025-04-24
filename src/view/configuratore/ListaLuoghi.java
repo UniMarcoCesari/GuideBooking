@@ -4,6 +4,7 @@ import card.LuogoCard;
 import controller.TipiVisitaController;
 import costants.Costants;
 import model.Luogo;
+import controller.CalendarioController;
 import controller.LuoghiController;
 import model.TipoVisita;
 // Removed: import view.corpoDati.NuovoTipoVisitaFrame;
@@ -41,9 +42,11 @@ public class ListaLuoghi extends JFrame {
 
     private final LuoghiController luoghiController;
     private final TipiVisitaController tipoVisitaController;
+    private final CalendarioController calendarioController;
 
-    public ListaLuoghi(LuoghiController luoghiController, TipiVisitaController tipoVisitaController) { // Add TipiVisitaController parameter
+    public ListaLuoghi(LuoghiController luoghiController, TipiVisitaController tipoVisitaController, CalendarioController calendarioController) { // Add TipiVisitaController parameter
         this.luoghiController = luoghiController;
+        this.calendarioController = calendarioController;
         this.tipoVisitaController = tipoVisitaController; // Initialize the field
 
         initializeFrame();
@@ -265,6 +268,14 @@ public class ListaLuoghi extends JFrame {
             listaPanel.repaint();
         });
 
+        // disabilita
+
+        if(!calendarioController.isFaseModificabile())
+        {
+            salvaButton.setEnabled(false);
+            clearButton.setEnabled(false);
+        }
+
         // Crea label con font migliorato
         Font labelFont = new Font("Segoe UI", Font.BOLD, 12);
         JLabel nomeLabel = new JLabel("Nome:");
@@ -419,7 +430,7 @@ public class ListaLuoghi extends JFrame {
 
     private void addLuogoCard(Luogo luogo) {
         listaPanel.add(Box.createVerticalStrut(6));
-        LuogoCard card = new LuogoCard(luogo,luoghiController,this);
+        LuogoCard card = new LuogoCard(luogo,luoghiController,calendarioController,this);
 
         listaPanel.add(card);
     }

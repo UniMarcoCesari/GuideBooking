@@ -6,6 +6,7 @@ import controller.VolontariController;
 import costants.Costants;
 import model.CorpoDati;
 import model.Luogo;
+import controller.CalendarioController;
 import controller.LuoghiController;
 import model.TipoVisita;
 import service.DataManager;
@@ -351,7 +352,7 @@ public class CorpoDatiFase2 extends JFrame {
 
     private void addLuogoCard(Luogo luogo) {
         listaPanel.add(Box.createVerticalStrut(6));
-        listaPanel.add(new LuogoCard(luogo,luoghiController));
+        listaPanel.add(new LuogoCard(luogo,luoghiController,null));
     }
 
     private void aggiungiLuogo() {

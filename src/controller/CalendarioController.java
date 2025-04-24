@@ -126,5 +126,9 @@ public class CalendarioController {
     
         return oggi.equals(primoFeriale);
     }
+
+    public boolean isFaseModificabile() {
+        return getDatacDateCorrenteLocalDate().getDayOfMonth() <= 15;
+    }
     
 }

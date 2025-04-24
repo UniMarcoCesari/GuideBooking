@@ -7,7 +7,7 @@ import view.configuratore.ListaVolontari;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import controller.LuoghiController;
+import controller.CalendarioController;
 import controller.TipiVisitaController;
 import controller.VisiteController;
 import controller.VolontariController;
@@ -32,15 +32,15 @@ public class VolontarioCard extends JPanel {
     private final List<TipoVisita> listaTipoVisita;
     private final VolontariController volontarioController;
     private final TipiVisitaController tipoVisitaController;
-    private final VisiteController visiteController;
+    private final CalendarioController calendarioController;
     private final ListaVolontari parent;
 
-    public VolontarioCard(Volontario volontario, List<TipoVisita> listaTipoVisita, VolontariController volontarioController,TipiVisitaController tipoVisitaController,VisiteController visiteController,ListaVolontari parent) {
+    public VolontarioCard(Volontario volontario, List<TipoVisita> listaTipoVisita, VolontariController volontarioController,TipiVisitaController tipoVisitaController,CalendarioController calendarioController,ListaVolontari parent) {
         this.volontario = volontario;
         this.listaTipoVisita = listaTipoVisita;
         this.volontarioController = volontarioController;
         this.tipoVisitaController = tipoVisitaController;
-        this.visiteController = visiteController;
+        this.calendarioController = calendarioController;
         this.parent = parent;
 
         // Configurazione panel
@@ -114,13 +114,17 @@ public class VolontarioCard extends JPanel {
         panel.setOpaque(false);
 
         JButton eliminaButton = createIconButton("Elimina");
+        if(!calendarioController.isFaseModificabile())
+        {
+            eliminaButton.setEnabled(false);
+        }
         eliminaButton.addActionListener(e -> {
             volontarioController.rimuoviVolontario(volontario);
             tipoVisitaController.rimuoviVolonatario(volontario);
-            visiteController.eliminaVisiteConVolontario(volontario);
             parent.aggiornaListaVolontari();
             System.out.println("Elimina button clicked for " + volontario.getNome());
         });
+
 
         // Aggiungere spazio tra i pulsanti
         eliminaButton.setAlignmentX(Component.CENTER_ALIGNMENT);

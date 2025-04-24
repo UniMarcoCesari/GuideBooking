@@ -135,15 +135,15 @@ public class PannelloConfiguratore extends JFrame {
 
         button4.addActionListener(e -> {
             dispose();
-            new ListaLuoghi(luoghiController,tipoVisitaController);
+            new ListaLuoghi(luoghiController,tipoVisitaController,calendarioController);
         });
         button5.addActionListener(e -> {
             dispose();
-            new ListaTipiVisita(tipoVisitaController,visiteController);
+            new ListaTipiVisita(tipoVisitaController,visiteController,calendarioController);
         });
         button6.addActionListener(e -> {
             dispose();
-            new ListaVolontari(volontariController, tipoVisitaController,visiteController);
+            new ListaVolontari(volontariController, tipoVisitaController,calendarioController);
         });
 
         secondBottomPanel.add(button4);

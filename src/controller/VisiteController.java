@@ -221,47 +221,10 @@ public class VisiteController {
         return visiteFiltrate;
     }
 
-    public void eliminaVisiteConVolontario(Volontario volontario) {
-        List<Visita> visiteDaRimuovere = new ArrayList<>();
-        for (Visita v : visite) {
-            if (v.getStato() == STATO_VISITA.PROPOSTA || v.getStato() == STATO_VISITA.COMPLETA) {
-                if (v.getTipo().getVolontari().stream().anyMatch(vol -> vol.getNome().equals(volontario.getNome()))) {
-                    visiteDaRimuovere.add(v);
-                }
-            }
-        }
-        System.out.println("Eliminate " + visiteDaRimuovere.size() + " visite con volontario " + volontario.getNome());
-        visite.removeAll(visiteDaRimuovere);
-        DataManager.scriviDatiVisite(visite);
-    }
+    
 
-    public void eliminaVisiteConTipoVisita(TipoVisita tipoVisita) {
-        List<Visita> visiteDaRimuovere = new ArrayList<>();
-        for (Visita v : visite) {
-            if (v.getStato() == STATO_VISITA.PROPOSTA || v.getStato() == STATO_VISITA.COMPLETA) {
-                if (v.getTipo().getTitolo().equals(tipoVisita.getTitolo())) {
-                    visiteDaRimuovere.add(v);
-                }
-            }
-        }
-        System.out.println("Eliminate " + visiteDaRimuovere.size() + " visite con tipo " + tipoVisita.getTitolo());
-        visite.removeAll(visiteDaRimuovere);
-        DataManager.scriviDatiVisite(visite);
-    }
+   
 
-    // public void eliminaVisiteConLuogo(Luogo luogo) {
-    //     List<Visita> visiteDaRimuovere = new ArrayList<>();
-    //     for (Visita v : visite) {
-    //         if (v.getStato() == STATO_VISITA.PROPOSTA || v.getStato() == STATO_VISITA.COMPLETA) {
-    //             if (v.get().getTitolo().equals(luogo.getNome())) {
-    //                 visiteDaRimuovere.add(v);
-    //             }
-    //         }
-    //     }
-    //     System.out.println("Eliminate " + visiteDaRimuovere.size() + " visite nel luogo " + luogo.getNome());
-    //     visite.removeAll(visiteDaRimuovere);
-    //     DataManager.scriviDatiVisite(visite);
-    // }
 
     public void confermaVisitaOdierna(LocalDate data) {
         for (Visita visita : visite) {
