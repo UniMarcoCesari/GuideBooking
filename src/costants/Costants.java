@@ -33,6 +33,7 @@ public class Costants
     public static final String ruolo_volontario = "volontario";
     public static final String ruolo_pre_volontario = "preVolontario";
     public static String ruolo_eliminato = "eliminato";
+    public static String ruolo_fruitore = "fruitore";
 
     // Colori principali
     public static final Color ACCENT_COLOR = new Color(55, 65, 81); // Grigio scuro testo

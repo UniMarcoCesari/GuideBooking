@@ -20,7 +20,6 @@ public class CalendarioController {
         this.datePrecluse = DataManager.caricaDatePrecluse(Costants.file_date);
     }
 
-
     private void salvaCalendario() {
         DataManager.salvaDati(calendario, CALENDARIO_FILE);
     }

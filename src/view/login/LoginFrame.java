@@ -7,6 +7,8 @@ import service.DataManager;
 import view.PannelloVolontario;
 import view.configuratore.PannelloConfiguratore;
 import view.corpoDati.CorpoDatiFase1;
+import view.fruitore.PannelloFruitore;
+import view.fruitore.RegistrazioneFruitore; // Import aggiunto
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +17,7 @@ public class LoginFrame extends JFrame {
     private final JTextField usernameField = new JTextField("pre", 15);
     private final JPasswordField passwordField = new JPasswordField("test", 15);
     private final JButton loginButton;
+    private final JButton registratiButton; // Dichiarazione nuovo pulsante
 
     public LoginFrame() {
         setTitle("LogIn");
@@ -30,13 +33,11 @@ public class LoginFrame extends JFrame {
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
 
-        // Header (Logo + Titolo)
-        JPanel headerPanel = new JPanel();
+        // Header (Logo + Titolo a sinistra, Bottone Registrati a destra)
+        JPanel headerPanel = new JPanel(new BorderLayout()); // Cambiato layout in BorderLayout
         headerPanel.setOpaque(true);
         headerPanel.setBackground(Costants.BACKGROUND_COLOR);
-        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS)); // BoxLayout orizzontale per il layout
-
-        headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT); // Allinea l'header al centro
+        // Rimosso headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT); non più necessario con BorderLayout
 
         JLabel logoLabel = new JLabel(" "); // Logo
         logoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 40));
@@ -62,6 +63,29 @@ public class LoginFrame extends JFrame {
         headerPanel.add(logoLabel);
         headerPanel.add(Box.createRigidArea(new Dimension(10, 0))); // Spazio tra logo e titolo
         headerPanel.add(titlePanel);
+
+        // Pannello per il contenuto sinistro dell'header (logo + titolo)
+        JPanel headerContentPanel = new JPanel();
+        headerContentPanel.setOpaque(false); // Rendi trasparente per usare lo sfondo dell'headerPanel
+        headerContentPanel.setLayout(new BoxLayout(headerContentPanel, BoxLayout.X_AXIS));
+        headerContentPanel.add(logoLabel);
+        headerContentPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+        headerContentPanel.add(titlePanel);
+
+        // Pannello per il pulsante Registrati (allineato a destra)
+        JPanel registrationButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        registrationButtonPanel.setOpaque(false); // Rendi trasparente
+        registratiButton = Costants.createSimpleButton("Registrati");
+        registratiButton.addActionListener(_ -> {
+            dispose(); // Chiudi la finestra di login
+            new RegistrazioneFruitore().setVisible(true); // Apri la finestra di registrazione
+        });
+        registrationButtonPanel.add(registratiButton);
+
+        // Aggiungi i pannelli all'headerPanel principale
+        headerPanel.add(headerContentPanel, BorderLayout.CENTER);
+        headerPanel.add(registrationButtonPanel, BorderLayout.EAST);
+
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
@@ -102,7 +126,10 @@ public class LoginFrame extends JFrame {
             authenticate(username, password);
         });
 
+        // Rimosso creazione e aggiunta bottone Registrati da qui
+
         buttonPanel.add(loginButton);
+        // Rimosso Box.createRigidArea e buttonPanel.add(registratiButton)
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -111,9 +138,11 @@ public class LoginFrame extends JFrame {
 
     private void authenticate(String username, String password) {
         int verifica = AuthController.checkCredentials(username, password);
-
+        if (verifica == -2) {
+            JOptionPane.showMessageDialog(this, "Errore nel caricamento dei dati", "Errore", JOptionPane.ERROR_MESSAGE);
+        }
         if (verifica == -1) {  //errore
-            JOptionPane.showMessageDialog(this, "Nessun file credenziali trovato ", "Errore", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Username o password errati", "Errore", JOptionPane.ERROR_MESSAGE);
         } else if (verifica == 0) {  //configuratore
             dispose();
 
@@ -138,10 +167,13 @@ public class LoginFrame extends JFrame {
         } else if (verifica == 3) { //preVolontario
             dispose();
             new NewPasswordConf(username, "volontario").setVisible(true);
-        } else if (verifica == 4) { //cancellato
+        } else if (verifica == 4) { //volontario cancellato
             JOptionPane.showMessageDialog(this, "Utente cancellato", "Errore", JOptionPane.ERROR_MESSAGE);
             dispose();
             new LoginFrame().setVisible(true);
+        } else if (verifica == 5) { // fruitore
+            dispose();
+            new PannelloFruitore(username).setVisible(true);
         }
     }
 
@@ -149,4 +181,3 @@ public class LoginFrame extends JFrame {
         SwingUtilities.invokeLater(LoginFrame::new);
     }
 }
-

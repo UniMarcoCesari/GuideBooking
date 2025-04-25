@@ -4,6 +4,7 @@ import costants.Costants;
 import costants.Credenziale;
 import service.DataManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,9 +22,9 @@ public class AuthController
      * 1 --> login PRE-configuratore
      */
     public static int checkCredentials(String username, String password) {
-        List<Credenziale> credenzialeList = DataManager.caricaDati(file_credenziali);
+        List<Credenziale> credenzialeList = CredenzialeWriter.caricaCredenziali();
         if (credenzialeList == null) {
-            return -1;
+            return -2;
         }
         for (Credenziale credenziale : credenzialeList) {
            if (credenziale.getUsername().equals(username) && credenziale.getPassword().equals(password)) {
@@ -38,6 +39,9 @@ public class AuthController
                if (Objects.equals(credenziale.getRuolo(), Costants.ruolo_eliminato)) {  
                     return 4;
                 }
+                if (Objects.equals(credenziale.getRuolo(), Costants.ruolo_fruitore)) {
+                    return 5;
+                }
            }
         }
         return -1;
@@ -45,6 +49,9 @@ public class AuthController
 
     public static void setNewPassConfiguratore(String username, String password) {
         List<Credenziale> credenzialeList = DataManager.caricaDati(file_credenziali);
+        if (credenzialeList == null) {
+            return;
+        }
         for (Credenziale credenziale : credenzialeList) {
             if (credenziale.getUsername().equals(username)) {
                 credenziale.setPassword(password);
@@ -57,7 +64,7 @@ public class AuthController
     }
 
     public static void setNewPassVolontario(String username, String password) {
-        List<Credenziale> credenzialeList = DataManager.caricaDati(file_credenziali);
+        List<Credenziale> credenzialeList = CredenzialeWriter.caricaCredenziali();
         for (Credenziale credenziale : credenzialeList) {
             if (credenziale.getUsername().equals(username)) {
                 credenziale.setPassword(password);
@@ -69,7 +76,39 @@ public class AuthController
 
     }
 
-    public List<Credenziale> getCredenziali() {
+    public static List<Credenziale> getCredenziali() {
+        List<Credenziale> credenzialeList = DataManager.caricaDati(file_credenziali);
+        if (credenzialeList == null) {
+            return new ArrayList<Credenziale>();
+        }
         return DataManager.caricaDati(file_credenziali);
+    }
+
+    
+    public static boolean checkExistingCredentials(String username) {
+        List<Credenziale> credenzialeList = CredenzialeWriter.caricaCredenziali();
+        for (Credenziale credenziale : credenzialeList) {
+            System.out.println("Credenziale: " + credenziale.getUsername());
+            if (credenziale.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean creaFruitoreCredenziali(String username, String password) {
+        
+        if(checkExistingCredentials(username))
+        {   
+            //esiste gia username
+            return false;
+        }
+
+        List<Credenziale> credenzialeList = CredenzialeWriter.caricaCredenziali();
+        credenzialeList.add(new Credenziale(username, password, Costants.ruolo_fruitore));
+        System.out.println("aggiunto fruitore");
+        CredenzialeWriter.salvaCredenziali(credenzialeList);
+        return true;
+
     }
 }

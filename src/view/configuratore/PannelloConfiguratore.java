@@ -29,7 +29,7 @@ public class PannelloConfiguratore extends JFrame {
         initializeFrame();
 
         //inizializziamo controller qui
-        calendarioController = new CalendarioController();
+        this.calendarioController = new CalendarioController();
         this.luoghiController = new LuoghiController();
         this.tipoVisitaController = new TipiVisitaController();
         this.volontariController = new VolontariController();

@@ -58,25 +58,12 @@ public class VisualizzaMieVisiteFrame extends JFrame {
         cardContainerPanel.setBackground(Costants.BACKGROUND_COLOR);
         cardContainerPanel.setBorder(new EmptyBorder(Costants.SPACING, 0, Costants.SPACING, 0));
 
-        // Filtra le visite per questo volontario
-        // Nota: Assumiamo che getVisite() senza argomenti restituisca tutte le visite.
-        // Se getVisite() richiede una data, dovremmo modificare la logica per recuperare
-        // tutte le visite rilevanti (es. future o di un certo periodo).
-        // Per ora, usiamo getVisite() come definito in VisiteController (che richiede LocalDate).
-        // Mostriamo le visite del mese corrente e futuro come esempio.
-        LocalDate oggi = LocalDate.now();
-        List<Visita> mieVisite = visiteController.getVisite(oggi.withDayOfMonth(1)) // Visite mese corrente
+        // Filtra le visite per questo volontario utilizzando getAllVisite()
+        List<Visita> mieVisite = visiteController.getAllVisite() // Ottieni tutte le visite
                                     .stream()
-                                    .filter(v -> v.getGuidaAssegnata() != null && v.getGuidaAssegnata().getNome().equals(this.username))
+                                    .filter(v -> v.getGuidaAssegnata() != null && v.getGuidaAssegnata().getNome().equals(this.username)) // Filtra per username
+                                    .sorted(Comparator.comparing(Visita::getData)) // Ordina per data
                                     .collect(Collectors.toList());
-        // Aggiungi anche quelle del mese prossimo se necessario/desiderato
-         mieVisite.addAll(visiteController.getVisite(oggi.plusMonths(1).withDayOfMonth(1)) // Visite mese prossimo
-                                    .stream()
-                                    .filter(v -> v.getGuidaAssegnata() != null && v.getGuidaAssegnata().getNome().equals(this.username))
-                                    .collect(Collectors.toList()));
-
-        // Ordina per data (opzionale)
-        mieVisite.sort(Comparator.comparing(Visita::getData));
 
 
         if (mieVisite.isEmpty()) {
