@@ -7,6 +7,9 @@ import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import controller.CredenzialeWriter;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -20,6 +23,7 @@ public class VisitaCard extends JPanel {
     private JButton disiscrivitiButton;
     private String codicePrenotazione;
     private boolean utenteIscritto = false;
+    private boolean utenteFruitore = false;
 
     public VisitaCard(Visita visita) {
         this(visita, null);
@@ -34,6 +38,7 @@ public class VisitaCard extends JPanel {
                     .filter(i -> i.getUsernameFruitore().equals(currentUsername))
                     .findFirst();
 
+            utenteFruitore = CredenzialeWriter.isFruitore(currentUsername);
             utenteIscritto = iscrizione.isPresent();
             if (utenteIscritto) {
                 codicePrenotazione = iscrizione.get().getCodicePrenotazione();
@@ -119,15 +124,30 @@ public class VisitaCard extends JPanel {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0)); // Allinea a destra
         rightPanel.setOpaque(false);
 
-        if (visita.getStato() == Visita.STATO_VISITA.PROPOSTA || visita.getStato() == Visita.STATO_VISITA.COMPLETA) {
-            if (!utenteIscritto) {
-                iscrivitiButton = Costants.createSimpleButton("Iscriviti");
-                rightPanel.add(iscrivitiButton);
-            } else {
-                disiscrivitiButton = Costants.createSimpleButton("Disiscriviti");
-                rightPanel.add(disiscrivitiButton);
+        if(utenteFruitore) 
+        {
+            if (visita.getStato() == Visita.STATO_VISITA.PROPOSTA || visita.getStato() == Visita.STATO_VISITA.COMPLETA) {
+                if (utenteIscritto) {
+                    disiscrivitiButton = Costants.createSimpleButton("Disiscriviti");
+                    rightPanel.add(disiscrivitiButton);
+    
+                    codicePrenotazione = visita.getIscrizioni().stream()
+                            .filter(i -> i.getUsernameFruitore().equals(currentUsername))
+                            .findFirst()
+                            .map(Iscrizione::getCodicePrenotazione)
+                            .orElse(null);
+                    JLabel nuovaLabel = new JLabel(codicePrenotazione);
+                    nuovaLabel.setFont(labelFont);
+                    nuovaLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    rightPanel.add(Box.createVerticalStrut(5));
+                    rightPanel.add(nuovaLabel);
+                } else {
+                    iscrivitiButton = Costants.createSimpleButton("Iscriviti");
+                    rightPanel.add(iscrivitiButton);
+                }
+                add(rightPanel, BorderLayout.EAST);
             }
-            add(rightPanel, BorderLayout.EAST);
+        
         }
     }
 

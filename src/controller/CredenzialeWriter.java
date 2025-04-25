@@ -60,4 +60,15 @@ public class CredenzialeWriter {
         salvaCredenziali(listaCredenziali);
         System.out.println("✅ Credenziali per il ruolo 'volontario' marcate come 'eliminato' per l'utente " + nome);
     }
+
+
+    public static boolean isFruitore(String currentUsername) {
+        List<Credenziale> listaCredenziali = caricaCredenziali();
+        for (Credenziale c : listaCredenziali) {
+            if (c.getUsername().equals(currentUsername) && c.getRuolo().equals(Costants.ruolo_fruitore)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

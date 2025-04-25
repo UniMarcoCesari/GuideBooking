@@ -332,6 +332,10 @@ public class VisiteController {
             throw new SecurityException("Lo username non corrisponde all’intestatario dell’iscrizione.");
         }
 
+        if (visita.getStato() == STATO_VISITA.COMPLETA) {
+            visita.setStato(STATO_VISITA.PROPOSTA);
+        }
+        
         visita.getIscrizioni().remove(iscrizione);
         DataManager.scriviDatiVisite(visite); // salva la modifica
 

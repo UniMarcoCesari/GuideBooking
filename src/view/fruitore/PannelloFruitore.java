@@ -201,6 +201,7 @@ public class PannelloFruitore extends JFrame {
         revalidate();
         repaint();
     }
+
 public static void main(String[] args) {
     SwingUtilities.invokeLater(() -> {
         String username = "fruitore"; // Replace with actual username if needed
