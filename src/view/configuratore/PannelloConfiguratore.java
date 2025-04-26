@@ -42,15 +42,35 @@ public class PannelloConfiguratore extends JFrame {
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         // Header
-        JPanel headerPanel = Costants.createHeaderPanel("Pannello configuratore - "+corpoDati.getAmbito() );
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
 
+        // Titolo al centro
+        JLabel titolo = new JLabel("Pannello Configuaratore", SwingConstants.CENTER);
+        titolo.setForeground(Color.WHITE);
+        titolo.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(titolo, BorderLayout.CENTER);
+
+        // Bottone Logout a destra
+        JButton logoutButton = Costants.createLogoutButton("Logout");
+        logoutButton.addActionListener(e -> {
+            dispose();
+            new view.login.LoginFrame().setVisible(true);
+        });
+        
+        JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        headerRightPanel.setOpaque(false);
+        headerRightPanel.add(logoutButton);
+        headerPanel.add(headerRightPanel, BorderLayout.EAST);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
         // Contenuto principale
         JPanel mainContentPanel = createMainContentPanel();
         mainPanel.add(mainContentPanel, BorderLayout.CENTER);
 
         // Footer
         JPanel footerPanel = Costants.createFooterPanel("Footer");
+        footerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);

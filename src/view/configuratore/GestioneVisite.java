@@ -32,7 +32,6 @@ public class GestioneVisite extends JFrame {
         initializeFrame();
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
-        mainPanel.setBorder(new EmptyBorder(Costants.SPACING, Costants.SPACING, Costants.SPACING, Costants.SPACING)); // Padding esterno
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         // Header
@@ -54,12 +53,11 @@ public class GestioneVisite extends JFrame {
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // Contenuto principale con ScrollPane e GridLayout
+        // Contenuto principale con ScrollPane e BoxLayout
         JPanel cardContainerPanel = new JPanel();
-        // GridLayout con 0 righe (flessibili), 3 colonne, e spacing
-        cardContainerPanel.setLayout(new GridLayout(0, 3, Costants.SPACING, Costants.SPACING));
+        cardContainerPanel.setLayout(new BoxLayout(cardContainerPanel, BoxLayout.Y_AXIS));
         cardContainerPanel.setBackground(Costants.BACKGROUND_COLOR); // Sfondo del contenitore delle card
-        cardContainerPanel.setBorder(new EmptyBorder(Costants.SPACING, 0, Costants.SPACING, 0)); // Padding verticale
+        cardContainerPanel.setBorder(new EmptyBorder(Costants.SPACING, Costants.SPACING, Costants.SPACING, Costants.SPACING)); // Padding
 
         // Ottieni le visite per il mese e anno target direttamente dal controller
         List<Visita> visiteDelMese = visiteController.getVisite(meseAnno.atDay(1)); // Passa il primo giorno del mese target
@@ -74,15 +72,6 @@ public class GestioneVisite extends JFrame {
                 VisitaCard visitaCard = new VisitaCard(visita);
                 cardContainerPanel.add(visitaCard);
             }
-             // Aggiungi pannelli vuoti per riempire l'ultima riga se necessario
-             int items = visiteDelMese.size();
-             int cols = 3;
-             int remainder = items % cols;
-             if (remainder != 0) {
-                 for (int i = 0; i < cols - remainder; i++) {
-                     cardContainerPanel.add(new JPanel(){{setOpaque(false);}}); // Pannello trasparente vuoto
-                 }
-             }
         }
 
         // ScrollPane per le card

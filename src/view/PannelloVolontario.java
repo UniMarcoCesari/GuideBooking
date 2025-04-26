@@ -5,36 +5,33 @@ import costants.Costants;
 import model.CorpoDati;
 import service.DataManager;
 import view.volontario.GestisciDisponibilitaFrame;
-import view.volontario.VisualizzaMieVisiteFrame; // Importa il nuovo frame
+import view.volontario.VisualizzaMieVisiteFrame;
 import view.volontario.VisualizzaTipiVisitaVolontarioFrame;
 
 import controller.TipiVisitaController;
-import controller.VisiteController; // Importa VisiteController
-import controller.LuoghiController; // Importa LuoghiController (necessario per VisiteController)
-import controller.VolontariController; // Importa VolontariController (necessario per VisiteController)
+import controller.VisiteController;
+import controller.LuoghiController;
+import controller.VolontariController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-
 public class PannelloVolontario extends JFrame {
     private final CalendarioController calendarioController;
     private JTextField textArea;
-    private JButton button1, button2, button3; // Aggiunto button3
+    private JButton button1, button2, button3;
     private CorpoDati corpoDati;
     private String username;
     private TipiVisitaController tipiVisitaController;
-    private VisiteController visiteController; // Aggiunto VisiteController
+    private VisiteController visiteController;
 
-    public PannelloVolontario(String username) { // Update constructor
+    public PannelloVolontario(String username) {
         this.username = username;
         this.tipiVisitaController = new TipiVisitaController();
         initializeFrame();
 
-        // Inizializziamo i controller qui
         calendarioController = new CalendarioController();
-        // Istanziazione semplificata dei controller necessari per VisiteController
         LuoghiController luoghiController = new LuoghiController();
         VolontariController volontariController = new VolontariController();
         this.visiteController = new VisiteController(calendarioController, luoghiController, tipiVisitaController, volontariController);
@@ -44,8 +41,27 @@ public class PannelloVolontario extends JFrame {
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         // Header
-        JPanel headerPanel = Costants.createHeaderPanel("Pannello Volontario - " + corpoDati.getAmbito());
-        headerPanel.setBackground(Costants.VOLONTARIO_HEADER_BACK); // Set specific color for volunteer panel
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(Costants.VOLONTARIO_HEADER_BACK);
+
+        // Titolo al centro
+        JLabel titolo = new JLabel("Pannello Volontario - " + corpoDati.getAmbito(), SwingConstants.CENTER);
+        titolo.setForeground(Color.WHITE);
+        titolo.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(titolo, BorderLayout.CENTER);
+
+        // Bottone Logout a destra
+        JButton logoutButton = Costants.createLogoutButton("Logout");
+        logoutButton.addActionListener(e -> {
+            dispose();
+            new view.login.LoginFrame().setVisible(true);
+        });
+        
+        JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        headerRightPanel.setOpaque(false);
+        headerRightPanel.add(logoutButton);
+        headerPanel.add(headerRightPanel, BorderLayout.EAST);
+
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Contenuto principale
@@ -54,7 +70,7 @@ public class PannelloVolontario extends JFrame {
 
         // Footer
         JPanel footerPanel = Costants.createFooterPanel("Footer");
-        footerPanel.setBackground(Costants.VOLONTARIO_HEADER_BACK); // Set specific color for volunteer panel footer
+        footerPanel.setBackground(Costants.VOLONTARIO_HEADER_BACK);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -67,7 +83,6 @@ public class PannelloVolontario extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    //IDEA PER SALVARE STATO APP
     @Override
     public void dispose() {
         super.dispose();
@@ -86,16 +101,24 @@ public class PannelloVolontario extends JFrame {
         gbc.gridwidth = 2;
         gbc.weightx = 1;
 
-        // Pannello superiore (Data + Bottoni)
-        JPanel topPanel = new JPanel(new BorderLayout(10, 10));
+        // Pannello superiore (Data + Bottoni avanti/indietro)
+        JPanel topPanel = new JPanel(new BorderLayout(0, 10));
         textArea = new JTextField(calendarioController.getDataCorrente(), 20);
         textArea.setHorizontalAlignment(JTextField.CENTER);
         textArea.setEditable(false);
+        textArea.setBorder(BorderFactory.createCompoundBorder(
+            textArea.getBorder(),
+            BorderFactory.createEmptyBorder(0, 0, 0, 0)
+        ));
 
         JButton indietroBtn = new JButton("<");
+        indietroBtn.setMargin(new Insets(0, 0, 0, 0));
+        indietroBtn.setFocusPainted(false);
         indietroBtn.addActionListener(_ -> aggiornaData(-1));
 
         JButton avantiBtn = new JButton(">");
+        avantiBtn.setMargin(new Insets(0, 0, 0, 0));
+        avantiBtn.setFocusPainted(false);
         avantiBtn.addActionListener(_ -> aggiornaData(1));
 
         topPanel.add(indietroBtn, BorderLayout.WEST);
@@ -104,30 +127,30 @@ public class PannelloVolontario extends JFrame {
 
         contentPanel.add(topPanel, gbc);
 
-        // Pannello inferiore (Bottoni equidistanti)
+        // Pannello inferiore (Bottoni)
         gbc.gridy = 1;
-        JPanel bottomPanel = new JPanel(new GridLayout(1, 3, 20, 0)); // Cambiato a 3 colonne
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 3, 20, 0));
 
         button1 = Costants.createSimpleButton("Visualizza Tipi Visita");
         button2 = Costants.createSimpleButton("Gestisci Disponibilità");
-        button3 = Costants.createSimpleButton("Visualizza Mie Visite"); // Nuovo pulsante
+        button3 = Costants.createSimpleButton("Visualizza Mie Visite");
 
         button1.addActionListener(_ -> {
             dispose();
-            new VisualizzaTipiVisitaVolontarioFrame(this.username, this.tipiVisitaController).setVisible(true); // Open frame
+            new VisualizzaTipiVisitaVolontarioFrame(this.username, this.tipiVisitaController).setVisible(true);
         });
         button2.addActionListener(_ -> {
             dispose();
             new GestisciDisponibilitaFrame(this.username).setVisible(true);
         });
-        button3.addActionListener(_ -> { // ActionListener per il nuovo pulsante
+        button3.addActionListener(_ -> {
             dispose();
-            new VisualizzaMieVisiteFrame(this.username, this.visiteController).setVisible(true); // Apri il nuovo frame
+            new VisualizzaMieVisiteFrame(this.username, this.visiteController).setVisible(true);
         });
 
         bottomPanel.add(button1);
         bottomPanel.add(button2);
-        bottomPanel.add(button3); // Aggiungi il nuovo pulsante
+        bottomPanel.add(button3);
 
         contentPanel.add(bottomPanel, gbc);
 
@@ -145,6 +168,7 @@ public class PannelloVolontario extends JFrame {
         repaint();
     }
 
-   
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new PannelloVolontario("admin").setVisible(true));
+    }
 }
-

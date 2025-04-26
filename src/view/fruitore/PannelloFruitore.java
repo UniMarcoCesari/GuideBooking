@@ -33,11 +33,30 @@ public class PannelloFruitore extends JFrame {
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
         //mainPanel.setBorder(new EmptyBorder(Costants.SPACING, Costants.SPACING, Costants.SPACING, Costants.SPACING));
 
-        // Header
-        JPanel headerPanel = Costants.createHeaderPanel("Pannello Fruitore - Visite Disponibili");
-        // Potresti voler un colore diverso per l'header del fruitore
-        headerPanel.setBackground(new Color(200, 220, 255)); // Esempio: Azzurro chiaro
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
+         // Header
+         JPanel headerPanel = new JPanel(new BorderLayout());
+         headerPanel.setBackground(Costants.FRUITORE_HEADER_BACK);
+ 
+         // Titolo al centro
+         JLabel titolo = new JLabel("Pannello Fruitore", SwingConstants.CENTER);
+         titolo.setForeground(Color.WHITE);
+         titolo.setFont(new Font("Arial", Font.BOLD, 20));
+         headerPanel.add(titolo, BorderLayout.CENTER);
+ 
+         // Bottone Logout a destra
+         JButton logoutButton = Costants.createLogoutButton("Logout");
+         logoutButton.addActionListener(e -> {
+             dispose();
+             new view.login.LoginFrame().setVisible(true);
+         });
+         
+         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+         headerRightPanel.setOpaque(false);
+         headerRightPanel.add(logoutButton);
+         headerPanel.add(headerRightPanel, BorderLayout.EAST);
+ 
+         mainPanel.add(headerPanel, BorderLayout.NORTH);
+ 
 
         // Pannello centrale con la lista di visite
         JPanel listaVisitePanel = createListaVisitePanel();
@@ -48,8 +67,8 @@ public class PannelloFruitore extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Footer (opzionale)
-        JPanel footerPanel = Costants.createFooterPanel("Benvenuto " + username);
-        footerPanel.setBackground(new Color(200, 220, 255)); // Stesso colore dell'header
+        JPanel footerPanel = Costants.createFooterPanel("Footer");
+        footerPanel.setBackground(Costants.FRUITORE_HEADER_BACK);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
@@ -58,7 +77,7 @@ public class PannelloFruitore extends JFrame {
 
     private void initializeFrame() {
         setTitle("Pannello Fruitore");
-        setSize(800, 600);
+        setSize(1600, 900);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Chiude solo questa finestra
     }

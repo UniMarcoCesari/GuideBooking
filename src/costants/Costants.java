@@ -25,6 +25,8 @@ public class Costants
     private static final Font HEADER_FONT = new Font("Segoe UI", Font.BOLD, 20);
     public static final Color HEADER_BACK = new Color(100, 100, 200); // Default/Configuratore header
     public static final Color VOLONTARIO_HEADER_BACK = new Color(204, 102, 0); // Dark Orange for Volontario
+    public static final Color FRUITORE_HEADER_BACK = new Color(102, 0, 204); // Dark Purple for Fruitore
+    public static final Color CONFIGURATORE_HEADER_BACK = new Color(0, 127, 255); // BarkBlue for Configuratore
 
 
     // Ruoli
@@ -53,7 +55,6 @@ public class Costants
 
     // Formattatore di date per l'italiano
     public static final DateTimeFormatter ITALIAN_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ITALY);
-
     // Metodo per formattare una data in italiano
     public static String formatToItalian(LocalDate date) {
         return date.format(ITALIAN_DATE_FORMATTER);
@@ -82,6 +83,7 @@ public class Costants
             footerLabel.setForeground(Color.WHITE);
             footerPanel.add(footerLabel);
         }
+        footerPanel.setMinimumSize(new Dimension(0, 300));
         return footerPanel;
     }
 
@@ -150,6 +152,31 @@ public class Costants
             @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 button.setBackground(BUTTON_BACKGROUND);
+            }
+        });
+
+        return button;
+    }
+
+
+    public static JButton createLogoutButton(String string) {
+        JButton button = new JButton(string);
+        button.setFont(new Font("Dialog", Font.BOLD, 12));
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setForeground(HOVER_COLOR);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setForeground(BACKGROUND_COLOR);
             }
         });
 

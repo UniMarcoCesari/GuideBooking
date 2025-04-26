@@ -58,8 +58,6 @@ public class VisitaCard extends JPanel {
                 new LineBorder(borderColor, 2, true),  // BORDO COLORATO
                 new EmptyBorder(12, 20, 12, 20)
         ));
-        setMaximumSize(new Dimension(1000, 150));
-        setPreferredSize(new Dimension(700, 130));
 
         Font labelFont = Costants.BUTTON_FONT.deriveFont(Font.PLAIN, 14f);
         Font boldFont = labelFont.deriveFont(Font.BOLD);
@@ -77,10 +75,32 @@ public class VisitaCard extends JPanel {
         leftPanel.add(tipoLabel);
         leftPanel.add(Box.createVerticalStrut(6));
 
+        // Add description
+        JLabel descriptionLabel = new JLabel("Descrizione: " + visita.getTipo().getDescrizione());
+        descriptionLabel.setFont(labelFont);
+        descriptionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        leftPanel.add(descriptionLabel);
+
+        // Add meeting point
+        JLabel meetingPointLabel = new JLabel("Punto di incontro: " + visita.getTipo().getPuntoIncontro());
+        meetingPointLabel.setFont(labelFont);
+        meetingPointLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        leftPanel.add(meetingPointLabel);
+
         JLabel dataLabel = new JLabel("Data: " + Costants.formatToItalian(visita.getData()));
         dataLabel.setFont(labelFont);
         dataLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         leftPanel.add(dataLabel);
+
+        JLabel oraInizioLabel = new JLabel("Ora inizio: " + visita.getTipo().getOraInizio().toString());
+        oraInizioLabel.setFont(labelFont);
+        oraInizioLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        leftPanel.add(oraInizioLabel);
+
+        JLabel bigliettoLabel = new JLabel("Biglietto Ingresso: " + (visita.getTipo().isBigliettoNecessario() ? "Necessario" : "Non necessario"));
+        bigliettoLabel.setFont(labelFont);
+        bigliettoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        leftPanel.add(bigliettoLabel);
 
         JLabel guidaLabel = new JLabel("Guida: " + (visita.getGuidaAssegnata() != null ? visita.getGuidaAssegnata().getNome() : "N/A"));
         guidaLabel.setFont(labelFont);
@@ -148,6 +168,11 @@ public class VisitaCard extends JPanel {
                 add(rightPanel, BorderLayout.EAST);
             }
         
+        } else if (visita.getStato() == Visita.STATO_VISITA.CANCELLATA) {
+            JLabel dataMancatoSvolgimentoLabel = new JLabel("Data (mancato) svolgimento: " + Costants.formatToItalian(visita.getData()));
+            dataMancatoSvolgimentoLabel.setFont(labelFont);
+            dataMancatoSvolgimentoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            leftPanel.add(dataMancatoSvolgimentoLabel);
         }
     }
 
