@@ -13,10 +13,11 @@ import java.util.List;
 
 public class CredenzialeWriter {
     public static void main(String[] args) {
-        // Creiamo una credenziale di esempio
-        Credenziale admin = new Credenziale("pre", "a", Costants.ruolo_PRE_configuratore);
         List<Credenziale> credenzialeList = new ArrayList<>();
-        credenzialeList.add(admin);
+        credenzialeList.add(new Credenziale("pre", "test", Costants.ruolo_configuratore));
+        credenzialeList.add(new Credenziale("marco", "test", Costants.ruolo_volontario));
+        credenzialeList.add(new Credenziale("f2", "test", Costants.ruolo_fruitore));
+        credenzialeList.add(new Credenziale("f1", "test", Costants.ruolo_fruitore));
 
         // Scriviamo l'oggetto nel file
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_credenziali))) {
@@ -62,13 +63,18 @@ public class CredenzialeWriter {
     }
 
 
-    public static boolean isFruitore(String currentUsername) {
+
+
+
+
+    public static String getRuolo(String currentUsername) {
         List<Credenziale> listaCredenziali = caricaCredenziali();
         for (Credenziale c : listaCredenziali) {
-            if (c.getUsername().equals(currentUsername) && c.getRuolo().equals(Costants.ruolo_fruitore)) {
-                return true;
+            if (c.getUsername().equals(currentUsername)) {
+                return c.getRuolo();
             }
         }
-        return false;
+        return null;
+        
     }
 }

@@ -1,6 +1,7 @@
 package costants;
 
 import java.awt.*;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -77,13 +78,13 @@ public class Costants
     public static JPanel createFooterPanel(String title) {
         JPanel footerPanel = new JPanel();
         footerPanel.setBackground(Costants.HEADER_BACK);
+        footerPanel.setPreferredSize(new Dimension(0, 45));
         if(!title.isEmpty()) {
             JLabel footerLabel = new JLabel(title);
             footerLabel.setFont(Costants.TITLE_FONT);
             footerLabel.setForeground(Color.WHITE);
             footerPanel.add(footerLabel);
         }
-        footerPanel.setMinimumSize(new Dimension(0, 300));
         return footerPanel;
     }
 
@@ -93,6 +94,26 @@ public class Costants
         button.setBackground(BACKGROUND_COLOR);
         return button;
     }
+
+
+    public static JButton creaBottoneLogOut() {
+        URL resource = Costants.class.getResource("/immagini/logout.png");
+        ImageIcon iconaIndietro = resource != null ? new ImageIcon(resource) : null;
+        if(iconaIndietro != null) {
+            Image image = iconaIndietro.getImage(); // transform it 
+            Image newimg = image.getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH);  // scale it the smooth way  
+            iconaIndietro = new ImageIcon(newimg );  // transform it back
+        }
+
+        JButton bottone = new JButton(iconaIndietro);
+        bottone.setForeground(Color.WHITE);
+        bottone.setFocusPainted(false);
+        bottone.setContentAreaFilled(false);
+        bottone.setBorderPainted(false);
+
+        return bottone;
+    }
+    
 
     // Metodo per creare bottoni con lo stesso stile
     public static JButton createMenuButton(String text) {

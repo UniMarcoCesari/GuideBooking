@@ -61,11 +61,32 @@ public class DatePrecluseSezione extends JFrame {
         // Removed duplicate declaration: JPanel mainPanel = new JPanel(...); -> Use the one below
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
-        mainPanel.setBorder(new EmptyBorder(Costants.SPACING, Costants.SPACING, Costants.SPACING, Costants.SPACING));
 
 
-        // Header Panel
-        JPanel headerPanel = createHeaderPanel(); // Use the existing method
+        // Header
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
+
+        // Titolo al centro
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", ITALIAN_LOCALE);
+        String monthName = selectedMonth.format(formatter);
+        JLabel titolo = new JLabel("Date precluse "+monthName, SwingConstants.CENTER);
+        titolo.setForeground(Color.WHITE);
+        titolo.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(titolo, BorderLayout.CENTER);
+
+        // Bottone Logout a destra
+        JButton logoutButton = Costants.creaBottoneLogOut();
+        logoutButton.addActionListener(e -> {
+            dispose();
+            new view.configuratore.PannelloConfiguratore().setVisible(true);
+        });
+        
+        JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        headerRightPanel.setOpaque(false);
+        headerRightPanel.add(logoutButton);
+        headerPanel.add(headerRightPanel, BorderLayout.EAST);
+
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Content Panel (Calendar View)
@@ -107,25 +128,13 @@ public class DatePrecluseSezione extends JFrame {
 
 
         // Footer Panel
-        JPanel footerPanel = Costants.createFooterPanel("Seleziona i giorni da precludere"); // Updated footer text
+        JPanel footerPanel = Costants.createFooterPanel(""); // Updated footer text
+        footerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel); // Add the main panel to the JFrame
     }
 
-    // Keep createHeaderPanel as is for now
-     private JPanel createHeaderPanel() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", ITALIAN_LOCALE);
-        String monthName = selectedMonth.format(formatter);
-        // Use a more generic title as specific instructions are in the footer
-        JPanel headerPanel = Costants.createHeaderPanel("Configura Date Precluse - " + monthName);
-
-        JButton backButton = Costants.createSimpleButton("Indietro");
-        backButton.addActionListener(_ -> navigateBack());
-        headerPanel.add(backButton, BorderLayout.WEST);
-
-        return headerPanel;
-    }
 
     // --- New methods for Calendar View ---
 

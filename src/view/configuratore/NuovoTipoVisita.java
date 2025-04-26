@@ -57,8 +57,28 @@ public class NuovoTipoVisita extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
-        // Pannello superiore con titolo e tasto indietro
-        JPanel headerPanel = Costants.createHeaderPanel(isModifica ? "Modifica tipo visita" : "Nuovo tipo visita");
+        // Header
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
+
+        // Titolo al centro
+        JLabel titolo2 = new JLabel(isModifica ? "Modifica Tipo Visita" : "Nuovo Tipo Visita", SwingConstants.CENTER);
+        titolo2.setForeground(Color.WHITE);
+        titolo2.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(titolo2, BorderLayout.CENTER);
+
+        // Bottone Logout a destra
+        JButton logoutButton = Costants.creaBottoneLogOut();
+        logoutButton.addActionListener(e -> {
+            dispose();
+            new view.configuratore.PannelloConfiguratore().setVisible(true);
+        });
+        
+        JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        headerRightPanel.setOpaque(false);
+        headerRightPanel.add(logoutButton);
+        headerPanel.add(headerRightPanel, BorderLayout.EAST);
+
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Pannello per il form - usando GridBagLayout per un controllo migliore
@@ -322,6 +342,7 @@ public class NuovoTipoVisita extends JFrame {
         annullaButton.addActionListener(e -> chiudiEmandaIndietro());
 
         JPanel footerPanel = Costants.createFooterPanel("");
+        footerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
         footerPanel.add(salvaButton, BorderLayout.CENTER);
         footerPanel.add(annullaButton, BorderLayout.EAST);
 

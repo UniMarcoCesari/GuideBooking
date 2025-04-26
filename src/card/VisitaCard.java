@@ -14,6 +14,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.List;
+
 import model.Iscrizione;
 
 public class VisitaCard extends JPanel {
@@ -23,7 +26,7 @@ public class VisitaCard extends JPanel {
     private JButton disiscrivitiButton;
     private String codicePrenotazione;
     private boolean utenteIscritto = false;
-    private boolean utenteFruitore = false;
+    private String ruolo;
 
     public VisitaCard(Visita visita) {
         this(visita, null);
@@ -38,7 +41,7 @@ public class VisitaCard extends JPanel {
                     .filter(i -> i.getUsernameFruitore().equals(currentUsername))
                     .findFirst();
 
-            utenteFruitore = CredenzialeWriter.isFruitore(currentUsername);
+            ruolo = CredenzialeWriter.getRuolo(currentUsername);
             utenteIscritto = iscrizione.isPresent();
             if (utenteIscritto) {
                 codicePrenotazione = iscrizione.get().getCodicePrenotazione();
@@ -47,6 +50,7 @@ public class VisitaCard extends JPanel {
 
         // Layout a 2 colonne: sinistra per le informazioni e destra per il bottone
         setLayout(new BorderLayout(20, 0));
+        setPreferredSize(new Dimension(800, 200));
         setBackground(Color.WHITE);
 
         // Se l'utente è iscritto, usa il bordo verde indipendentemente dallo stato
@@ -144,9 +148,36 @@ public class VisitaCard extends JPanel {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0)); // Allinea a destra
         rightPanel.setOpaque(false);
 
-        if(utenteFruitore) 
+        System.out.println("ruolo: " + ruolo);
+
+        boolean isVolontario = currentUsername != null && ruolo.equals(Costants.ruolo_volontario);
+        boolean isFruitore = currentUsername != null && ruolo.equals(Costants.ruolo_fruitore);
+
+        // Then fix the List section in your code:
+        if(isVolontario && ( visita.getStato() == Visita.STATO_VISITA.PROPOSTA || visita.getStato() == Visita.STATO_VISITA.COMPLETA) )
         {
-            if (visita.getStato() == Visita.STATO_VISITA.PROPOSTA || visita.getStato() == Visita.STATO_VISITA.COMPLETA) {
+            List<String> codiciIscrizioni = visita.getIscrizioni().stream()
+                    .map(Iscrizione::getCodicePrenotazione)
+                    .collect(Collectors.toList());
+            if(!codiciIscrizioni.isEmpty()) {
+                JLabel errorLabel = new JLabel("<html>Codici iscrizioni:<br> " + String.join("<br> ", codiciIscrizioni) + "</html>");
+                errorLabel.setFont(labelFont);
+                errorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                rightPanel.add(errorLabel);
+            }
+            // Add this line to ensure the panel is added to the main layout
+            add(rightPanel, BorderLayout.EAST);
+        }
+
+        else if(isFruitore) 
+        {
+            if(!utenteIscritto && visita.getStato() == Visita.STATO_VISITA.COMPLETA) {
+                
+            }
+            else if(!utenteIscritto && visita.getStato() == Visita.STATO_VISITA.CANCELLATA) {
+                
+            }
+            else if (visita.getStato() == Visita.STATO_VISITA.PROPOSTA || visita.getStato() == Visita.STATO_VISITA.COMPLETA) {
                 if (utenteIscritto) {
                     disiscrivitiButton = Costants.createSimpleButton("Disiscriviti");
                     rightPanel.add(disiscrivitiButton);
@@ -161,7 +192,8 @@ public class VisitaCard extends JPanel {
                     nuovaLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
                     rightPanel.add(Box.createVerticalStrut(5));
                     rightPanel.add(nuovaLabel);
-                } else {
+                } 
+                else {
                     iscrivitiButton = Costants.createSimpleButton("Iscriviti");
                     rightPanel.add(iscrivitiButton);
                 }
@@ -283,3 +315,4 @@ public class VisitaCard extends JPanel {
         };
     }
 }
+

@@ -18,15 +18,29 @@ public class NumMax extends JFrame {
         // Inizializza corpoDati in modo sicuro
         initializeCorpoDati();
 
-        // Header
-        JPanel headerPanel = Costants.createHeaderPanel("Lista volontari");
-        JButton indietro = Costants.createSimpleButton("Indietro");
-        indietro.addActionListener(_ -> {
-            dispose();
-            new PannelloConfiguratore().setVisible(true);
-        });
-        headerPanel.add(indietro, BorderLayout.WEST);
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
+      // Header
+      JPanel headerPanel = new JPanel(new BorderLayout());
+      headerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
+
+      // Titolo al centro
+      JLabel titolo = new JLabel("Numero massimo di persone", SwingConstants.CENTER);
+      titolo.setForeground(Color.WHITE);
+      titolo.setFont(new Font("Arial", Font.BOLD, 20));
+      headerPanel.add(titolo, BorderLayout.CENTER);
+
+      // Bottone Logout a destra
+      JButton logoutButton = Costants.creaBottoneLogOut();
+      logoutButton.addActionListener(e -> {
+          dispose();
+          new view.configuratore.PannelloConfiguratore().setVisible(true);
+      });
+      
+      JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+      headerRightPanel.setOpaque(false);
+      headerRightPanel.add(logoutButton);
+      headerPanel.add(headerRightPanel, BorderLayout.EAST);
+
+      mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Contenuto principale
         JPanel mainContentPanel = new JPanel(new BorderLayout(20, 20));
@@ -69,7 +83,8 @@ public class NumMax extends JFrame {
         mainPanel.add(mainContentPanel, BorderLayout.CENTER);
 
         // Footer
-        JPanel footerPanel = Costants.createFooterPanel("Footer");
+        JPanel footerPanel = Costants.createFooterPanel("");
+        footerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);

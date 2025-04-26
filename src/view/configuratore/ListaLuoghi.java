@@ -51,20 +51,33 @@ public class ListaLuoghi extends JFrame {
 
         initializeFrame();
 
-        // Crea l'intestazione
-        JPanel headerPanel = Costants.createHeaderPanel("Lista dei Luoghi");
-
-        // Add "Back" button
-        JButton backButton = createStyledButton("Indietro");
-        backButton.addActionListener(e -> {
-            dispose();
-            new PannelloConfiguratore();
-        });
-        headerPanel.add(backButton);
-
         // Crea un pannello principale con BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout(SPACING, SPACING));
         mainPanel.setBackground(BACKGROUND_COLOR);
+
+        // Header
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
+
+        // Titolo al centro
+        JLabel titolo = new JLabel("Lista Luoghi", SwingConstants.CENTER);
+        titolo.setForeground(Color.WHITE);
+        titolo.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(titolo, BorderLayout.CENTER);
+
+        // Bottone Logout a destra
+        JButton logoutButton = Costants.creaBottoneLogOut();
+        logoutButton.addActionListener(e -> {
+            dispose();
+            new view.configuratore.PannelloConfiguratore().setVisible(true);
+        });
+        
+        JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        headerRightPanel.setOpaque(false);
+        headerRightPanel.add(logoutButton);
+        headerPanel.add(headerRightPanel, BorderLayout.EAST);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
@@ -161,6 +174,7 @@ public class ListaLuoghi extends JFrame {
 
         // Crea l'intestazione
         JPanel footerPanel = Costants.createFooterPanel("");
+        footerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
         add(mainPanel);

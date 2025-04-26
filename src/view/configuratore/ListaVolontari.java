@@ -29,15 +29,29 @@ public class ListaVolontari extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
-        // Header
-        JPanel headerPanel = Costants.createHeaderPanel("Lista volontari");
-        JButton indietro = Costants.createSimpleButton("Indietro");
-        indietro.addActionListener(e -> {
-            dispose();
-            new PannelloConfiguratore().setVisible(true);
-        });
-        headerPanel.add(indietro, BorderLayout.WEST);
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
+         // Header
+         JPanel headerPanel = new JPanel(new BorderLayout());
+         headerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
+ 
+         // Titolo al centro
+         JLabel titolo = new JLabel("Lista Volontari", SwingConstants.CENTER);
+         titolo.setForeground(Color.WHITE);
+         titolo.setFont(new Font("Arial", Font.BOLD, 20));
+         headerPanel.add(titolo, BorderLayout.CENTER);
+ 
+         // Bottone Logout a destra
+         JButton logoutButton = Costants.creaBottoneLogOut();
+         logoutButton.addActionListener(e -> {
+             dispose();
+             new view.configuratore.PannelloConfiguratore().setVisible(true);
+         });
+         
+         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+         headerRightPanel.setOpaque(false);
+         headerRightPanel.add(logoutButton);
+         headerPanel.add(headerRightPanel, BorderLayout.EAST);
+ 
+         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Contenuto principale con scroll
         listPanel = createListPanel();
@@ -55,7 +69,8 @@ public class ListaVolontari extends JFrame {
 
 
         // Footer
-        JPanel footerPanel = Costants.createFooterPanel(""); // Clear default text
+        JPanel footerPanel = Costants.createFooterPanel(""); // Clear default textù
+        footerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
         JButton aggiungiButton = Costants.createSimpleButton("+"); // Use "+" symbol
         aggiungiButton.setFont(new Font("Segoe UI", Font.BOLD, 18)); // Make button bigger
         aggiungiButton.setToolTipText("Aggiungi nuovo volontario");

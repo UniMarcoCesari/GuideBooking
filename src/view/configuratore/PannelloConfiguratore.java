@@ -52,7 +52,7 @@ public class PannelloConfiguratore extends JFrame {
         headerPanel.add(titolo, BorderLayout.CENTER);
 
         // Bottone Logout a destra
-        JButton logoutButton = Costants.createLogoutButton("Logout");
+        JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
             new view.login.LoginFrame().setVisible(true);
@@ -69,7 +69,7 @@ public class PannelloConfiguratore extends JFrame {
         mainPanel.add(mainContentPanel, BorderLayout.CENTER);
 
         // Footer
-        JPanel footerPanel = Costants.createFooterPanel("Footer");
+        JPanel footerPanel = Costants.createFooterPanel("");
         footerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
@@ -122,11 +122,11 @@ public class PannelloConfiguratore extends JFrame {
 
         // Pannello inferiore (Bottoni equidistanti)
         gbc.gridy = 1;
-        JPanel bottomPanel = new JPanel(new GridLayout(1, 3, 20, 0));
+        JPanel firstRowPanel = new JPanel(new GridLayout(1, 3, 20, 0));
 
-        button1 = Costants.createSimpleButton("Sezione 1");
-        button2 = Costants.createSimpleButton("Sezione 2");
-        button3 = Costants.createSimpleButton("Sezione 3");
+        button1 = Costants.createSimpleButton("Gestione Visite");
+        button3 = Costants.createSimpleButton("Date Precluse");
+        button4 = Costants.createSimpleButton("Gestione Luoghi");
 
         button1.addActionListener(e -> {
             dispose();
@@ -136,27 +136,25 @@ public class PannelloConfiguratore extends JFrame {
             dispose();
             new DatePrecluseSezione(calendarioController);
         });
-
-        aggiornaBottoni();
-
-        bottomPanel.add(button1);
-        bottomPanel.add(button2);
-        bottomPanel.add(button3);
-
-        contentPanel.add(bottomPanel, gbc);
-
-        // **Secondo Pannello per altri tre bottoni**
-        gbc.gridy = 2;  // Posiziona sotto il primo set di bottoni
-        JPanel secondBottomPanel = new JPanel(new GridLayout(1, 3, 20, 0));
-
-        button4 = Costants.createSimpleButton("LISTA LUOGHI");
-        button5 = Costants.createSimpleButton("LISTA TIPI VISITA");
-        button6 = Costants.createSimpleButton("LISTA VOLONTARI");
-
         button4.addActionListener(e -> {
             dispose();
             new ListaLuoghi(luoghiController,tipoVisitaController,calendarioController);
         });
+
+        firstRowPanel.add(button1);
+        firstRowPanel.add(button3);
+        firstRowPanel.add(button4);
+
+        contentPanel.add(firstRowPanel, gbc);
+
+        // **Secondo Pannello per altri tre bottoni**
+        gbc.gridy = 2;  // Posiziona sotto il primo set di bottoni
+        JPanel secondRowPanel = new JPanel(new GridLayout(1, 3, 20, 0));
+
+        button5 = Costants.createSimpleButton("Gestione tipi visita");
+        button6 = Costants.createSimpleButton("Gestione volontari");
+        button7 = Costants.createSimpleButton("Numero massimo iscrizioni");
+
         button5.addActionListener(e -> {
             dispose();
             new ListaTipiVisita(tipoVisitaController,visiteController,calendarioController);
@@ -165,39 +163,16 @@ public class PannelloConfiguratore extends JFrame {
             dispose();
             new ListaVolontari(volontariController, tipoVisitaController,calendarioController);
         });
-
-        secondBottomPanel.add(button4);
-        secondBottomPanel.add(button5);
-        secondBottomPanel.add(button6);
-
-        contentPanel.add(secondBottomPanel, gbc);
-
-        // **Terzo Pannello per altri tre bottoni**
-        gbc.gridy = 3;  // Posiziona sotto il secondo set di bottoni
-        JPanel thirdBottomPanel = new JPanel(new GridLayout(1, 3, 20, 0));
-
-        button7 = Costants.createSimpleButton("NUM MAX");
-        button8 = Costants.createSimpleButton("MODIFICHE 2");
-        button9 = Costants.createSimpleButton("MODIFICHE 3");
-
         button7.addActionListener(e -> {
             dispose();
             new NumMax();
         });
-        button8.addActionListener(e -> {
-            dispose();
-            //new Sezione8(calendarioController);
-        });
-        button9.addActionListener(e -> {
-            dispose();
-            //new Sezione9(calendarioController);
-        });
 
-        thirdBottomPanel.add(button7);
-        thirdBottomPanel.add(button8);
-        thirdBottomPanel.add(button9);
+        secondRowPanel.add(button5);
+        secondRowPanel.add(button6);
+        secondRowPanel.add(button7);
 
-        contentPanel.add(thirdBottomPanel, gbc);
+        contentPanel.add(secondRowPanel, gbc);
 
         return contentPanel;
     }
@@ -220,11 +195,11 @@ public class PannelloConfiguratore extends JFrame {
         LocalDate firstModifiableMonth = calendarioController.getNomeMesePrimoCheSiPuoModificare();
                
         button1.setText("Visite per " + firstModifiableMonth.format(formatter));
-        button2.setText("Modifiche per " + firstModifiableMonth.plusMonths(1).format(formatter));
+        //button2.setText("Modifiche per " + firstModifiableMonth.plusMonths(1).format(formatter));
         button3.setText("Date precluse " + firstModifiableMonth.plusMonths(2).format(formatter));
     }
 
-    public static void main(String[] args) {
-        new PannelloConfiguratore();
-    }
+    // public static void main(String[] args) {
+    //     new PannelloConfiguratore();
+    // }
 }

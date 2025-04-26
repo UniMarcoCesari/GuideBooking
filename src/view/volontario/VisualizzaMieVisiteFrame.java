@@ -73,7 +73,7 @@ public class VisualizzaMieVisiteFrame extends JFrame {
             cardContainerPanel.add(noVisiteLabel, BorderLayout.CENTER);
         } else {
             for (Visita visita : mieVisite) {
-                VisitaCard visitaCard = new VisitaCard(visita);
+                VisitaCard visitaCard = new VisitaCard(visita,username);
                 cardContainerPanel.add(visitaCard);
             }
             // Aggiungi pannelli vuoti per riempire l'ultima riga
