@@ -250,6 +250,17 @@ public class VisiteController {
         return new ArrayList<>(this.visite);
     }
 
+    
+    public List<Visita> getVisite(String username) {
+        List<Visita> visiteFiltrate = new ArrayList<>();
+        for (Visita v : visite) {
+            if (v.getGuidaAssegnata().getNome().equalsIgnoreCase(username)) {
+                visiteFiltrate.add(v);
+            }
+        }
+        return visiteFiltrate;
+    }
+
     public void confermaVisitaOdierna(LocalDate data) {
         for (Visita visita : visite) {
             if (visita.getData().equals(data) && visita.getStato() == STATO_VISITA.PROPOSTA) {

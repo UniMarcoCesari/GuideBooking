@@ -1,13 +1,9 @@
-package view;
+package view.volontario;
 
 import controller.CalendarioController;
 import costants.Costants;
 import model.CorpoDati;
 import service.DataManager;
-import view.volontario.GestisciDisponibilitaFrame;
-import view.volontario.VisualizzaMieVisiteFrame;
-import view.volontario.VisualizzaTipiVisitaVolontarioFrame;
-
 import controller.TipiVisitaController;
 import controller.VisiteController;
 import controller.LuoghiController;
@@ -45,13 +41,13 @@ public class PannelloVolontario extends JFrame {
         headerPanel.setBackground(Costants.VOLONTARIO_HEADER_BACK);
 
         // Titolo al centro
-        JLabel titolo = new JLabel("Pannello Volontario - " + corpoDati.getAmbito(), SwingConstants.CENTER);
+        JLabel titolo = new JLabel("Pannello Volontario", SwingConstants.CENTER);
         titolo.setForeground(Color.WHITE);
         titolo.setFont(new Font("Arial", Font.BOLD, 20));
         headerPanel.add(titolo, BorderLayout.CENTER);
 
         // Bottone Logout a destra
-        JButton logoutButton = Costants.createLogoutButton("Logout");
+        JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
             new view.login.LoginFrame().setVisible(true);
@@ -78,7 +74,7 @@ public class PannelloVolontario extends JFrame {
     }
 
     private void initializeFrame() {
-        setSize(800, 600);
+        setSize(1200, 800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -169,6 +165,6 @@ public class PannelloVolontario extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new PannelloVolontario("admin").setVisible(true));
+        SwingUtilities.invokeLater(() -> new PannelloVolontario("marco").setVisible(true));
     }
 }

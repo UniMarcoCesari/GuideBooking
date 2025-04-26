@@ -4,10 +4,10 @@ import controller.AuthController;
 import costants.Costants;
 import model.CorpoDati;
 import service.DataManager;
-import view.PannelloVolontario;
 import view.configuratore.PannelloConfiguratore;
 import view.corpoDati.CorpoDatiFase1;
 import view.login.LoginFrame;
+import view.volontario.PannelloVolontario;
 
 import javax.swing.*;
 import java.awt.*;

@@ -4,7 +4,6 @@ import controller.CalendarioController;
 import controller.VolontariController;
 import costants.Costants;
 import model.Volontario;
-import view.PannelloVolontario;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -81,7 +80,7 @@ public class GestisciDisponibilitaFrame extends JFrame {
 
     private void initializeFrame() {
         setTitle("Gestisci Disponibilità - " + username);
-        setSize(800, 600);
+        setSize(1200, 800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
@@ -91,17 +90,27 @@ public class GestisciDisponibilitaFrame extends JFrame {
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
         
         // Header
-        JPanel headerPanel = Costants.createHeaderPanel("Gestisci Disponibilità - " + username);
+        JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(Costants.VOLONTARIO_HEADER_BACK);
-        
-        // Pulsante indietro
-        JButton indietroButton = Costants.createSimpleButton("Indietro");
-        indietroButton.addActionListener(_ -> {
+
+        // Titolo al centro
+        JLabel titolo = new JLabel("Gestisci Disponibilita", SwingConstants.CENTER);
+        titolo.setForeground(Color.WHITE);
+        titolo.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(titolo, BorderLayout.CENTER);
+
+        // Bottone Logout a destra
+        JButton logoutButton = Costants.creaBottoneLogOut();
+        logoutButton.addActionListener(e -> {
             dispose();
-            new PannelloVolontario(username).setVisible(true);
+            new view.volontario.PannelloVolontario(username).setVisible(true);
         });
-        headerPanel.add(indietroButton, BorderLayout.WEST);
         
+        JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        headerRightPanel.setOpaque(false);
+        headerRightPanel.add(logoutButton);
+        headerPanel.add(headerRightPanel, BorderLayout.EAST);
+
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         
         // Contenuto principale
@@ -120,13 +129,6 @@ public class GestisciDisponibilitaFrame extends JFrame {
         meseLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         meseLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // Rimuovi i pulsanti di navigazione mese
-        // JButton prevMonthButton = new JButton("◀");
-        // prevMonthButton.addActionListener(e -> cambioMese(-1));
-        // JButton nextMonthButton = new JButton("▶");
-        // nextMonthButton.addActionListener(e -> cambioMese(1));
-        // monthPanel.add(prevMonthButton, BorderLayout.WEST);
-        // monthPanel.add(nextMonthButton, BorderLayout.EAST);
 
         monthPanel.add(meseLabel, BorderLayout.CENTER); // Aggiungi solo l'etichetta del mese
 

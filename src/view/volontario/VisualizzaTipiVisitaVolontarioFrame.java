@@ -4,8 +4,6 @@ import controller.VolontariController;
 import costants.Costants;
 import model.TipoVisita;
 
-import view.PannelloVolontario;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -31,16 +29,26 @@ public class VisualizzaTipiVisitaVolontarioFrame extends JFrame {
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         // Header
-        JPanel headerPanel = Costants.createHeaderPanel("Tipi di Visita Associati - " + username);
-        headerPanel.setBackground(Costants.VOLONTARIO_HEADER_BACK); // Colore specifico per volontario
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(Costants.VOLONTARIO_HEADER_BACK);
 
-        // Pulsante indietro
-        JButton indietroButton = Costants.createSimpleButton("Indietro");
-        indietroButton.addActionListener(_ -> {
+        // Titolo al centro
+        JLabel titolo = new JLabel("Tipi di visita associati", SwingConstants.CENTER);
+        titolo.setForeground(Color.WHITE);
+        titolo.setFont(new Font("Arial", Font.BOLD, 20));
+        headerPanel.add(titolo, BorderLayout.CENTER);
+
+        // Bottone Logout a destra
+        JButton logoutButton = Costants.creaBottoneLogOut();
+        logoutButton.addActionListener(e -> {
             dispose();
-            new PannelloVolontario(username).setVisible(true);
+            new view.volontario.PannelloVolontario(username).setVisible(true);
         });
-        headerPanel.add(indietroButton, BorderLayout.WEST);
+        
+        JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        headerRightPanel.setOpaque(false);
+        headerRightPanel.add(logoutButton);
+        headerPanel.add(headerRightPanel, BorderLayout.EAST);
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
@@ -75,7 +83,7 @@ public class VisualizzaTipiVisitaVolontarioFrame extends JFrame {
 
     private void initializeFrame() {
         setTitle("Visualizza Tipi Visita Associati - " + username);
-        setSize(800, 600);
+        setSize(1200, 800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }

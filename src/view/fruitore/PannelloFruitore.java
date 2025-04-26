@@ -44,7 +44,7 @@ public class PannelloFruitore extends JFrame {
          headerPanel.add(titolo, BorderLayout.CENTER);
  
          // Bottone Logout a destra
-         JButton logoutButton = Costants.createLogoutButton("Logout");
+         JButton logoutButton = Costants.creaBottoneLogOut();
          logoutButton.addActionListener(e -> {
              dispose();
              new view.login.LoginFrame().setVisible(true);
@@ -67,7 +67,7 @@ public class PannelloFruitore extends JFrame {
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // Footer (opzionale)
-        JPanel footerPanel = Costants.createFooterPanel("Footer");
+        JPanel footerPanel = Costants.createFooterPanel("");
         footerPanel.setBackground(Costants.FRUITORE_HEADER_BACK);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
