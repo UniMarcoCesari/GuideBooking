@@ -78,7 +78,7 @@ public class Costants
     public static JPanel createFooterPanel(String title) {
         JPanel footerPanel = new JPanel();
         footerPanel.setBackground(Costants.HEADER_BACK);
-        footerPanel.setPreferredSize(new Dimension(0, 45));
+        footerPanel.setPreferredSize(new Dimension(0, 40));
         if(!title.isEmpty()) {
             JLabel footerLabel = new JLabel(title);
             footerLabel.setFont(Costants.TITLE_FONT);
@@ -91,6 +91,7 @@ public class Costants
     public static JButton createSimpleButton(String text) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(200, 40));
+        button.setOpaque(true);
         button.setBackground(BACKGROUND_COLOR);
         return button;
     }

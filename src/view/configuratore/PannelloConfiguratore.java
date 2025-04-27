@@ -104,6 +104,7 @@ public class PannelloConfiguratore extends JFrame {
 
         // Pannello superiore (Data + Bottoni)
         JPanel topPanel = new JPanel(new BorderLayout(10, 10));
+        topPanel.setBackground(Costants.BACKGROUND_COLOR);
         textArea = new JTextField(calendarioController.getDataCorrente(), 20);
         textArea.setHorizontalAlignment(JTextField.CENTER);
         textArea.setEditable(false);
@@ -123,6 +124,7 @@ public class PannelloConfiguratore extends JFrame {
         // Pannello inferiore (Bottoni equidistanti)
         gbc.gridy = 1;
         JPanel firstRowPanel = new JPanel(new GridLayout(1, 3, 20, 0));
+        firstRowPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         button1 = Costants.createSimpleButton("Gestione Visite");
         button3 = Costants.createSimpleButton("Date Precluse");
@@ -150,6 +152,7 @@ public class PannelloConfiguratore extends JFrame {
         // **Secondo Pannello per altri tre bottoni**
         gbc.gridy = 2;  // Posiziona sotto il primo set di bottoni
         JPanel secondRowPanel = new JPanel(new GridLayout(1, 3, 20, 0));
+        secondRowPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         button5 = Costants.createSimpleButton("Gestione tipi visita");
         button6 = Costants.createSimpleButton("Gestione volontari");
@@ -182,6 +185,7 @@ public class PannelloConfiguratore extends JFrame {
             calendarioController.indietroUnGiorno();
         } else {
             calendarioController.avantiUnGiorno();
+            visiteController.aggiornaVisiteAlCambioGiorno(calendarioController.getDatacDateCorrenteLocalDate());
         }
         textArea.setText(calendarioController.getDataCorrente());
         aggiornaBottoni();

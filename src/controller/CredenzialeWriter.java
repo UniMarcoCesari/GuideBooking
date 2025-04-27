@@ -16,8 +16,9 @@ public class CredenzialeWriter {
         List<Credenziale> credenzialeList = new ArrayList<>();
         credenzialeList.add(new Credenziale("pre", "test", Costants.ruolo_configuratore));
         credenzialeList.add(new Credenziale("marco", "test", Costants.ruolo_volontario));
-        credenzialeList.add(new Credenziale("f2", "test", Costants.ruolo_fruitore));
-        credenzialeList.add(new Credenziale("f1", "test", Costants.ruolo_fruitore));
+        credenzialeList.add(new Credenziale("laura", "test", Costants.ruolo_volontario));
+        credenzialeList.add(new Credenziale("gian", "test", Costants.ruolo_fruitore));
+        credenzialeList.add(new Credenziale("filippo", "test", Costants.ruolo_fruitore));
 
         // Scriviamo l'oggetto nel file
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_credenziali))) {
@@ -68,7 +69,17 @@ public class CredenzialeWriter {
 
 
     public static String getRuolo(String currentUsername) {
+
+        System.out.println("Cerco ruolo per: " + currentUsername);
+
         List<Credenziale> listaCredenziali = caricaCredenziali();
+
+        System.out.println("Lista credenziali:");
+        for (Credenziale c : listaCredenziali) {
+            System.out.println(c.getUsername() + " - " + c.getPassword() + " - " + c.getRuolo());
+        }
+        
+
         for (Credenziale c : listaCredenziali) {
             if (c.getUsername().equals(currentUsername)) {
                 return c.getRuolo();

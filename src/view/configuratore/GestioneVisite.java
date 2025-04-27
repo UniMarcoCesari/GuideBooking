@@ -37,7 +37,7 @@ public class GestioneVisite extends JFrame {
         DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ITALIAN);
         String yearMonthLabel = meseAnno.format(monthYearFormatter);
         // Titolo al centro
-        JLabel titolo = new JLabel("Visite pianificate per "+ yearMonthLabel, SwingConstants.CENTER);
+        JLabel titolo = new JLabel("Visite pianificate", SwingConstants.CENTER);
         titolo.setForeground(Color.WHITE);
         titolo.setFont(new Font("Arial", Font.BOLD, 20));
         headerPanel.add(titolo, BorderLayout.CENTER);
@@ -64,7 +64,7 @@ public class GestioneVisite extends JFrame {
         cardContainerPanel.setBorder(new EmptyBorder(Costants.SPACING, Costants.SPACING, Costants.SPACING, Costants.SPACING)); // Padding
 
         // Ottieni le visite per il mese e anno target direttamente dal controller
-        List<Visita> visiteDelMese = visiteController.getVisite(meseAnno.atDay(1)); // Passa il primo giorno del mese target
+        List<Visita> visiteDelMese = visiteController.getAllVisite(); // Passa il primo giorno del mese target
 
         if (visiteDelMese.isEmpty()) {
             JLabel noVisiteLabel = new JLabel("Nessuna visita pianificata per questo mese.", SwingConstants.CENTER);
@@ -72,23 +72,30 @@ public class GestioneVisite extends JFrame {
             cardContainerPanel.setLayout(new BorderLayout()); // Cambia layout per centrare il messaggio
             cardContainerPanel.add(noVisiteLabel, BorderLayout.CENTER);
         } else {
-            // Pannello per il carosello
-            JPanel carouselPanel = new JPanel();
-            carouselPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); // Spaziatura tra le card
-            carouselPanel.setBackground(Costants.BACKGROUND_COLOR);
+            // Pannello per le card, disposto verticalmente
+            JPanel cardListPanel = new JPanel();
+            cardListPanel.setLayout(new BoxLayout(cardListPanel, BoxLayout.Y_AXIS)); // Layout verticale
+            cardListPanel.setBackground(Costants.BACKGROUND_COLOR);
+            // Aggiunge padding interno al pannello delle card invece che allo JScrollPane
+            cardListPanel.setBorder(new EmptyBorder(20, 20, 20, 20)); // 20 pixel di padding interno
 
             for (Visita visita : visiteDelMese) {
                 VisitaCard visitaCard = new VisitaCard(visita);
-                // Imposta una dimensione fissa per tutte le card
-                visitaCard.setPreferredSize(new Dimension(400, 200)); // Larghezza fissa, altezza preferita
-                carouselPanel.add(visitaCard);
+                // Imposta una dimensione preferita per le card (BoxLayout rispetterà l'altezza preferita)
+                // Potrebbe essere necessario aggiustare la larghezza o usaresetAlignmentX per centrare
+                visitaCard.setPreferredSize(new Dimension(400, 200));
+                visitaCard.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra le card orizzontalmente
+                cardListPanel.add(visitaCard);
+                cardListPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Aggiunge spaziatura verticale tra le card
             }
 
-            // ScrollPane per il carosello
-            JScrollPane scrollPane = new JScrollPane(carouselPanel);
-            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-            scrollPane.setBorder(BorderFactory.createEmptyBorder());
+            // ScrollPane per la lista di card
+            JScrollPane scrollPane = new JScrollPane(cardListPanel);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // No scroll orizzontale
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); // Scroll verticale se necessario
+            // Rimuove il bordo dallo JScrollPane per avere la scrollbar attaccata a destra
+            scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Nessun bordo esterno
+            scrollPane.getViewport().setBackground(Costants.BACKGROUND_COLOR); // Assicura che lo sfondo del viewport sia coerente
 
             mainPanel.add(scrollPane, BorderLayout.CENTER);
         }
@@ -98,6 +105,7 @@ public class GestioneVisite extends JFrame {
         footerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
         JButton generaVisiteButton = Costants.createSimpleButton("Genera Visite");
         generaVisiteButton.setFont(Costants.BUTTON_FONT); // Applica font costante
+        generaVisiteButton.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
         generaVisiteButton.addActionListener(e -> {
             try {
                 visiteController.generaVisite();
@@ -117,11 +125,7 @@ public class GestioneVisite extends JFrame {
             generaVisiteButton.setToolTipText("La generazione delle visite è possibile solo il primo giorno feriale a partire dal 16 del mese corrente.");
         }
 
-        // Aggiungi un pannello per il bottone per allinearlo a destra nel footer
-        JPanel footerButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        footerButtonPanel.setOpaque(false); // Rendi trasparente
-        footerButtonPanel.add(generaVisiteButton);
-        footerPanel.add(footerButtonPanel, BorderLayout.EAST); // Aggiungi il pannello del bottone
+        footerPanel.add(generaVisiteButton, BorderLayout.CENTER); // Aggiungi il bottone al centro
 
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 

@@ -53,9 +53,9 @@ public class VisitaCard extends JPanel {
         setPreferredSize(new Dimension(800, 200));
         setBackground(Color.WHITE);
 
-        // Se l'utente è iscritto, usa il bordo verde indipendentemente dallo stato
+        // Se l'utente è iscritto, usa il bordo verde solo se la visita non è stata effettuata
         Color borderColor = utenteIscritto ?
-                new Color(39, 174, 96) : // Verde per utente iscritto
+                (visita.getStato() == Visita.STATO_VISITA.EFFETTUATA ? new Color(127, 140, 141) : new Color(39, 174, 96)) : // Grigio per visita effettuata, Verde per altre visite
                 getColorForStato(visita.getStato());
 
         setBorder(new CompoundBorder(
@@ -64,7 +64,7 @@ public class VisitaCard extends JPanel {
         ));
 
         Font labelFont = Costants.BUTTON_FONT.deriveFont(Font.PLAIN, 14f);
-        Font boldFont = labelFont.deriveFont(Font.BOLD);
+        Font boldFont = labelFont.deriveFont(Font.BOLD,16f);
 
         // PANEL SINISTRO
         JPanel leftPanel = new JPanel();
@@ -117,17 +117,36 @@ public class VisitaCard extends JPanel {
         statoPanel.setOpaque(false);
         statoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        // Colore del badge:
+        // - Grigio se utente iscritto e visita effettuata
+        // - Verde se utente iscritto e visita non effettuata
+        // - Colore dello stato se utente non iscritto
+        Color statoBadgeColor = utenteIscritto ?
+                (visita.getStato() == Visita.STATO_VISITA.EFFETTUATA ? new Color(127, 140, 141) : new Color(39, 174, 96)) :
+                getColorForStato(visita.getStato());
+
         JLabel statoBadge = new JLabel("● ");
         statoBadge.setFont(labelFont.deriveFont(Font.BOLD, 16f));
-        statoBadge.setForeground(utenteIscritto ? new Color(39, 174, 96) : getColorForStato(visita.getStato()));
+        statoBadge.setForeground(statoBadgeColor);
 
-        // Cambia testo se l'utente è iscritto
-        String statoText = utenteIscritto ?
-                "Sei iscritto" :
-                "Stato: " + visita.getStato().name();
+        // Testo stato:
+        // - "Hai partecipato" se utente iscritto e visita effettuata
+        // - "Sei iscritto" se utente iscritto e visita non effettuata
+        // - "Stato: [stato]" se utente non iscritto
+        String statoText;
+        if (utenteIscritto) {
+            if (visita.getStato() == Visita.STATO_VISITA.EFFETTUATA) {
+                statoText = "Hai partecipato";
+            } else {
+                statoText = "Sei iscritto";
+            }
+        } else {
+            statoText = "Stato: " + visita.getStato().name();
+        }
+        
         JLabel statoLabel = new JLabel(statoText);
         statoLabel.setFont(labelFont);
-        statoLabel.setForeground(utenteIscritto ? new Color(39, 174, 96) : getColorForStato(visita.getStato()));
+        statoLabel.setForeground(statoBadgeColor);  // Utilizzo dello stesso colore del badge
 
         statoPanel.add(statoBadge);
         statoPanel.add(statoLabel);
@@ -145,66 +164,111 @@ public class VisitaCard extends JPanel {
         add(leftPanel, BorderLayout.CENTER);
 
         // PANEL DESTRO: bottone "Iscriviti" o "Disiscriviti"
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0)); // Allinea a destra
+        JPanel rightPanel = new JPanel();
         rightPanel.setOpaque(false);
+        rightPanel.setBackground(Costants.BACKGROUND_COLOR);
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        rightPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        
 
         System.out.println("ruolo: " + ruolo);
 
         boolean isVolontario = currentUsername != null && ruolo.equals(Costants.ruolo_volontario);
         boolean isFruitore = currentUsername != null && ruolo.equals(Costants.ruolo_fruitore);
 
-        // Then fix the List section in your code:
-        if(isVolontario && ( visita.getStato() == Visita.STATO_VISITA.PROPOSTA || visita.getStato() == Visita.STATO_VISITA.COMPLETA) )
+        // Sezione per i volontari
+        if(isVolontario && (visita.getStato() == Visita.STATO_VISITA.PROPOSTA || visita.getStato() == Visita.STATO_VISITA.COMPLETA || visita.getStato() == Visita.STATO_VISITA.CONFERMATA))
         {
             List<String> codiciIscrizioni = visita.getIscrizioni().stream()
                     .map(Iscrizione::getCodicePrenotazione)
                     .collect(Collectors.toList());
             if(!codiciIscrizioni.isEmpty()) {
-                JLabel errorLabel = new JLabel("<html>Codici iscrizioni:<br> " + String.join("<br> ", codiciIscrizioni) + "</html>");
-                errorLabel.setFont(labelFont);
-                errorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-                rightPanel.add(errorLabel);
+                JLabel codiciLista = new JLabel("<html>Codici iscrizioni:<br> " + String.join("<br> ", codiciIscrizioni) + "</html>");
+                codiciLista.setFont(labelFont);
+                // Rimuovo l'allineamento esplicito a sinistra, lasciando che BoxLayout gestisca l'allineamento
+                rightPanel.add(codiciLista);
             }
             // Add this line to ensure the panel is added to the main layout
             add(rightPanel, BorderLayout.EAST);
         }
 
+        // Sezione per i fruitori
         else if(isFruitore) 
         {
             if(!utenteIscritto && visita.getStato() == Visita.STATO_VISITA.COMPLETA) {
-                
+                // Non fare nulla
             }
             else if(!utenteIscritto && visita.getStato() == Visita.STATO_VISITA.CANCELLATA) {
-                
+                // Non fare nulla
             }
             else if (visita.getStato() == Visita.STATO_VISITA.PROPOSTA || visita.getStato() == Visita.STATO_VISITA.COMPLETA) {
                 if (utenteIscritto) {
-                    disiscrivitiButton = Costants.createSimpleButton("Disiscriviti");
-                    rightPanel.add(disiscrivitiButton);
-    
-                    codicePrenotazione = visita.getIscrizioni().stream()
-                            .filter(i -> i.getUsernameFruitore().equals(currentUsername))
-                            .findFirst()
-                            .map(Iscrizione::getCodicePrenotazione)
-                            .orElse(null);
-                    JLabel nuovaLabel = new JLabel(codicePrenotazione);
-                    nuovaLabel.setFont(labelFont);
-                    nuovaLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-                    rightPanel.add(Box.createVerticalStrut(5));
-                    rightPanel.add(nuovaLabel);
+                    // Pannello per contenere solo il pulsante (allineato a destra)
+                    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                    buttonPanel.setOpaque(false);
+                    buttonPanel.setBackground(Costants.BACKGROUND_COLOR);
+                    
+                    // Mostra il pulsante Disiscriviti solo se la visita non è stata effettuata
+                    if (visita.getStato() != Visita.STATO_VISITA.EFFETTUATA) {
+                        disiscrivitiButton = Costants.createSimpleButton("Disiscriviti");
+                        buttonPanel.add(disiscrivitiButton);
+                        rightPanel.add(buttonPanel);
+                        
+                        // Aggiunge uno spazio verticale tra il pulsante e il codice
+                        rightPanel.add(Box.createVerticalStrut(10));
+                    }
+                    
+                    // Pannello per il codice di prenotazione (allineato a destra)
+                    JPanel codicePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                    codicePanel.setOpaque(false);
+                    
+                    // Crea una label per il codice di prenotazione con testo in grassetto
+                    JLabel codiceLabel = new JLabel("Codice prenotazione: ");
+                    codiceLabel.setFont(labelFont);
+                    codicePanel.add(codiceLabel);
+                    
+                    // Usa il colore grigio per il codice se la visita è stata effettuata, verde altrimenti
+                    Color codiceColor = (visita.getStato() == Visita.STATO_VISITA.EFFETTUATA) ? 
+                            new Color(127, 140, 141) : // Grigio per visita effettuata
+                            new Color(39, 174, 96);    // Verde per visita non effettuata
+                    
+                    JLabel codiceValueLabel = new JLabel(codicePrenotazione);
+                    codiceValueLabel.setFont(boldFont);
+                    codiceValueLabel.setForeground(codiceColor);
+                    codicePanel.add(codiceValueLabel);
+                    
+                    rightPanel.add(codicePanel);
                 } 
                 else {
+                    // Pannello per contenere solo il pulsante (allineato a destra)
+                    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                    buttonPanel.setOpaque(false);
+                    
                     iscrivitiButton = Costants.createSimpleButton("Iscriviti");
-                    rightPanel.add(iscrivitiButton);
+                    buttonPanel.add(iscrivitiButton);
+                    rightPanel.add(buttonPanel);
                 }
+                add(rightPanel, BorderLayout.EAST);
+            } else if ((visita.getStato() == Visita.STATO_VISITA.EFFETTUATA || visita.getStato() == Visita.STATO_VISITA.CONFERMATA ) && utenteIscritto) {
+                // Per visite effettuate a cui l'utente ha partecipato, mostra solo il codice di prenotazione in grigio
+                JPanel codicePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                codicePanel.setOpaque(false);
+                
+                JLabel codiceLabel = new JLabel("Codice prenotazione: ");
+                codiceLabel.setFont(labelFont);
+                codicePanel.add(codiceLabel);
+                
+                JLabel codiceValueLabel = new JLabel(codicePrenotazione);
+                codiceValueLabel.setFont(boldFont);
+                codiceValueLabel.setForeground(new Color(127, 140, 141)); // Grigio
+                codicePanel.add(codiceValueLabel);
+                
+                rightPanel.add(codicePanel);
                 add(rightPanel, BorderLayout.EAST);
             }
         
         } else if (visita.getStato() == Visita.STATO_VISITA.CANCELLATA) {
-            JLabel dataMancatoSvolgimentoLabel = new JLabel("Data (mancato) svolgimento: " + Costants.formatToItalian(visita.getData()));
-            dataMancatoSvolgimentoLabel.setFont(labelFont);
-            dataMancatoSvolgimentoLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-            leftPanel.add(dataMancatoSvolgimentoLabel);
+            // Non fare nulla
         }
     }
 
@@ -315,4 +379,3 @@ public class VisitaCard extends JPanel {
         };
     }
 }
-

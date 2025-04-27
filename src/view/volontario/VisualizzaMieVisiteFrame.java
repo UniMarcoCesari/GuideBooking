@@ -63,26 +63,33 @@ public class VisualizzaMieVisiteFrame extends JFrame {
             noVisiteLabel.setFont(Costants.TITLE_FONT);
             cardContainerPanel.setLayout(new BorderLayout()); // Cambia layout per centrare il messaggio
             cardContainerPanel.add(noVisiteLabel, BorderLayout.CENTER);
+            mainPanel.add(cardContainerPanel, BorderLayout.CENTER); // Aggiungi il pannello con il messaggio se non ci sono visite
         } else {
-            // Pannello per il carosello
-            JPanel carouselPanel = new JPanel();
-            carouselPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10)); // Spaziatura tra le card
-            carouselPanel.setBackground(Costants.BACKGROUND_COLOR);
+            // Pannello per le card, disposto verticalmente
+            JPanel cardListPanel = new JPanel();
+            cardListPanel.setLayout(new BoxLayout(cardListPanel, BoxLayout.Y_AXIS)); // Layout verticale
+            cardListPanel.setBackground(Costants.BACKGROUND_COLOR);
+            // Aggiunge padding interno al pannello delle card
+            cardListPanel.setBorder(new EmptyBorder(20, 20, 20, 20)); // 20 pixel di padding interno
 
             for (Visita visita : visiteDelMese) {
-                VisitaCard visitaCard = new VisitaCard(visita);
-                // Imposta una dimensione fissa per tutte le card
-                visitaCard.setPreferredSize(new Dimension(400, 200)); // Larghezza fissa, altezza preferita
-                carouselPanel.add(visitaCard);
+                VisitaCard visitaCard = new VisitaCard(visita, username);
+                // Imposta una dimensione preferita per le card
+                visitaCard.setPreferredSize(new Dimension(400, 200));
+                visitaCard.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra le card orizzontalmente
+                cardListPanel.add(visitaCard);
+                cardListPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spaziatura verticale
             }
 
-            // ScrollPane per il carosello
-            JScrollPane scrollPane = new JScrollPane(carouselPanel);
-            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-            scrollPane.setBorder(BorderFactory.createEmptyBorder());
+            // ScrollPane per la lista di card
+            JScrollPane scrollPane = new JScrollPane(cardListPanel);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // No scroll orizzontale
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); // Scroll verticale se necessario
+            // Rimuove il bordo dallo JScrollPane per avere la scrollbar attaccata a destra
+            scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Nessun bordo esterno
+            scrollPane.getViewport().setBackground(Costants.BACKGROUND_COLOR); // Sfondo del viewport
 
-            mainPanel.add(scrollPane, BorderLayout.CENTER);
+            mainPanel.add(scrollPane, BorderLayout.CENTER); // Aggiungi lo scrollPane con le card
         }
 
         // Footer con genera visite

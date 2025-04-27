@@ -11,6 +11,9 @@ import controller.VolontariController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import static costants.Costants.BACKGROUND_COLOR;
+
 import java.awt.*;
 
 public class PannelloVolontario extends JFrame {
@@ -99,9 +102,11 @@ public class PannelloVolontario extends JFrame {
 
         // Pannello superiore (Data + Bottoni avanti/indietro)
         JPanel topPanel = new JPanel(new BorderLayout(0, 10));
+        topPanel.setBackground(Costants.BACKGROUND_COLOR);
         textArea = new JTextField(calendarioController.getDataCorrente(), 20);
         textArea.setHorizontalAlignment(JTextField.CENTER);
         textArea.setEditable(false);
+        textArea.setFocusable(false);
         textArea.setBorder(BorderFactory.createCompoundBorder(
             textArea.getBorder(),
             BorderFactory.createEmptyBorder(0, 0, 0, 0)
@@ -126,6 +131,7 @@ public class PannelloVolontario extends JFrame {
         // Pannello inferiore (Bottoni)
         gbc.gridy = 1;
         JPanel bottomPanel = new JPanel(new GridLayout(1, 3, 20, 0));
+        bottomPanel.setBackground(Costants.BACKGROUND_COLOR);
 
         button1 = Costants.createSimpleButton("Visualizza Tipi Visita");
         button2 = Costants.createSimpleButton("Gestisci Disponibilità");
@@ -158,6 +164,7 @@ public class PannelloVolontario extends JFrame {
             calendarioController.indietroUnGiorno();
         } else {
             calendarioController.avantiUnGiorno();
+            visiteController.aggiornaVisiteAlCambioGiorno(calendarioController.getDatacDateCorrenteLocalDate());
         }
         textArea.setText(calendarioController.getDataCorrente());
         revalidate();

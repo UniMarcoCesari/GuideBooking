@@ -55,7 +55,32 @@ public class VisiteController {
         if (this.visite == null) {
             this.visite = new ArrayList<>(); // Inizializza se il file non esiste o è vuoto
         }
+        aggiornaVisiteAlCambioGiorno(calendarioController.getDatacDateCorrenteLocalDate());
     }
+
+    public void aggiornaVisiteAlCambioGiorno(LocalDate nuovaDataCorrente) {
+        for (Visita visita : visite) {
+            LocalDate dataVisita = visita.getData();
+    
+            if (visita.getStato() == STATO_VISITA.PROPOSTA || visita.getStato() == STATO_VISITA.COMPLETA) {
+                if (dataVisita.minusDays(3).isEqual(nuovaDataCorrente)) {
+                    if (visita.getTotaleIscritti() >= visita.getTipo().getMinPartecipanti()) {
+                        visita.setStato(STATO_VISITA.CONFERMATA);
+                    } else {
+                        visita.setStato(STATO_VISITA.CANCELLATA);
+                    }
+                }
+            }
+    
+            if (visita.getStato() == STATO_VISITA.CONFERMATA) {
+                if (dataVisita.isEqual(nuovaDataCorrente)) {
+                    visita.setStato(STATO_VISITA.EFFETTUATA);
+                }
+            }
+        }
+        DataManager.scriviDatiVisite(visite); // salva aggiornamenti
+    }
+    
 
     public void generaVisite() {
         LocalDate oggi = calendarioController.getDatacDateCorrenteLocalDate();
