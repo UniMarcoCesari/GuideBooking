@@ -2,8 +2,6 @@ package view.volontario;
 
 import controller.CalendarioController;
 import costants.Costants;
-import model.CorpoDati;
-import service.DataManager;
 import controller.TipiVisitaController;
 import controller.VisiteController;
 import controller.LuoghiController;
@@ -12,7 +10,6 @@ import controller.VolontariController;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import static costants.Costants.BACKGROUND_COLOR;
 
 import java.awt.*;
 
@@ -20,7 +17,6 @@ public class PannelloVolontario extends JFrame {
     private final CalendarioController calendarioController;
     private JTextField textArea;
     private JButton button1, button2, button3;
-    private CorpoDati corpoDati;
     private String username;
     private TipiVisitaController tipiVisitaController;
     private VisiteController visiteController;
@@ -33,8 +29,7 @@ public class PannelloVolontario extends JFrame {
         calendarioController = new CalendarioController();
         LuoghiController luoghiController = new LuoghiController();
         VolontariController volontariController = new VolontariController();
-        this.visiteController = new VisiteController(calendarioController, luoghiController, tipiVisitaController, volontariController);
-        this.corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
+        this.visiteController = new VisiteController(calendarioController, luoghiController, volontariController);
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);

@@ -14,12 +14,15 @@ import java.util.List;
 public class CredenzialeWriter {
     public static void main(String[] args) {
         List<Credenziale> credenzialeList = new ArrayList<>();
-        credenzialeList.add(new Credenziale("pre", "test", Costants.ruolo_configuratore));
-        credenzialeList.add(new Credenziale("marco", "test", Costants.ruolo_volontario));
-        credenzialeList.add(new Credenziale("laura", "test", Costants.ruolo_volontario));
-        credenzialeList.add(new Credenziale("gian", "test", Costants.ruolo_fruitore));
-        credenzialeList.add(new Credenziale("filippo", "test", Costants.ruolo_fruitore));
-
+        credenzialeList.add(new Credenziale("configVerona1", "test", Costants.ruolo_configuratore));
+        credenzialeList.add(new Credenziale("configVerona2", "test", Costants.ruolo_PRE_configuratore));
+        credenzialeList.add(new Credenziale("voloMarco", "test", Costants.ruolo_volontario));
+        credenzialeList.add(new Credenziale("voloSara", "test", Costants.ruolo_volontario));
+        credenzialeList.add(new Credenziale("giulia23", "test", Costants.ruolo_fruitore));
+        credenzialeList.add(new Credenziale("lucaf89", "test", Costants.ruolo_fruitore));
+        credenzialeList.add(new Credenziale("marta_trip", "test", Costants.ruolo_fruitore));
+        
+       
         // Scriviamo l'oggetto nel file
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_credenziali))) {
             oos.writeObject(credenzialeList);

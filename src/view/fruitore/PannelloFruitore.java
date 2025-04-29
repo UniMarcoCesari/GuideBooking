@@ -3,7 +3,6 @@ package view.fruitore;
 import card.VisitaCard;
 import controller.CalendarioController;
 import controller.LuoghiController;
-import controller.TipiVisitaController;
 import controller.VisiteController;
 import controller.VolontariController; 
 import costants.Costants;
@@ -17,14 +16,13 @@ public class PannelloFruitore extends JFrame {
     private VisiteController visiteController; 
     private CalendarioController calendarioController = new CalendarioController();
     private LuoghiController luoghiController = new LuoghiController();
-    private TipiVisitaController tipiVisitaController = new TipiVisitaController();
     private VolontariController volontariController = new VolontariController();
 
     private String username; 
 
     public PannelloFruitore(String username) {
         this.username = username;
-        this.visiteController = new VisiteController(calendarioController, luoghiController, tipiVisitaController, volontariController); 
+        this.visiteController = new VisiteController(calendarioController, luoghiController, volontariController); 
 
 
         initializeFrame();
@@ -77,7 +75,7 @@ public class PannelloFruitore extends JFrame {
 
     private void initializeFrame() {
         setTitle("Pannello Fruitore");
-        setSize(1600, 900);
+        setSize(1200, 800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Chiude solo questa finestra
     }

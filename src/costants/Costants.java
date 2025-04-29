@@ -102,8 +102,7 @@ public class Costants
         ImageIcon iconaIndietro = resource != null ? new ImageIcon(resource) : null;
         if(iconaIndietro != null) {
             Image image = iconaIndietro.getImage(); // transform it 
-            Image newimg = image.getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH);  // scale it the smooth way  
-            iconaIndietro = new ImageIcon(newimg );  // transform it back
+            iconaIndietro = new ImageIcon(image);  // transform it back
         }
 
         JButton bottone = new JButton(iconaIndietro);

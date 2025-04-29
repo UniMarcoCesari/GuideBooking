@@ -155,5 +155,15 @@ public class DataManager {
             e.printStackTrace();
         }
     }
+
+    public static int leggiNumMax() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Costants.file_corpo))) {
+            CorpoDati corpoDati = (CorpoDati) ois.readObject();
+            return Integer.parseInt(corpoDati.getMaxPersone());
+        } catch (IOException | ClassNotFoundException | NumberFormatException e) {
+            e.printStackTrace();
+            return 20;
+        }
+    }
 }
 

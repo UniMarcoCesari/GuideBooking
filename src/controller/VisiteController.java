@@ -27,8 +27,7 @@ import service.DataManager;
 public class VisiteController {
 
     private final CalendarioController calendarioController;
-    private final TipiVisitaController tipiVisitaController; // Potrebbe non essere più necessario se otteniamo i tipi
-                                                             // dai luoghi
+    private final int numeroMaxIscrizine;
     private final VolontariController volontariController;
     private final LuoghiController luoghiController;
 
@@ -44,14 +43,12 @@ public class VisiteController {
         }
     }
 
-    public VisiteController(CalendarioController calendarioController,
-            LuoghiController luoghiController, TipiVisitaController tipiVisitaController,
-            VolontariController volontariController) {
+    public VisiteController(CalendarioController calendarioController,LuoghiController luoghiController,VolontariController volontariController) {
         this.calendarioController = calendarioController;
-        this.tipiVisitaController = tipiVisitaController; // Mantenuto per ora, potrebbe essere rimosso/modificato
         this.luoghiController = luoghiController;
         this.volontariController = volontariController;
         this.visite = DataManager.leggiDatiVisite();
+        this.numeroMaxIscrizine = DataManager.leggiNumMax();
         if (this.visite == null) {
             this.visite = new ArrayList<>(); // Inizializza se il file non esiste o è vuoto
         }
@@ -317,6 +314,11 @@ public class VisiteController {
 
     // restituisce codice
     public String iscriviFruitore(Visita visita, String username, int numeroPersone) {
+        if (numeroPersone > numeroMaxIscrizine)
+        {
+            throw new IllegalStateException("Numero persone iscizione troppo elevato Max: "+numeroMaxIscrizine);
+        }
+
         if (visita.getStato() != STATO_VISITA.PROPOSTA) {
             throw new IllegalStateException("È possibile iscriversi solo a visite in stato PROPOSTA.");
         }

@@ -6,8 +6,6 @@ import controller.TipiVisitaController;
 import controller.VisiteController;
 import controller.VolontariController;
 import costants.Costants;
-import model.CorpoDati;
-import service.DataManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -22,8 +20,7 @@ public class PannelloConfiguratore extends JFrame {
     private final VolontariController volontariController;
     private final VisiteController visiteController;
     private JTextField textArea;
-    private JButton button1, button2, button3, button4, button5, button6, button7, button8, button9;
-    private CorpoDati corpoDati;
+    private JButton button1, button3, button4, button5, button6, button7;
 
     public PannelloConfiguratore() {
         initializeFrame();
@@ -33,10 +30,9 @@ public class PannelloConfiguratore extends JFrame {
         this.luoghiController = new LuoghiController();
         this.tipoVisitaController = new TipiVisitaController();
         this.volontariController = new VolontariController();
-        this.corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
 
         //inizializziamo il controller delle visite
-        this.visiteController = new VisiteController(calendarioController, luoghiController, tipoVisitaController, volontariController);
+        this.visiteController = new VisiteController(calendarioController, luoghiController, volontariController);
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
