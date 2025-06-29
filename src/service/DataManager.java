@@ -12,6 +12,7 @@ import java.util.List;
 
 import costants.Costants;
 import costants.Credenziale;
+import enumerations.Ruolo;
 
 public class DataManager {
 
@@ -104,7 +105,7 @@ public class DataManager {
         for (int i = 0; i < luoghi.size(); i++) {
             for (int j = 0; j < luoghi.get(i).getTipiVisita().size(); j++) {
                 for (int k = 0; k < luoghi.get(i).getTipiVisita().get(j).getVolontari().size(); k++) {
-                    credenziali.add(new Credenziale(luoghi.get(i).getTipiVisita().get(j).getVolontari().get(k).getNome(), "v", Costants.ruolo_volontario));
+                    credenziali.add(new Credenziale(luoghi.get(i).getTipiVisita().get(j).getVolontari().get(k).getNome(), "v", Ruolo.VOLONTARIO));
                 }
             }
         }
