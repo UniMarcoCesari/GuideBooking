@@ -1,6 +1,7 @@
 package card;
 
 import model.Visita;
+import enumerations.Ruolo;
 import costants.Costants;
 
 import javax.swing.*;
@@ -41,7 +42,7 @@ public class VisitaCard extends JPanel {
                     .filter(i -> i.getUsernameFruitore().equals(currentUsername))
                     .findFirst();
 
-            ruolo = CredenzialeWriter.getRuolo(currentUsername);
+            ruolo = CredenzialeWriter.getRuolo(currentUsername).name();
             utenteIscritto = iscrizione.isPresent();
             if (utenteIscritto) {
                 codicePrenotazione = iscrizione.get().getCodicePrenotazione();
@@ -192,8 +193,8 @@ public class VisitaCard extends JPanel {
         System.out.println("ruolo: " + ruolo);
 
         // SEZIONE PANEL DESTRO: gestione pulsanti e codice iscrizione
-        boolean isVolontario = currentUsername != null && ruolo.equals(Costants.ruolo_volontario);
-        boolean isFruitore = currentUsername != null && ruolo.equals(Costants.ruolo_fruitore);
+        boolean isVolontario = currentUsername != null && ruolo.equals(Ruolo.VOLONTARIO);
+        boolean isFruitore = currentUsername != null && ruolo.equals(Ruolo.FRUITORE);
 
         // Volontario -> mostra elenco codici se visita proposta/completa/confermata
         if (isVolontario && visita.getStato() != Visita.STATO_VISITA.CANCELLATA && visita.getStato() != Visita.STATO_VISITA.EFFETTUATA) {

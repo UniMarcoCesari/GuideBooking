@@ -2,6 +2,7 @@ package controller;
 
 
 import costants.*;
+import enumerations.Ruolo;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,19 +10,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CredenzialeWriter {
     public static void main(String[] args) {
         List<Credenziale> credenzialeList = new ArrayList<>();
-        credenzialeList.add(new Credenziale("configVerona1", "test", Costants.ruolo_configuratore));
-        credenzialeList.add(new Credenziale("configVerona2", "test", Costants.ruolo_PRE_configuratore));
-        credenzialeList.add(new Credenziale("voloMarco", "test", Costants.ruolo_volontario));
-        credenzialeList.add(new Credenziale("voloSara", "test", Costants.ruolo_volontario));
-        credenzialeList.add(new Credenziale("giulia23", "test", Costants.ruolo_fruitore));
-        credenzialeList.add(new Credenziale("lucaf89", "test", Costants.ruolo_fruitore));
-        credenzialeList.add(new Credenziale("marta_trip", "test", Costants.ruolo_fruitore));
-        
+        credenzialeList.add(new Credenziale("test", "test", Ruolo.CONFIGURATORE));
+        credenzialeList.add(new Credenziale("configVerona2", "test", Ruolo.PRE_CONFIGURATORE));
+       
        
         // Scriviamo l'oggetto nel file
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_credenziali))) {
@@ -50,7 +47,7 @@ public class CredenzialeWriter {
             return (List<Credenziale>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
     }
 
@@ -58,8 +55,8 @@ public class CredenzialeWriter {
     public static void disabilitaCredenzialeVolontario(String nome) {
         List<Credenziale> listaCredenziali = caricaCredenziali();
         for (Credenziale c : listaCredenziali) {
-            if (c.getUsername().equals(nome) && c.getRuolo().equals(Costants.ruolo_volontario)) {
-                c.setRuolo(Costants.ruolo_eliminato);
+            if (c.getUsername().equals(nome) && c.getRuolo().equals(Ruolo.VOLONTARIO)) {
+                c.setRuolo(Ruolo.UTENTE_ELIMINATO);
             }
         }
         salvaCredenziali(listaCredenziali);
@@ -71,7 +68,7 @@ public class CredenzialeWriter {
 
 
 
-    public static String getRuolo(String currentUsername) {
+    public static Ruolo getRuolo(String currentUsername) {
 
         System.out.println("Cerco ruolo per: " + currentUsername);
 

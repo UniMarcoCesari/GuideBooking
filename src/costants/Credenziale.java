@@ -1,6 +1,7 @@
 package costants;
 
 import java.io.Serializable;
+import enumerations.Ruolo;
 
 public class Credenziale implements Serializable
 {
@@ -8,10 +9,10 @@ public class Credenziale implements Serializable
 
     final String username;
     String password;
-    String ruolo;
+    Ruolo ruolo;
 
 
-    public Credenziale(String username, String password, String ruolo) {
+    public Credenziale(String username, String password, Ruolo ruolo) {
         this.username = username;
         this.password = password;
         this.ruolo = ruolo;
@@ -25,14 +26,14 @@ public class Credenziale implements Serializable
         return password;
     }
 
-    public String getRuolo() {
+    public Ruolo getRuolo() {
         return ruolo;
     }
 
     public  void setPassword(String password) {
         this.password = password;
     }
-    public  void setRuolo(String ruolo) {
+    public  void setRuolo(Ruolo ruolo) {
         this.ruolo = ruolo;
     }
 }

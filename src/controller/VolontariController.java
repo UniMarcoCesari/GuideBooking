@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import model.Volontario;
+import enumerations.Ruolo;
 import costants.Credenziale;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class VolontariController {
 
     public static void creaCredenzialiVolontari(String username) {
         List<Credenziale> credenziali = CredenzialeWriter.caricaCredenziali();
-        Credenziale nuovaCredenziale = new Credenziale(username, "pw", Costants.ruolo_pre_volontario);
+        Credenziale nuovaCredenziale = new Credenziale(username, "pw", Ruolo.VOLONTARIO);
         credenziali.add(nuovaCredenziale);
         CredenzialeWriter.salvaCredenziali(credenziali);
     }

@@ -1,23 +1,23 @@
 package view.login;
 
-import controller.AuthController;
+import controller.LoginController;
 import costants.Costants;
-import model.CorpoDati;
-import service.DataManager;
 import view.configuratore.PannelloConfiguratore;
 import view.corpoDati.CorpoDatiFase1;
 import view.fruitore.PannelloFruitore;
-import view.fruitore.RegistrazioneFruitore; // Import aggiunto
+import view.fruitore.RegistrazioneFruitore; 
 import view.volontario.PannelloVolontario;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class LoginFrame extends JFrame {
+public class LoginFrame extends JFrame implements ILoginView{
     private final JTextField usernameField = new JTextField("pre", 15);
     private final JPasswordField passwordField = new JPasswordField("test", 15);
     private final JButton loginButton;
-    private final JButton registratiButton; // Dichiarazione nuovo pulsante
+    private final JButton registratiButton; 
+
+    private final LoginController loginController;
 
     public LoginFrame() {
         setTitle("LogIn");
@@ -26,6 +26,7 @@ public class LoginFrame extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
+        loginController = new LoginController(this);
 
         // Pannello principale
         JPanel mainPanel = new JPanel();
@@ -37,8 +38,7 @@ public class LoginFrame extends JFrame {
         JPanel headerPanel = new JPanel(new BorderLayout()); // Cambiato layout in BorderLayout
         headerPanel.setOpaque(true);
         headerPanel.setBackground(Costants.BACKGROUND_COLOR);
-        // Rimosso headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT); non più necessario con BorderLayout
-
+        
         JLabel logoLabel = new JLabel(" "); // Logo
         logoLabel.setFont(new Font("Segoe UI", Font.PLAIN, 40));
 
@@ -77,8 +77,7 @@ public class LoginFrame extends JFrame {
         registrationButtonPanel.setOpaque(false); // Rendi trasparente
         registratiButton = Costants.createSimpleButton("Registrati");
         registratiButton.addActionListener(_ -> {
-            dispose(); // Chiudi la finestra di login
-            new RegistrazioneFruitore().setVisible(true); // Apri la finestra di registrazione
+            loginController.vaiARegistrazione();
         });
         registrationButtonPanel.add(registratiButton);
 
@@ -121,63 +120,76 @@ public class LoginFrame extends JFrame {
         loginButton.setMaximumSize(loginButton.getPreferredSize()); // Adatta la larghezza al testo
 
         loginButton.addActionListener(_ -> {
-            String username = usernameField.getText();
-            String password = new String(passwordField.getPassword());
-            authenticate(username, password);
+            loginController.tentaLogin();
         });
 
-        // Rimosso creazione e aggiunta bottone Registrati da qui
-
         buttonPanel.add(loginButton);
-        // Rimosso Box.createRigidArea e buttonPanel.add(registratiButton)
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
         setVisible(true);
     }
 
-    private void authenticate(String username, String password) {
-        int verifica = AuthController.checkCredentials(username, password);
-        if (verifica == -2) {
-            JOptionPane.showMessageDialog(this, "Errore nel caricamento dei dati", "Errore", JOptionPane.ERROR_MESSAGE);
-        }
-        if (verifica == -1) {  //errore
-            JOptionPane.showMessageDialog(this, "Username o password errati", "Errore", JOptionPane.ERROR_MESSAGE);
-        } else if (verifica == 0) {  //configuratore
-            dispose();
 
-            CorpoDati corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
-
-            if (corpoDati == null)
-            {
-                new CorpoDatiFase1().setVisible(true);
-            }
-            else
-            {
-                new PannelloConfiguratore().setVisible(true);
-            }
-
-
-        } else if (verifica == 1) { //PRE-configuratore
-            dispose();
-            new NewPasswordConf(username, "configuratore").setVisible(true);
-        } else if (verifica == 2) { //volontario
-            dispose();
-            new PannelloVolontario(username).setVisible(true); // Pass username
-        } else if (verifica == 3) { //preVolontario
-            dispose();
-            new NewPasswordConf(username, "volontario").setVisible(true);
-        } else if (verifica == 4) { //volontario cancellato
-            JOptionPane.showMessageDialog(this, "Utente cancellato", "Errore", JOptionPane.ERROR_MESSAGE);
-            dispose();
-            new LoginFrame().setVisible(true);
-        } else if (verifica == 5) { // fruitore
-            dispose();
-            new PannelloFruitore(username).setVisible(true);
-        }
+    @Override
+    public String getUsername() {
+        return usernameField.getText();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(LoginFrame::new);
+    @Override
+    public String getPassword() {
+        // Ritorna la password come stringa, migliorabile la sicurezza in un futuro
+        return new String(passwordField.getPassword());
+    }
+
+    @Override
+    public void mostraErrore(String titolo, String messaggio) {
+        JOptionPane.showMessageDialog(this, messaggio, titolo, JOptionPane.ERROR_MESSAGE);
+    }
+
+    @Override
+    public void mostraMessaggio(String titolo, String messaggio) {
+      JOptionPane.showMessageDialog(this, messaggio, titolo, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    @Override
+    public void apriPannelloConfiguratore() {
+        new PannelloConfiguratore().setVisible(true);
+    }
+
+    @Override
+    public void apriCorpoDatiFase1() {
+        new CorpoDatiFase1().setVisible(true);
+    }
+
+    @Override
+    public void apriPannelloVolontario(String username) {
+       new PannelloVolontario(username).setVisible(true);
+    }
+
+    @Override
+    public void apriPannelloFruitore(String username) {
+        new PannelloFruitore(username).setVisible(true);
+    }
+
+    @Override
+    public void apriNewPasswordConf(String username, String tipoUtente) {
+        new NewPasswordConf(username, tipoUtente).setVisible(true);
+    }
+
+    @Override
+    public void apriRegistrazioneFruitore() {
+        new RegistrazioneFruitore().setVisible(true);
+    }
+
+    @Override
+    public void chiudi() {
+       this.dispose();
+    }
+
+    @Override
+    public void pulisciCampi() {
+        usernameField.setText("");
+        passwordField.setText("");
     }
 }

@@ -30,13 +30,13 @@ public class Costants
     public static final Color CONFIGURATORE_HEADER_BACK = new Color(0, 127, 255); // BarkBlue for Configuratore
 
 
-    // Ruoli
-    public static final String ruolo_PRE_configuratore =  "PRE-configuratore";
-    public static final String ruolo_configuratore =  "configuratore";
-    public static final String ruolo_volontario = "volontario";
-    public static final String ruolo_pre_volontario = "preVolontario";
-    public static String ruolo_eliminato = "eliminato";
-    public static String ruolo_fruitore = "fruitore";
+    // // Ruoli
+    // public static final String ruolo_PRE_configuratore =  Ruolo.PRE_CONFIGURATORE;
+    // public static final String ruolo_configuratore =  "configuratore";
+    // public static final String ruolo_volontario = "volontario";
+    // public static final String ruolo_pre_volontario = "preVolontario";
+    // public static String ruolo_eliminato = "eliminato";
+    // public static String ruolo_fruitore = "fruitore";
 
     // Colori principali
     public static final Color ACCENT_COLOR = new Color(55, 65, 81); // Grigio scuro testo
