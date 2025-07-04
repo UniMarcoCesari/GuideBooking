@@ -1,5 +1,7 @@
 package controller;
 import enumerations.Ruolo;
+import exception.InvalidPasswordException;
+import exception.UserNotFoundException;
 import view.login.ILoginView;
 
 public class LoginController {
@@ -35,17 +37,20 @@ public class LoginController {
                     view.apriPannelloFruitore(username);
                     break;
                 default:
-                    view.mostraErrore("Errore di Autenticazione", "Credenziali errate.");
+                    view.mostraErrore("Errore di Autenticazione", "Ruolo non valido.");
                     view.pulisciCampi();
                     break;
             }
-        } catch (Exception e) {
-            view.mostraErrore("Errore di Autenticazione", e.getMessage());
+         } catch (UserNotFoundException e) {
+            view.mostraErrore("Utente Non Trovato", e.getMessage());
             view.pulisciCampi();
-            return; 
-        }
+        } catch (InvalidPasswordException e) {
+            view.mostraErrore("Password Errata", e.getMessage());
+            view.pulisciCampi();
+        } catch (Exception e) {
+            view.mostraErrore("Errore di Sistema", e.getMessage());
+        } 
 
-        
     }
 
     public void vaiARegistrazione() {

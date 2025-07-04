@@ -6,5 +6,6 @@ public enum Ruolo {
     VOLONTARIO,
     PRE_VOLONTARIO,
     UTENTE_ELIMINATO,
-    FRUITORE
+    FRUITORE,
+    SCONOSCIUTO,
 }

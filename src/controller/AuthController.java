@@ -3,6 +3,8 @@ package controller;
 import costants.Credenziale;
 import service.DataManager;
 import enumerations.Ruolo;
+import exception.InvalidPasswordException;
+import exception.UserNotFoundException;
 
 import java.util.List;
 
@@ -10,17 +12,24 @@ import static costants.Costants.file_credenziali;
 
 public class AuthController
 {
-    public static Ruolo getRuoloByCredential(String username, String password) {
+    public static Ruolo getRuoloByCredential(String username, String password) throws Exception {
         List<Credenziale> credenzialeList = CredenzialeWriter.caricaCredenziali();
         if (credenzialeList == null) {
             throw new IllegalStateException("Impossibile caricare le credenziali.");
         }
         for (Credenziale credenziale : credenzialeList) {
-           if (credenziale.getUsername().equals(username) && credenziale.getPassword().equals(password)) {
-              return credenziale.getRuolo();
+           if (credenziale.getUsername().equals(username)) {
+            // Username esistente
+              if (credenziale.getPassword().equals(password)) {
+                  // Password corretta
+                  return credenziale.getRuolo();
+              }
+              // Password errata
+              throw new InvalidPasswordException("Password errata per l'utente: " + username);
+              
            }
         }
-        throw new IllegalStateException("Credenziali errate.");
+        throw new UserNotFoundException("Utente non trovato: " + username);
     }
 
     public static void setNewPassConfiguratore(String username, String password) {
@@ -49,8 +58,6 @@ public class AuthController
 
         DataManager.salvaDati(credenzialeList, file_credenziali);
     }
-
-    
 
     
     public static boolean checkExistingCredentials(String username) {
