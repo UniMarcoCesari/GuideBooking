@@ -21,6 +21,7 @@ public class CalendarioController {
     }
 
     private void salvaCalendario() {
+        List<LocalDate> datePrecluse = new ArrayList<>(this.datePrecluse);
         DataManager.salvaDati(calendario, CALENDARIO_FILE);
     }
 
