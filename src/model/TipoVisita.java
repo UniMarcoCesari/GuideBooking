@@ -148,6 +148,18 @@ public class TipoVisita implements Serializable {
         return titolo;
     }
 
+    public boolean isProgrammabilePerData(LocalDate data) {
+        // Logica per controllare i giorni della settimana
+        if (!this.giorniSettimana.contains(data.getDayOfWeek())) {
+            return false;
+        }
+        // Logica per controllare l'intervallo di date
+        if (data.isBefore(this.dataInizio) || data.isAfter(this.dataFine)) {
+            return false;
+        }
+        return true;
+    }
+
     public void modifica(TipoVisita nuovaVisita) {
         this.setDescrizione(nuovaVisita.getDescrizione());
         this.setPuntoIncontro(nuovaVisita.getPuntoIncontro());

@@ -139,32 +139,25 @@ public class VisiteController {
                                                                                  // non esiste
                 List<TimeSlot> orariOccupatiLuogoCorrente = orariOccupatiPerLuogo.get(nomeLuogo);
 
-                System.out.println("  Luogo: " + nomeLuogo);
+                System.out.println("Luogo: " + nomeLuogo);
 
                 // Itera sui tipi di visita associati a questo luogo
                 for (TipoVisita tipo : luogo.getTipiVisita()) {
-                    System.out.println("    Tipo Visita: " + tipo.getTitolo());
+                    System.out.println("Tipo Visita: " + tipo.getTitolo());
 
                     // 1. Controlla se il tipo di visita è attivo in questa data e giorno della
                     // settimana
-                    System.out.print("      Giorni settimana tipo visita: ");
-                    tipo.getGiorniSettimana().forEach(
-                            giorno -> System.out.print(giorno.getDisplayName(TextStyle.FULL, Locale.ITALIAN) + " "));
-                    System.out.println();
-                    if (!tipo.getGiorniSettimana().contains(data.getDayOfWeek())) {
-                        System.out.println("      Giorno settimana non valido.");
+                    if (!tipo.isProgrammabilePerData(data)) { 
+                        System.out.println("Tipo visita non programmabile per questa data."); 
                         continue;
                     }
-                    if (data.isBefore(tipo.getDataInizio()) || data.isAfter(tipo.getDataFine())) {
-                        System.out.println("      Data fuori intervallo validità tipo visita.");
-                        continue;
-                    }
+                    
 
                     // 2. Calcola l'intervallo di tempo per questa visita
                     LocalTime oraInizio = tipo.getOraInizio();
                     LocalTime oraFine = oraInizio.plusMinutes(tipo.getDurataMinuti());
                     TimeSlot potenzialeSlot = new TimeSlot(oraInizio, oraFine);
-                    System.out.println("      Orario potenziale: " + oraInizio + " - " + oraFine);
+                    System.out.println("Orario potenziale: " + oraInizio + " - " + oraFine);
 
                     // 3. Controlla sovrapposizioni con altre visite *nello stesso luogo* in questo
                     // giorno
@@ -172,13 +165,13 @@ public class VisiteController {
                     for (TimeSlot slotOccupato : orariOccupatiLuogoCorrente) {
                         if (potenzialeSlot.overlaps(slotOccupato)) {
                             sovrapposizione = true;
-                            System.out.println("      ATTENZIONE: Sovrapposizione rilevata con slot "
+                            System.out.println("ATTENZIONE: Sovrapposizione rilevata con slot "
                                     + slotOccupato.start + " - " + slotOccupato.end);
                             break;
                         }
                     }
                     if (sovrapposizione) {
-                        System.out.println("      Impossibile programmare per sovrapposizione oraria.");
+                        System.out.println("Impossibile programmare per sovrapposizione oraria.");
                         continue; // Passa al prossimo tipo di visita per questo luogo
                     }
 
