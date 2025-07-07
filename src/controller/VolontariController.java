@@ -1,31 +1,27 @@
 package controller;
 
 import costants.Costants;
-import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import model.Volontario;
+import service.PersistentDataManager;
 import enumerations.Ruolo;
-import costants.Credenziale;
-import java.util.List;
 
 public class VolontariController {
 
-    public static void creaCredenzialiVolontari(String username) {
-        List<Credenziale> credenziali = CredenzialeWriter.caricaCredenziali();
-        Credenziale nuovaCredenziale = new Credenziale(username, "pw", Ruolo.VOLONTARIO);
-        credenziali.add(nuovaCredenziale);
-        CredenzialeWriter.salvaCredenziali(credenziali);
-    }
+    AuthController authController;
+    PersistentDataManager dataManager;
     private ArrayList<Volontario> listaVolontari;
     private Map<LocalDate, Map<String, Boolean>> disponibilitaVolontari;
 
-    public VolontariController() {
-        listaVolontari = caricaDati();
-        disponibilitaVolontari = caricaDisponibilita();;
+    public VolontariController(AuthController authController,PersistentDataManager dataManager) {
+        this.authController = authController;
+        this.dataManager = dataManager;
+        listaVolontari = dataManager.caricaDati(Costants.file_volontari);
+        disponibilitaVolontari = dataManager.caricaDati(Costants.file_disponibilita_volontari);
     }
 
     public boolean isDisponibile(Volontario volontario, LocalDate data) {
@@ -35,7 +31,6 @@ public class VolontariController {
     }
 
     public ArrayList<Volontario> getListaVolontari() {
-        caricaDati();
         return listaVolontari;
     }
 
@@ -68,15 +63,15 @@ public class VolontariController {
         // Se non esiste, crea e aggiungi il nuovo volontario
         Volontario nuovoVolontario = new Volontario(username);
         listaVolontari.add(nuovoVolontario);
-        salvaVolontari(); // Salva la lista aggiornata
-        creaCredenzialiVolontari(nuovoVolontario.getNome());
+        dataManager.salvaDati(listaVolontari, Costants.file_volontari);
+        authController.creaNuovaCredenziale(username, "pw", Ruolo.VOLONTARIO);
         return true; // Volontario aggiunto con successo
     }
 
     public void rimuoviVolonatario(Volontario volontario) {
         listaVolontari.remove(volontario);
-        CredenzialeWriter.disabilitaCredenzialeVolontario(volontario.getNome());
-        salvaVolontari();
+        authController.disabilitaCredenziale(volontario.getNome());
+        dataManager.salvaDati(listaVolontari, Costants.file_volontari);
     }
 
     public void aggiornaDisponibilita(Volontario volontario, LocalDate data, boolean disponibile) {
@@ -85,54 +80,23 @@ public class VolontariController {
     }
 
     public void salvaDisponibilita() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_disponibilita_volontari))) {
-            oos.writeObject(disponibilitaVolontari);
-            System.out.println("salvata disponibilita");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //TODO sistema
+        // dataManager.salvaDati(disponibilitaVolontari, Costants.file_disponibilita_volontari);
     }
 
-    public Map<LocalDate, Map<String, Boolean>> caricaDisponibilita() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Costants.file_disponibilita_volontari))) {
-            System.out.println("Disponibilita caricata");
-            return (Map<LocalDate, Map<String, Boolean>>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            disponibilitaVolontari = new HashMap<>();
-            return new HashMap<>();
-        }
-    }
 
     public boolean isDisponibile(LocalDate data, String username) {
-        if (disponibilitaVolontari == null || disponibilitaVolontari.isEmpty()) caricaDisponibilita();
         return disponibilitaVolontari.containsKey(data) &&
                disponibilitaVolontari.get(data).getOrDefault(username, false);
     }
 
-    public void salvaVolontari() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_volontari))) {
-            oos.writeObject(listaVolontari);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    @SuppressWarnings("unchecked")
-    private ArrayList<Volontario> caricaDati() {
-        File file = new File(Costants.file_volontari);
-        if (!file.exists()) return new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            return (ArrayList<Volontario>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
-    }
+
 
     public void rimuoviVolontario(Volontario volontario) {
         listaVolontari.remove(volontario);
-        CredenzialeWriter.disabilitaCredenzialeVolontario(volontario.getNome());
-        salvaVolontari();
+        authController.disabilitaCredenziale(volontario.getNome());
+        dataManager.salvaDati(listaVolontari, Costants.file_volontari);
     }
 
     public boolean volontarioEsiste(String nomeVolontario) {

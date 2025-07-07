@@ -6,9 +6,12 @@ import view.login.ILoginView;
 
 public class LoginController {
     private ILoginView view;
+    private AuthController authController;
+    
 
-    public LoginController(ILoginView view) {
+    public LoginController(ILoginView view, AuthController authController) {
         this.view = view;
+        this.authController = authController;
     }
 
     public void tentaLogin() {
@@ -21,9 +24,12 @@ public class LoginController {
         }
 
         try {
-            Ruolo ruolo = AuthController.getRuoloByCredential(username, password);
+            Ruolo ruolo = authController.getRuoloByCredential(username, password);
 
             switch (ruolo) {
+                case PRE_CONFIGURATORE:
+                    view.apriNewPassword(username, ruolo);
+                    view.chiudi();
                 case CONFIGURATORE:
                     view.chiudi();
                     view.apriPannelloConfiguratore();
@@ -63,7 +69,7 @@ public class LoginController {
             view.mostraErrore("Errore Registrazione", "Username e password non possono essere vuoti.");
             return false;
         }
-        boolean successo = AuthController.creaFruitoreCredenziali(username, password);
+        boolean successo = authController.creaNuovaCredenziale(username, password, Ruolo.FRUITORE);
         if (successo) {
             view.mostraMessaggio("Registrazione Completata", "Utente registrato con successo. Ora puoi effettuare il login.");
         } else {

@@ -2,7 +2,7 @@ package view.configuratore;
 
 import costants.Costants;
 import model.CorpoDati;
-import service.DataManager;
+import service.PersistentDataManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +68,7 @@ public class NumMax extends JFrame {
             try {
                 int nuovoNumero = Integer.parseInt(nuovoValore);
                 corpoDati.setMaxPersone(String.valueOf(nuovoNumero));
-                DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+                PersistentDataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
                 JOptionPane.showMessageDialog(this, "Dati salvati con successo!");
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Il valore inserito non è un numero!", "Errore", JOptionPane.ERROR_MESSAGE);
@@ -93,13 +93,13 @@ public class NumMax extends JFrame {
 
     private void initializeCorpoDati() {
         try {
-            corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
+            corpoDati = PersistentDataManager.caricaCorpoDati(Costants.file_corpo);
             if (corpoDati == null) {
                 corpoDati = new CorpoDati();
                 corpoDati.setMaxPersone("0"); // Imposta un valore di default
                 corpoDati.setAmbito("Default"); // Imposta un valore di default per ambito
                 // Salva il nuovo corpoDati per evitare problemi futuri
-                DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+                PersistentDataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
                 System.out.println("[INFO] Creato nuovo CorpoDati con valori di default");
             }
         } catch (Exception e) {
@@ -109,7 +109,7 @@ public class NumMax extends JFrame {
             corpoDati.setMaxPersone("0");
             corpoDati.setAmbito("Default");
             // Salva il nuovo corpoDati
-            DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+            PersistentDataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
         }
     }
 

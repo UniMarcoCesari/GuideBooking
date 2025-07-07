@@ -1,7 +1,7 @@
 package controller;
 
 import costants.Credenziale;
-import service.DataManager;
+import service.PersistentDataManager;
 import enumerations.Ruolo;
 import exception.InvalidPasswordException;
 import exception.UserNotFoundException;
@@ -12,12 +12,20 @@ import static costants.Costants.file_credenziali;
 
 public class AuthController
 {
-    public static Ruolo getRuoloByCredential(String username, String password) throws Exception {
-        List<Credenziale> credenzialeList = CredenzialeWriter.caricaCredenziali();
-        if (credenzialeList == null) {
+    private final PersistentDataManager dataManager;
+    List<Credenziale> credenziali;
+
+    public AuthController(PersistentDataManager dataManager) {
+        this.dataManager = dataManager;
+        credenziali = dataManager.caricaCredenziali();
+    }
+    
+
+    public Ruolo getRuoloByCredential(String username, String password) throws Exception {
+        if (credenziali == null) {
             throw new IllegalStateException("Impossibile caricare le credenziali.");
         }
-        for (Credenziale credenziale : credenzialeList) {
+        for (Credenziale credenziale : credenziali) {
            if (credenziale.getUsername().equals(username)) {
             // Username esistente
               if (credenziale.getPassword().equals(password)) {
@@ -32,37 +40,19 @@ public class AuthController
         throw new UserNotFoundException("Utente non trovato: " + username);
     }
 
-    public static void setNewPassConfiguratore(String username, String password) {
-        List<Credenziale> credenzialeList = DataManager.caricaDati(file_credenziali);
-        if (credenzialeList == null) {
-            return;
-        }
-        for (Credenziale credenziale : credenzialeList) {
+    public void setNewPasswordAndRuolo(String username, String password, Ruolo ruolo) {
+        for (Credenziale credenziale : credenziali) {
             if (credenziale.getUsername().equals(username)) {
                 credenziale.setPassword(password);
-                credenziale.setRuolo(Ruolo.CONFIGURATORE);  // ruolo nuovo
+                credenziale.setRuolo(ruolo); 
             }
         }
-
-        DataManager.salvaDati(credenzialeList, file_credenziali);
-    }
-
-    public static void setNewPassVolontario(String username, String password) {
-        List<Credenziale> credenzialeList = CredenzialeWriter.caricaCredenziali();
-        for (Credenziale credenziale : credenzialeList) {
-            if (credenziale.getUsername().equals(username)) {
-                credenziale.setPassword(password);
-                credenziale.setRuolo(Ruolo.VOLONTARIO);  // ruolo nuovo
-            }
-        }
-
-        DataManager.salvaDati(credenzialeList, file_credenziali);
     }
 
     
-    public static boolean checkExistingCredentials(String username) {
-        List<Credenziale> credenzialeList = CredenzialeWriter.caricaCredenziali();
-        for (Credenziale credenziale : credenzialeList) {
+    public boolean checkExistingCredentials(String username) {
+        
+        for (Credenziale credenziale : credenziali) {
             System.out.println("Credenziale: " + credenziale.getUsername());
             if (credenziale.getUsername().equals(username)) {
                 return true;
@@ -71,7 +61,8 @@ public class AuthController
         return false;
     }
 
-    public static boolean creaFruitoreCredenziali(String username, String password) {
+    public boolean creaNuovaCredenziale(String username, String password, Ruolo ruolo) {
+
         
         if(checkExistingCredentials(username))
         {   
@@ -79,11 +70,20 @@ public class AuthController
             return false;
         }
 
-        List<Credenziale> credenzialeList = CredenzialeWriter.caricaCredenziali();
-        credenzialeList.add(new Credenziale(username, password, Ruolo.FRUITORE));
-        System.out.println("aggiunto fruitore");
-        CredenzialeWriter.salvaCredenziali(credenzialeList);
+        credenziali.add(new Credenziale(username, password, ruolo));
+        System.out.println("Credenziale aggiunta: " + username + " con ruolo " + ruolo);
+        dataManager.salvaDati(credenziali, file_credenziali);
         return true;
 
+    }
+
+
+    public void disabilitaCredenziale(String nome) {
+        for (Credenziale credenziale : credenziali) {
+            if (credenziale.getUsername().equals(nome)) {
+                credenziale.setRuolo(Ruolo.UTENTE_ELIMINATO);
+            }
+        }
+        dataManager.salvaDati(credenziali, file_credenziali);
     }
 }

@@ -9,7 +9,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import controller.CredenzialeWriter;
+import controller.CredenzialiWriter;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -42,7 +42,7 @@ public class VisitaCard extends JPanel {
                     .filter(i -> i.getUsernameFruitore().equals(currentUsername))
                     .findFirst();
 
-            ruolo = CredenzialeWriter.getRuolo(currentUsername).name();
+            // ruolo = CredenzialiWriter.getRuolo(currentUsername).name();
             utenteIscritto = iscrizione.isPresent();
             if (utenteIscritto) {
                 codicePrenotazione = iscrizione.get().getCodicePrenotazione();

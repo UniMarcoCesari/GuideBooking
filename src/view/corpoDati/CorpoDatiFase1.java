@@ -2,7 +2,7 @@ package view.corpoDati;
 
 import costants.Costants;
 import model.CorpoDati;
-import service.DataManager;
+import service.PersistentDataManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -136,7 +136,7 @@ public class CorpoDatiFase1 extends JFrame {
         if (!hasErrors) {
             dispose();
             CorpoDati corpoDati = new CorpoDati(ambito, maxPersoneText);
-            DataManager.salvaCorpoDati(corpoDati,Costants.file_corpo);
+            PersistentDataManager.salvaCorpoDati(corpoDati,Costants.file_corpo);
             new CorpoDatiFase2(corpoDati).setVisible(true);
         }
     }

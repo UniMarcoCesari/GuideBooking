@@ -45,7 +45,7 @@ public class PannelloFruitore extends JFrame {
          JButton logoutButton = Costants.creaBottoneLogOut();
          logoutButton.addActionListener(e -> {
              dispose();
-             new view.login.LoginFrame().setVisible(true);
+             new view.login.LoginPanel().setVisible(true);
          });
          
          JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

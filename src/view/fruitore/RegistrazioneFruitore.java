@@ -3,10 +3,10 @@ package view.fruitore;
 import controller.AuthController;
 import costants.Costants;
 import model.CorpoDati;
-import service.DataManager;
+import service.PersistentDataManager;
 import view.configuratore.PannelloConfiguratore;
 import view.corpoDati.CorpoDatiFase1;
-import view.login.LoginFrame;
+import view.login.LoginPanel;
 import view.volontario.PannelloVolontario;
 
 import javax.swing.*;
@@ -120,7 +120,7 @@ public class RegistrazioneFruitore extends JFrame {
         }
         else
         {
-            LoginFrame loginFrame = new LoginFrame();
+            LoginPanel loginFrame = new LoginPanel();
             loginFrame.setVisible(true);
             this.dispose();
         }

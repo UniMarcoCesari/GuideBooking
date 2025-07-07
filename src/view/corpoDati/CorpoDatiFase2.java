@@ -9,7 +9,7 @@ import model.Luogo;
 import controller.CalendarioController;
 import controller.LuoghiController;
 import model.TipoVisita;
-import service.DataManager;
+import service.PersistentDataManager;
 import view.configuratore.PannelloConfiguratore;
 
 import javax.swing.*;
@@ -126,7 +126,7 @@ public class CorpoDatiFase2 extends JFrame {
     private void salvaEMandaPannello()
     {
         //TODO:salva dati app 2
-        DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+        PersistentDataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
         dispose();
         new PannelloConfiguratore().setVisible(true);
     }

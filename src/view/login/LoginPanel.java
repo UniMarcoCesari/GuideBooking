@@ -1,7 +1,10 @@
 package view.login;
 
+import controller.AuthController;
 import controller.LoginController;
 import costants.Costants;
+import enumerations.Ruolo;
+import service.PersistentDataManager;
 import view.configuratore.PannelloConfiguratore;
 import view.corpoDati.CorpoDatiFase1;
 import view.fruitore.PannelloFruitore;
@@ -11,22 +14,20 @@ import view.volontario.PannelloVolontario;
 import javax.swing.*;
 import java.awt.*;
 
-public class LoginFrame extends JFrame implements ILoginView{
+public class LoginPanel extends JPanel implements ILoginView{
     private final JTextField usernameField = new JTextField("pre", 15);
     private final JPasswordField passwordField = new JPasswordField("test", 15);
     private final JButton loginButton;
     private final JButton registratiButton; 
 
     private final LoginController loginController;
+    private final AuthController authController;
+    private final JFrame mainFrame;
 
-    public LoginFrame() {
-        setTitle("LogIn");
-        setSize(800, 500);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setResizable(false);
-
-        loginController = new LoginController(this);
+    public LoginPanel(JFrame mainFrame, AuthController authController, LoginController loginController) {
+        this.mainFrame = mainFrame;
+        this.authController = authController;
+        this.loginController = loginController;
 
         // Pannello principale
         JPanel mainPanel = new JPanel();
@@ -35,7 +36,7 @@ public class LoginFrame extends JFrame implements ILoginView{
         mainPanel.setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
 
         // Header (Logo + Titolo a sinistra, Bottone Registrati a destra)
-        JPanel headerPanel = new JPanel(new BorderLayout()); // Cambiato layout in BorderLayout
+        JPanel headerPanel = new JPanel(new BorderLayout()); 
         headerPanel.setOpaque(true);
         headerPanel.setBackground(Costants.BACKGROUND_COLOR);
         
@@ -154,7 +155,7 @@ public class LoginFrame extends JFrame implements ILoginView{
 
     @Override
     public void apriPannelloConfiguratore() {
-        new PannelloConfiguratore().setVisible(true);
+        mainFrame.toBack();
     }
 
     @Override
@@ -173,9 +174,10 @@ public class LoginFrame extends JFrame implements ILoginView{
     }
 
     @Override
-    public void apriNewPasswordConf(String username, String tipoUtente) {
-        new NewPasswordConf(username, tipoUtente).setVisible(true);
+    public void apriNewPassword(String username, Ruolo ruolo) {
+        new NewPasswordFrame(authController, username, ruolo).setVisible(true);
     }
+
 
     @Override
     public void apriRegistrazioneFruitore() {
@@ -192,4 +194,7 @@ public class LoginFrame extends JFrame implements ILoginView{
         usernameField.setText("");
         passwordField.setText("");
     }
+
+
+    
 }

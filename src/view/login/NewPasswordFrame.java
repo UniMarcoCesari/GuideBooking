@@ -1,28 +1,33 @@
 package view.login;
 
 import controller.AuthController;
+import enumerations.Ruolo;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class NewPasswordConf extends JFrame {
+public class NewPasswordFrame extends JFrame {
     private final JTextField usernameField;
     private final JPasswordField passwordField;
     private final JPasswordField confirmPasswordField;
     private final JButton loginButton;
 
     private final String username;
-    private final String ruolo;
+    private final Ruolo ruolo;
 
-    public NewPasswordConf(String username, String ruolo) {
+    private final AuthController authController;
+
+
+    public NewPasswordFrame(AuthController authController, String username, Ruolo ruolo) {
+        this.authController = authController;
         this.username = username;
         this.ruolo = ruolo;
 
         String titleText;
         String labelText;
-        if (ruolo.equals("configuratore")) {
+        if (ruolo.equals(Ruolo.CONFIGURATORE)) {
             titleText = "Inizializzazione Configuratore";
             labelText = "Primo Accesso Configuratore";
         } else {
@@ -108,12 +113,9 @@ public class NewPasswordConf extends JFrame {
         }
 
         JOptionPane.showMessageDialog(this, "✅ Credenziali salvate con successo!");
-        if (ruolo.equals("configuratore")) {
-            AuthController.setNewPassConfiguratore(username, password);
-        } else {
-            AuthController.setNewPassVolontario(username, password);
-        }
+
+        authController.setNewPasswordAndRuolo(username, password, ruolo);
         dispose();  // Chiude la finestra
-        new LoginFrame().setVisible(true);
+        new LoginPanel().setVisible(true);
     }
 }

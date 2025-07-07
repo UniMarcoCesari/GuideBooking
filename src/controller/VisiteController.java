@@ -22,7 +22,7 @@ import model.TipoVisita;
 import model.Visita;
 import model.Visita.STATO_VISITA;
 import model.Volontario;
-import service.DataManager;
+import service.PersistentDataManager;
 
 public class VisiteController {
 
@@ -47,8 +47,8 @@ public class VisiteController {
         this.calendarioController = calendarioController;
         this.luoghiController = luoghiController;
         this.volontariController = volontariController;
-        this.visite = DataManager.leggiDatiVisite();
-        this.numeroMaxIscrizine = DataManager.leggiNumMax();
+        this.visite = PersistentDataManager.leggiDatiVisite();
+        this.numeroMaxIscrizine = PersistentDataManager.leggiNumMax();
         if (this.visite == null) {
             this.visite = new ArrayList<>(); // Inizializza se il file non esiste o è vuoto
         }
@@ -75,7 +75,7 @@ public class VisiteController {
                 }
             }
         }
-        DataManager.scriviDatiVisite(visite); // salva aggiornamenti
+        PersistentDataManager.scriviDatiVisite(visite); // salva aggiornamenti
     }
     
 
@@ -225,7 +225,7 @@ public class VisiteController {
         // visite.removeIf(v -> v.getData().getMonth() == meseTarget.getMonth() &&
         // v.getData().getYear() == meseTarget.getYear());
         visite.addAll(nuoveVisite);
-        DataManager.scriviDatiVisite(visite);
+        PersistentDataManager.scriviDatiVisite(visite);
 
         System.out.println("\n✅ Generazione completata: " + nuoveVisite.size() + " nuove visite create per " +
                 meseTarget.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN) + " " + meseTarget.getYear());
@@ -284,7 +284,7 @@ public class VisiteController {
                 visita.setStato(STATO_VISITA.CONFERMATA);
             }
         }
-        DataManager.scriviDatiVisite(visite);
+        PersistentDataManager.scriviDatiVisite(visite);
     }
 
     public void controlla3Giorni(LocalDate data) {
@@ -333,7 +333,7 @@ public class VisiteController {
         Iscrizione nuova = new Iscrizione(codice, username, numeroPersone);
         visita.aggiungiIscrizione(nuova);
 
-        DataManager.scriviDatiVisite(visite); // se mantieni una lista globale
+        PersistentDataManager.scriviDatiVisite(visite); // se mantieni una lista globale
         
         // Aggiorna l'oggetto Visita nella lista
         int index = visite.indexOf(visita);
@@ -368,7 +368,7 @@ public class VisiteController {
         }
         
         visita.getIscrizioni().remove(iscrizione);
-        DataManager.scriviDatiVisite(visite); // salva la modifica
+        PersistentDataManager.scriviDatiVisite(visite); // salva la modifica
 
         // Aggiorna l'oggetto Visita nella lista
         int index = visite.indexOf(visita);

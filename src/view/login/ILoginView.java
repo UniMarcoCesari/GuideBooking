@@ -1,5 +1,6 @@
 package view.login;
 
+import enumerations.Ruolo;
 
 public interface ILoginView {
     String getUsername();
@@ -10,7 +11,7 @@ public interface ILoginView {
     void apriCorpoDatiFase1();
     void apriPannelloVolontario(String username);
     void apriPannelloFruitore(String username);
-    void apriNewPasswordConf(String username, String tipoUtente);
+    void apriNewPassword(String username, Ruolo ruolo);
     void apriRegistrazioneFruitore();
     void chiudi(); 
     void pulisciCampi(); 

@@ -7,22 +7,24 @@ import java.util.*;
 import costants.Costants;
 import model.Calendario;
 import model.CorpoDati;
-import service.DataManager;
+import service.PersistentDataManager;
 
 public class CalendarioController {
+    private PersistentDataManager dataManager;
     private final Calendario calendario;
     private final List<LocalDate> datePrecluse;
     private static final String CALENDARIO_FILE = "src/data/calendario.dat";
 
-    public CalendarioController() {
-        Calendario loadedCalendario = DataManager.caricaDati(CALENDARIO_FILE);
+    public CalendarioController(PersistentDataManager dataManager) {
+        this.dataManager = dataManager;
+        Calendario loadedCalendario = dataManager.caricaDati(CALENDARIO_FILE);
         this.calendario = (Calendario) (loadedCalendario != null ? loadedCalendario : new Calendario());
-        this.datePrecluse = DataManager.caricaDatePrecluse(Costants.file_date);
+        this.datePrecluse = this.dataManager.caricaDatePrecluse(Costants.file_date);
     }
 
-    private void salvaCalendario() {
-        List<LocalDate> datePrecluse = new ArrayList<>(this.datePrecluse);
-        DataManager.salvaDati(calendario, CALENDARIO_FILE);
+    private void salvaDati() {
+        dataManager.salvaDati(calendario, CALENDARIO_FILE);
+        dataManager.salvaDati(datePrecluse, Costants.file_date);
     }
 
     public String getDataCorrente() {
@@ -35,12 +37,12 @@ public class CalendarioController {
 
     public void avantiUnGiorno() {
         calendario.avantiUnGiorno();
-        salvaCalendario();
+        salvaDati();
     }
 
     public void indietroUnGiorno() {
         calendario.indietroUnGiorno();
-        salvaCalendario();
+        salvaDati();
     }
 
     public String getNomeMese() {
@@ -56,10 +58,10 @@ public class CalendarioController {
     public LocalDate getNomeMesePrimoCheSiPuoModificare() {
         LocalDate data = calendario.getData();
         if (data.getDayOfMonth() > 15 && !isGiornoCancellato(data)) {
-            CorpoDati corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
+            CorpoDati corpoDati = PersistentDataManager.caricaCorpoDati(Costants.file_corpo);
             if (!corpoDati.getIsAlreadyStart()) {
                 corpoDati.setIsAlreadyStart(true);
-                DataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+                PersistentDataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
             }
             data = data.plusMonths(1);
         }
@@ -67,7 +69,7 @@ public class CalendarioController {
     }
 
     public boolean isButtonLocked() {
-        CorpoDati corpoDati = DataManager.caricaCorpoDati(Costants.file_corpo);
+        CorpoDati corpoDati = PersistentDataManager.caricaCorpoDati(Costants.file_corpo);
         return !corpoDati.getIsAlreadyStart();
     }
 
@@ -98,14 +100,14 @@ public class CalendarioController {
     // Metodo per aggiungere una data alla lista delle date precluse
     public void aggiungiDataPreclusa(LocalDate data) {
         datePrecluse.add(data);
-        DataManager.salvaDatePrecluse(datePrecluse, Costants.file_date);
+        salvaDati();
     }
 
     // Metodo per rimuovere una data dalla lista delle date precluse
     public void rimuoviDataPreclusa(LocalDate data) {
         boolean removed = datePrecluse.remove(data);
         if (removed) { // Only save if a date was actually removed
-            DataManager.salvaDatePrecluse(datePrecluse, Costants.file_date);
+            salvaDati();
             System.out.println("Saved precluded dates after removing: " + data); // Optional log
         }
     }

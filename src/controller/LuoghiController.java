@@ -5,13 +5,15 @@ import java.util.List;
 import model.Luogo;
 import model.TipoVisita;
 import model.Volontario;
-import service.DataManager;
+import service.PersistentDataManager;
 
 public class LuoghiController {
     private List<Luogo> luoghi;
+    private PersistentDataManager dataManager;
 
-    public LuoghiController() {
-        luoghi = DataManager.caricaDati(Costants.file_luoghi);
+    public LuoghiController(PersistentDataManager dataManager) {
+        this.dataManager = dataManager;
+        this.luoghi = dataManager.caricaDati(Costants.file_luoghi);
         if (luoghi == null) {
             luoghi = new ArrayList<>();
             salvaDati();
@@ -28,47 +30,46 @@ public class LuoghiController {
         return luoghi;
     }
 
-    private void pulisciDati() {
-        // Carica i luoghi e i tipi visita dal file
-        List<Luogo> luoghi = DataManager.caricaDati(Costants.file_luoghi);
-        List<TipoVisita> tipiVisitaGlobali = DataManager.caricaDati(Costants.file_tipi_visita);
+    // private void pulisciDati() {
+    //     // Carica i luoghi e i tipi visita dal file
+    //     List<TipoVisita> tipiVisitaGlobali = PersistentDataManager.caricaDati(Costants.file_tipi_visita);
     
-        if (luoghi == null || tipiVisitaGlobali == null) return;
+    //     if (luoghi == null || tipiVisitaGlobali == null) return;
     
-        // Scorri i luoghi (copia per evitare ConcurrentModificationException)
-        for (Luogo luogo : new ArrayList<>(luoghi)) {
-            // Scorri i tipi visita del luogo (anche qui uso una copia)
-            for (TipoVisita tipo : new ArrayList<>(luogo.getTipiVisita())) {
-                // Trova il tipo visita completo nel file globale
-                boolean esiste = false;
-                for (TipoVisita tipoGlobale : tipiVisitaGlobali) {
-                    if (tipo.equals(tipoGlobale)) {
-                        esiste = true;
-                        break;
-                    }
-                }
-                // Se non esiste, rimuovi dal luogo
-                if (!esiste) {
-                    luogo.getTipiVisita().remove(tipo);
-                }
-            }
+    //     // Scorri i luoghi (copia per evitare ConcurrentModificationException)
+    //     for (Luogo luogo : new ArrayList<>(luoghi)) {
+    //         // Scorri i tipi visita del luogo (anche qui uso una copia)
+    //         for (TipoVisita tipo : new ArrayList<>(luogo.getTipiVisita())) {
+    //             // Trova il tipo visita completo nel file globale
+    //             boolean esiste = false;
+    //             for (TipoVisita tipoGlobale : tipiVisitaGlobali) {
+    //                 if (tipo.equals(tipoGlobale)) {
+    //                     esiste = true;
+    //                     break;
+    //                 }
+    //             }
+    //             // Se non esiste, rimuovi dal luogo
+    //             if (!esiste) {
+    //                 luogo.getTipiVisita().remove(tipo);
+    //             }
+    //         }
     
-            // Se il luogo non ha più tipi visita, rimuovilo dalla lista
-            if (luogo.getTipiVisita().isEmpty()) {
-                System.out.println("luogo pulito");
-                luoghi.remove(luogo);
-            }
-        }
+    //         // Se il luogo non ha più tipi visita, rimuovilo dalla lista
+    //         if (luogo.getTipiVisita().isEmpty()) {
+    //             System.out.println("luogo pulito");
+    //             luoghi.remove(luogo);
+    //         }
+    //     }
     
-        // Aggiorna l'attributo e salva
-        this.luoghi = luoghi;
-        salvaDati();
-    }
+    //     // Aggiorna l'attributo e salva
+    //     this.luoghi = luoghi;
+    //     salvaDati();
+    // }
     
     
 
     public void salvaDati() {
-        DataManager.salvaDati(luoghi, Costants.file_luoghi);
+        dataManager.salvaDati(luoghi, Costants.file_luoghi);
     }
 
     public Boolean aggiungiTipoVisita(Luogo luogoSelezionato, TipoVisita tipoVisita) {

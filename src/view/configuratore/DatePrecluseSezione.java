@@ -252,17 +252,7 @@ public class DatePrecluseSezione extends JFrame {
     }
 
 
-    // --- Remove old/unused methods ---
-    // Removed: createMainContentPanel
-    // Removed: createInputPanel
-    // Removed: createDateListPanel
-    // Removed: addDate
-    // Removed: validateAndAddDate
-    // Removed: isDuplicateDate
-    // Removed: loadPrecludedDates
-    // Removed: showDateFormatError
-    // Removed: showMonthMismatchError
-    // Removed: showDuplicateDateError
+
 
 
     // --- Add RoundedBorder class (copied from GestisciDisponibilitaFrame) ---
