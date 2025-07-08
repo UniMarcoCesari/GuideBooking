@@ -5,9 +5,9 @@ import model.TipoVisita;
 import model.Volontario;
 import view.configuratore.ListaTipiVisita;
 import view.configuratore.NuovoTipoVisita;
+import view.login.MainController;
 import controller.CalendarioController;
-import controller.TipiVisitaController; // Added import for TipiVisitaController
-import controller.VisiteController;
+import controller.TipiVisitaController; 
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -33,12 +33,14 @@ public class TipoVisitaCard extends JPanel {
     private final TipiVisitaController tipiVisitaController;
     private final CalendarioController calendarioController;
     private final ListaTipiVisita parent;
+    private final MainController mainController;
 
-    public TipoVisitaCard(ListaTipiVisita parent,TipoVisita tipoVisita, TipiVisitaController tipiVisitaController, CalendarioController calendarioController) {
+    public TipoVisitaCard(ListaTipiVisita parent,TipoVisita tipoVisita, MainController mainController) {
+        this.mainController = mainController;
         this.tipoVisita = tipoVisita;
         this.parent = parent;
-        this.tipiVisitaController = tipiVisitaController;
-        this.calendarioController = calendarioController;
+        this.tipiVisitaController = mainController.getTipiVisitaController();
+        this.calendarioController = mainController.getCalendarioController();
 
         System.out.println(tipoVisita.getGiorniSettimana().toString());
         System.out.println(tipoVisita.getVolontari().toString());
@@ -125,7 +127,7 @@ public class TipoVisitaCard extends JPanel {
         modificaButton.addActionListener(e -> {
 
             // Open the NuovoTipoVisita frame in edit mode by passing the tipo visita to modify
-            new NuovoTipoVisita(parent, tipiVisitaController, tipoVisita);
+            new NuovoTipoVisita(parent, mainController, tipoVisita);
             
             // Hide the parent frame since the new frame will be displayed
             parent.setVisible(false);

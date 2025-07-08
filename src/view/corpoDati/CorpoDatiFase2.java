@@ -6,11 +6,10 @@ import controller.VolontariController;
 import costants.Costants;
 import model.CorpoDati;
 import model.Luogo;
-import controller.CalendarioController;
 import controller.LuoghiController;
 import model.TipoVisita;
-import service.PersistentDataManager;
 import view.configuratore.PannelloConfiguratore;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -37,16 +36,19 @@ public class CorpoDatiFase2 extends JFrame {
     private DefaultListModel<String> tipiVisitaModel;
     private JList<String> tipiVisitaList;
 
-    private CorpoDati corpoDati;
+    private CorpoDati corpoDati;    
+
+    private final MainController mainController;
 
     private final LuoghiController luoghiController;
     private final TipiVisitaController tipoVisitaController;
     private final VolontariController volontariController;
 
-    public CorpoDatiFase2(CorpoDati corpoDati) {
-        this.luoghiController = new LuoghiController();
-        this.tipoVisitaController = new TipiVisitaController();
-        this.volontariController = new VolontariController();
+    public CorpoDatiFase2(CorpoDati corpoDati, MainController mainController) {
+        this.mainController = mainController;
+        this.luoghiController = mainController.getLuoghiController();
+        this.tipoVisitaController = mainController.getTipiVisitaController();
+        this.volontariController = mainController.getVolontarioController();
         this.corpoDati = corpoDati;
 
         initializeFrame();
@@ -125,10 +127,9 @@ public class CorpoDatiFase2 extends JFrame {
 
     private void salvaEMandaPannello()
     {
-        //TODO:salva dati app 2
-        PersistentDataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+        mainController.salvaCorpoDati(corpoDati);
         dispose();
-        new PannelloConfiguratore().setVisible(true);
+        new PannelloConfiguratore(mainController).setVisible(true);
     }
 
 

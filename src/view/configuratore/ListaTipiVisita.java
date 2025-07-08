@@ -3,9 +3,9 @@ package view.configuratore;
 import card.TipoVisitaCard;
 import controller.CalendarioController;
 import controller.TipiVisitaController;
-import controller.VisiteController;
 import costants.Costants;
 import model.TipoVisita;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,10 +16,12 @@ public class ListaTipiVisita extends JFrame {
     private JPanel listPanel;
     private TipiVisitaController tipiVisitaController;
     private CalendarioController calendarioController;
+    private MainController mainController;
 
-    public ListaTipiVisita(TipiVisitaController tipiVisitaController, VisiteController visiteController, CalendarioController calendarioController) {
-        this.tipiVisitaController = tipiVisitaController;
-        this.calendarioController = calendarioController;
+    public ListaTipiVisita(MainController mainController) {
+        this.mainController = mainController;
+        this.tipiVisitaController = mainController.getTipiVisitaController();
+        this.calendarioController = mainController.getCalendarioController();
         initializeFrame();
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -38,7 +40,7 @@ public class ListaTipiVisita extends JFrame {
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
-            new view.configuratore.PannelloConfiguratore().setVisible(true);
+            new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -94,7 +96,7 @@ public class ListaTipiVisita extends JFrame {
     private void addTipoVisitaCard(TipoVisita tipoVisita) {
         listPanel.add(Box.createVerticalStrut(6));
         // Instantiate and add the card for the given TipoVisita
-        listPanel.add(new TipoVisitaCard(this,tipoVisita,tipiVisitaController,calendarioController));  // Add a card for each place
+        listPanel.add(new TipoVisitaCard(this,tipoVisita,mainController));  // Add a card for each place
     }
 
     private void initializeFrame() {
@@ -106,13 +108,13 @@ public class ListaTipiVisita extends JFrame {
     // Placeholder method for the "Aggiungi" button action
     private void apriDialogAggiungiTipoVisita() {
         dispose();
-        new NuovoTipoVisita(this, tipiVisitaController).setVisible(true);
+        new NuovoTipoVisita(this,mainController).setVisible(true);
     }
 
     public void rimuoviTipoVisita(TipoVisita tipoVisita) {
         tipiVisitaController.rimuoviTipoVisita(tipoVisita);
         aggiornaListaTipiVisita();
         dispose();
-        new PannelloConfiguratore().setVisible(true);
+        new PannelloConfiguratore(mainController).setVisible(true);
     }
 }

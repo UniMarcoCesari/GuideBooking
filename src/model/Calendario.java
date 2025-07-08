@@ -7,10 +7,11 @@ import java.io.Serializable;
 
 public class Calendario implements Serializable {
     private LocalDate data;
-    private Set<LocalDate> datePrecluse; // Date in cui non si possono fare visite
+    private Set<LocalDate> datePrecluse; 
 
     public Calendario() {
         this.data = LocalDate.now();
+        this.datePrecluse = Set.of();
     }
 
     public LocalDate getData() {

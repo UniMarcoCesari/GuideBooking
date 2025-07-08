@@ -18,10 +18,12 @@ public class NewPasswordFrame extends JFrame {
     private final Ruolo ruolo;
 
     private final AuthController authController;
+    private final MainController mainController;
 
 
-    public NewPasswordFrame(AuthController authController, String username, Ruolo ruolo) {
-        this.authController = authController;
+    public NewPasswordFrame(String username, Ruolo ruolo, MainController mainController) {
+        this.mainController = mainController;
+        this.authController = mainController.getAuthController();
         this.username = username;
         this.ruolo = ruolo;
 
@@ -116,6 +118,6 @@ public class NewPasswordFrame extends JFrame {
 
         authController.setNewPasswordAndRuolo(username, password, ruolo);
         dispose();  // Chiude la finestra
-        new LoginPanel().setVisible(true);
+        new LoginPanel(mainController).setVisible(true);
     }
 }

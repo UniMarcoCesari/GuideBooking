@@ -6,6 +6,7 @@ import controller.TipiVisitaController;
 import controller.VisiteController;
 import controller.VolontariController;
 import costants.Costants;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -19,20 +20,20 @@ public class PannelloConfiguratore extends JFrame {
     private final TipiVisitaController tipoVisitaController;
     private final VolontariController volontariController;
     private final VisiteController visiteController;
+    private final MainController mainController;
     private JTextField textArea;
     private JButton button1, button3, button4, button5, button6, button7;
 
-    public PannelloConfiguratore() {
+    public PannelloConfiguratore(MainController mainController) {
         initializeFrame();
+        this.mainController = mainController;
+        this.calendarioController = mainController.getCalendarioController();
+        this.luoghiController = mainController.getLuoghiController();
+        this.visiteController = mainController.getVisiteController();
+        this.volontariController = mainController.getVolontarioController();
+        this.tipoVisitaController = mainController.getTipiVisitaController();
 
-        //inizializziamo controller qui
-        this.calendarioController = new CalendarioController();
-        this.luoghiController = new LuoghiController();
-        this.tipoVisitaController = new TipiVisitaController();
-        this.volontariController = new VolontariController();
-
-        //inizializziamo il controller delle visite
-        this.visiteController = new VisiteController(calendarioController, luoghiController, volontariController);
+        
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -51,7 +52,7 @@ public class PannelloConfiguratore extends JFrame {
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
-            new view.login.LoginPanel().setVisible(true);
+            new view.login.LoginPanel(mainController).setVisible(true);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -128,15 +129,15 @@ public class PannelloConfiguratore extends JFrame {
 
         button1.addActionListener(e -> {
             dispose();
-            new GestioneVisite(visiteController,calendarioController);
+            new GestioneVisite(mainController);
         });
         button3.addActionListener(e -> {
             dispose();
-            new DatePrecluseSezione(calendarioController);
+            new DatePrecluseSezione(mainController);
         });
         button4.addActionListener(e -> {
             dispose();
-            new ListaLuoghi(luoghiController,tipoVisitaController,calendarioController);
+            new ListaLuoghi(mainController);
         });
 
         firstRowPanel.add(button1);
@@ -156,15 +157,15 @@ public class PannelloConfiguratore extends JFrame {
 
         button5.addActionListener(e -> {
             dispose();
-            new ListaTipiVisita(tipoVisitaController,visiteController,calendarioController);
+            new ListaTipiVisita(mainController);
         });
         button6.addActionListener(e -> {
             dispose();
-            new ListaVolontari(volontariController, tipoVisitaController,calendarioController);
+            new ListaVolontari(mainController);
         });
         button7.addActionListener(e -> {
             dispose();
-            new NumMax();
+            new NumMax(mainController);
         });
 
         secondRowPanel.add(button5);

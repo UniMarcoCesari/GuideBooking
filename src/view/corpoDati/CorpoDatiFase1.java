@@ -2,7 +2,7 @@ package view.corpoDati;
 
 import costants.Costants;
 import model.CorpoDati;
-import service.PersistentDataManager;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -15,8 +15,10 @@ public class CorpoDatiFase1 extends JFrame {
     private final JLabel ambitoErrorLabel;
     private final JLabel maxPersoneErrorLabel;
     private final Border defaultBorder;
+    MainController mainController;
 
-    public CorpoDatiFase1() {
+    public CorpoDatiFase1(MainController mainController) {
+        this.mainController = mainController;
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -136,8 +138,8 @@ public class CorpoDatiFase1 extends JFrame {
         if (!hasErrors) {
             dispose();
             CorpoDati corpoDati = new CorpoDati(ambito, maxPersoneText);
-            PersistentDataManager.salvaCorpoDati(corpoDati,Costants.file_corpo);
-            new CorpoDatiFase2(corpoDati).setVisible(true);
+            mainController.salvaCorpoDati(corpoDati);
+            new CorpoDatiFase2(corpoDati,mainController).setVisible(true);
         }
     }
 

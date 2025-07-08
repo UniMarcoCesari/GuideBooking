@@ -1,10 +1,9 @@
 package view.login;
 
-import controller.AuthController;
-import controller.LoginController;
+import controller.*;
+
 import costants.Costants;
 import enumerations.Ruolo;
-import service.PersistentDataManager;
 import view.configuratore.PannelloConfiguratore;
 import view.corpoDati.CorpoDatiFase1;
 import view.fruitore.PannelloFruitore;
@@ -14,20 +13,27 @@ import view.volontario.PannelloVolontario;
 import javax.swing.*;
 import java.awt.*;
 
-public class LoginPanel extends JPanel implements ILoginView{
+public class LoginPanel extends JFrame implements ILoginView{
     private final JTextField usernameField = new JTextField("pre", 15);
     private final JPasswordField passwordField = new JPasswordField("test", 15);
     private final JButton loginButton;
     private final JButton registratiButton; 
 
-    private final LoginController loginController;
-    private final AuthController authController;
-    private final JFrame mainFrame;
 
-    public LoginPanel(JFrame mainFrame, AuthController authController, LoginController loginController) {
-        this.mainFrame = mainFrame;
-        this.authController = authController;
-        this.loginController = loginController;
+    private final AuthController authController;
+    private final MainController mainController;
+
+    public LoginPanel(MainController mainController) {
+        this.mainController = mainController;
+
+        this.authController = mainController.getAuthController();
+        
+        //initilize frame 
+        setTitle("Login");
+        setSize(700, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        
 
         // Pannello principale
         JPanel mainPanel = new JPanel();
@@ -78,7 +84,7 @@ public class LoginPanel extends JPanel implements ILoginView{
         registrationButtonPanel.setOpaque(false); // Rendi trasparente
         registratiButton = Costants.createSimpleButton("Registrati");
         registratiButton.addActionListener(_ -> {
-            loginController.vaiARegistrazione();
+            // loginController.vaiARegistrazione();
         });
         registrationButtonPanel.add(registratiButton);
 
@@ -121,7 +127,7 @@ public class LoginPanel extends JPanel implements ILoginView{
         loginButton.setMaximumSize(loginButton.getPreferredSize()); // Adatta la larghezza al testo
 
         loginButton.addActionListener(_ -> {
-            loginController.tentaLogin();
+            // loginController.tentaLogin();
         });
 
         buttonPanel.add(loginButton);
@@ -155,33 +161,33 @@ public class LoginPanel extends JPanel implements ILoginView{
 
     @Override
     public void apriPannelloConfiguratore() {
-        mainFrame.toBack();
+        new PannelloConfiguratore(mainController).setVisible(true);
     }
 
     @Override
     public void apriCorpoDatiFase1() {
-        new CorpoDatiFase1().setVisible(true);
+        new CorpoDatiFase1(mainController).setVisible(true);
     }
 
     @Override
     public void apriPannelloVolontario(String username) {
-       new PannelloVolontario(username).setVisible(true);
+       new PannelloVolontario(username, mainController).setVisible(true);
     }
 
     @Override
     public void apriPannelloFruitore(String username) {
-        new PannelloFruitore(username).setVisible(true);
+        new PannelloFruitore(username,mainController).setVisible(true);
     }
 
     @Override
     public void apriNewPassword(String username, Ruolo ruolo) {
-        new NewPasswordFrame(authController, username, ruolo).setVisible(true);
+        new NewPasswordFrame(username, ruolo, mainController).setVisible(true);
     }
 
 
     @Override
     public void apriRegistrazioneFruitore() {
-        new RegistrazioneFruitore().setVisible(true);
+        new RegistrazioneFruitore(mainController).setVisible(true);
     }
 
     @Override

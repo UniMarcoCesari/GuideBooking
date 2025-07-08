@@ -7,22 +7,31 @@ import controller.VisiteController;
 import controller.VolontariController; 
 import costants.Costants;
 import model.Visita;
+import view.login.MainController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 public class PannelloFruitore extends JFrame {
 
+    private MainController mainController;
     private VisiteController visiteController; 
-    private CalendarioController calendarioController = new CalendarioController();
-    private LuoghiController luoghiController = new LuoghiController();
-    private VolontariController volontariController = new VolontariController();
+    private CalendarioController calendarioController;
+    private LuoghiController luoghiController;
+    private VolontariController volontariController;
 
     private String username; 
 
-    public PannelloFruitore(String username) {
+    public PannelloFruitore(String username, MainController mainController) {
+        this.mainController = mainController;
+        this.calendarioController = mainController.getCalendarioController();
+        this.luoghiController = mainController.getLuoghiController();
+        this.volontariController = mainController.getVolontarioController();
+        this.visiteController = mainController.getVisiteController();
+
         this.username = username;
-        this.visiteController = new VisiteController(calendarioController, luoghiController, volontariController); 
+        
 
 
         initializeFrame();
@@ -45,7 +54,7 @@ public class PannelloFruitore extends JFrame {
          JButton logoutButton = Costants.creaBottoneLogOut();
          logoutButton.addActionListener(e -> {
              dispose();
-             new view.login.LoginPanel().setVisible(true);
+             new view.login.LoginPanel(mainController).setVisible(true);
          });
          
          JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -123,7 +132,7 @@ public class PannelloFruitore extends JFrame {
 
                         // Apri un nuovo pannello
                         SwingUtilities.invokeLater(() -> {
-                            new PannelloFruitore(username).setVisible(true);
+                            new PannelloFruitore(username, mainController).setVisible(true);
                         });
 
                     } catch (NumberFormatException ex) {
@@ -169,7 +178,7 @@ public class PannelloFruitore extends JFrame {
 
                         // Apri un nuovo pannello
                         SwingUtilities.invokeLater(() -> {
-                            new PannelloFruitore(username).setVisible(true);
+                            new PannelloFruitore(username, mainController).setVisible(true);
                         });
 
                     } catch (Exception ex) {

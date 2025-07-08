@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import javax.swing.*;
 import model.TipoVisita;
 import model.Volontario;
+import view.login.MainController;
 
 public class NuovoTipoVisita extends JFrame {
     private final JTextField titoloField, descrizioneField, puntoIncontroField;
@@ -36,11 +37,11 @@ public class NuovoTipoVisita extends JFrame {
     private final TipoVisita tipoVisitaDaModificare;
     private final boolean isModifica;
 
-    public NuovoTipoVisita(ListaTipiVisita parent, TipiVisitaController tipiVisitaController) {
-        this(parent, tipiVisitaController, null);
+    public NuovoTipoVisita(ListaTipiVisita parent, MainController mainController) {
+        this(parent, mainController, null);
     }
 
-    public NuovoTipoVisita(ListaTipiVisita parent, TipiVisitaController tipiVisitaController, TipoVisita tipoVisitaDaModificare) {
+    public NuovoTipoVisita(ListaTipiVisita parent, MainController mainController, TipoVisita tipoVisitaDaModificare) {
         this.isModifica = (tipoVisitaDaModificare != null);
         setSize(1200, 900);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -49,8 +50,8 @@ public class NuovoTipoVisita extends JFrame {
         setTitle(isModifica ? "Modifica Tipo Visita" : "Nuovo Tipo Visita");
 
         this.parent = parent;
-        this.tipiVisitaController = tipiVisitaController;
-        this.volontariController = new VolontariController();
+        this.tipiVisitaController = mainController.getTipiVisitaController();
+        this.volontariController = mainController.getVolontarioController();
         this.tipoVisitaDaModificare = tipoVisitaDaModificare;
 
         // Pannello principale con layout BorderLayout
@@ -71,7 +72,7 @@ public class NuovoTipoVisita extends JFrame {
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
-            new view.configuratore.PannelloConfiguratore().setVisible(true);
+            new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

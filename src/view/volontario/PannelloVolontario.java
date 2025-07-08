@@ -1,11 +1,8 @@
 package view.volontario;
 
-import controller.CalendarioController;
+import controller.*;
 import costants.Costants;
-import controller.TipiVisitaController;
-import controller.VisiteController;
-import controller.LuoghiController;
-import controller.VolontariController;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,18 +15,16 @@ public class PannelloVolontario extends JFrame {
     private JTextField textArea;
     private JButton button1, button2, button3;
     private String username;
-    private TipiVisitaController tipiVisitaController;
     private VisiteController visiteController;
+    private MainController mainController;
 
-    public PannelloVolontario(String username) {
+    public PannelloVolontario(String username, MainController mainController) {
+        this.calendarioController = null;
         this.username = username;
-        this.tipiVisitaController = new TipiVisitaController();
-        initializeFrame();
+        this.mainController = mainController;
+        this.visiteController = mainController.getVisiteController();
 
-        calendarioController = new CalendarioController();
-        LuoghiController luoghiController = new LuoghiController();
-        VolontariController volontariController = new VolontariController();
-        this.visiteController = new VisiteController(calendarioController, luoghiController, volontariController);
+        initializeFrame();
 
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -48,7 +43,7 @@ public class PannelloVolontario extends JFrame {
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
-            new view.login.LoginPanel().setVisible(true);
+            new view.login.LoginPanel(mainController).setVisible(true);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -134,15 +129,15 @@ public class PannelloVolontario extends JFrame {
 
         button1.addActionListener(_ -> {
             dispose();
-            new VisualizzaTipiVisitaVolontarioFrame(this.username, this.tipiVisitaController).setVisible(true);
+            new VisualizzaTipiVisitaVolontarioFrame(this.username, this.mainController).setVisible(true);
         });
         button2.addActionListener(_ -> {
             dispose();
-            new GestisciDisponibilitaFrame(this.username).setVisible(true);
+            new GestisciDisponibilitaFrame(this.username, this.mainController).setVisible(true);
         });
         button3.addActionListener(_ -> {
             dispose();
-            new VisualizzaMieVisiteFrame(this.username, this.visiteController).setVisible(true);
+            new VisualizzaMieVisiteFrame(this.username, mainController).setVisible(true);
         });
 
         bottomPanel.add(button1);
@@ -166,7 +161,5 @@ public class PannelloVolontario extends JFrame {
         repaint();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new PannelloVolontario("marco").setVisible(true));
-    }
+    
 }

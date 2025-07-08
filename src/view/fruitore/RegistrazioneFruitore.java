@@ -2,11 +2,13 @@ package view.fruitore;
 
 import controller.AuthController;
 import costants.Costants;
+import enumerations.Ruolo;
 import model.CorpoDati;
 import service.PersistentDataManager;
 import view.configuratore.PannelloConfiguratore;
 import view.corpoDati.CorpoDatiFase1;
 import view.login.LoginPanel;
+import view.login.MainController;
 import view.volontario.PannelloVolontario;
 
 import javax.swing.*;
@@ -16,8 +18,13 @@ public class RegistrazioneFruitore extends JFrame {
     private final JTextField usernameField = new JTextField("fruitore", 15);
     private final JPasswordField passwordField = new JPasswordField("t", 15);
     private final JButton loginButton;
+    private final AuthController authController;
+    private final MainController mainController;
 
-    public RegistrazioneFruitore() {
+    public RegistrazioneFruitore(MainController mainController) {
+        this.mainController = mainController;
+        this.authController = mainController.getAuthController();
+
         setTitle("Registrazione-Fruitore");
         setSize(800, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -111,7 +118,7 @@ public class RegistrazioneFruitore extends JFrame {
     }
 
     private void registrati(String username, String password) {
-        boolean verifica = AuthController.creaFruitoreCredenziali(username, password);
+        boolean verifica = authController.creaNuovaCredenziale(username, password, Ruolo.FRUITORE);
         if(!verifica)
         {
             //credenziali gia esistono
@@ -120,7 +127,7 @@ public class RegistrazioneFruitore extends JFrame {
         }
         else
         {
-            LoginPanel loginFrame = new LoginPanel();
+            LoginPanel loginFrame = new LoginPanel(mainController);
             loginFrame.setVisible(true);
             this.dispose();
         }

@@ -3,14 +3,17 @@ package view.configuratore;
 import costants.Costants;
 import model.CorpoDati;
 import service.PersistentDataManager;
+import view.login.MainController;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class NumMax extends JFrame {
-    private CorpoDati corpoDati; // Rimosso il modificatore 'final'
+    private CorpoDati corpoDati; 
+    private MainController mainController;
 
-    public NumMax() {
+    public NumMax(MainController mainController) {
+        this.mainController = mainController;
         initializeFrame();
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
@@ -32,7 +35,7 @@ public class NumMax extends JFrame {
       JButton logoutButton = Costants.creaBottoneLogOut();
       logoutButton.addActionListener(e -> {
           dispose();
-          new view.configuratore.PannelloConfiguratore().setVisible(true);
+          new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
       });
       
       JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -64,15 +67,7 @@ public class NumMax extends JFrame {
         JButton salvaBtn = new JButton("Salva");
         salvaBtn.setFont(new Font("Arial", Font.BOLD, 14));
         salvaBtn.addActionListener(_ -> {
-            String nuovoValore = textField.getText();
-            try {
-                int nuovoNumero = Integer.parseInt(nuovoValore);
-                corpoDati.setMaxPersone(String.valueOf(nuovoNumero));
-                PersistentDataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
-                JOptionPane.showMessageDialog(this, "Dati salvati con successo!");
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Il valore inserito non è un numero!", "Errore", JOptionPane.ERROR_MESSAGE);
-            }
+            mainController.salvaCorpoDati(corpoDati);
         });
 
         savePanel.add(salvaBtn);
@@ -92,25 +87,7 @@ public class NumMax extends JFrame {
     }
 
     private void initializeCorpoDati() {
-        try {
-            corpoDati = PersistentDataManager.caricaCorpoDati(Costants.file_corpo);
-            if (corpoDati == null) {
-                corpoDati = new CorpoDati();
-                corpoDati.setMaxPersone("0"); // Imposta un valore di default
-                corpoDati.setAmbito("Default"); // Imposta un valore di default per ambito
-                // Salva il nuovo corpoDati per evitare problemi futuri
-                PersistentDataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
-                System.out.println("[INFO] Creato nuovo CorpoDati con valori di default");
-            }
-        } catch (Exception e) {
-            // In caso di errore, crea un nuovo CorpoDati e continua
-            System.err.println("[ERRORE] Impossibile caricare CorpoDati: " + e.getMessage());
-            corpoDati = new CorpoDati();
-            corpoDati.setMaxPersone("0");
-            corpoDati.setAmbito("Default");
-            // Salva il nuovo corpoDati
-            PersistentDataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
-        }
+        this.corpoDati = mainController.getCorpoDati();
     }
 
     private void initializeFrame() {

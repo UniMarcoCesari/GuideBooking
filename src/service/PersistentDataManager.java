@@ -67,7 +67,7 @@ public class PersistentDataManager {
         }
     }
 
-    public static void salvaCorpoDati(CorpoDati dati, String filename) {
+    public void salvaCorpoDati(CorpoDati dati, String filename) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
             oos.writeObject(dati);
         } catch (IOException e) {
@@ -76,7 +76,7 @@ public class PersistentDataManager {
     }
 
 
-    public static CorpoDati caricaCorpoDati(String filename) {
+    public CorpoDati caricaCorpoDati(String filename) {
         File file = new File(filename);
 
         if (!file.exists()) {
@@ -143,7 +143,7 @@ public class PersistentDataManager {
         
     }
 
-    public static List<Visita> leggiDatiVisite(){
+    public List<Visita> leggiDatiVisite(){
         File file = new File(Costants.file_visite);
 
         if (!file.exists()) {
@@ -160,7 +160,7 @@ public class PersistentDataManager {
         }
     }
 
-    public static void scriviDatiVisite(List<Visita> visite) {
+    public void scriviDatiVisite(List<Visita> visite) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(Costants.file_visite))) {
             oos.writeObject(visite);
         } catch (IOException e) {
@@ -168,15 +168,6 @@ public class PersistentDataManager {
         }
     }
 
-    public static int leggiNumMax() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Costants.file_corpo))) {
-            CorpoDati corpoDati = (CorpoDati) ois.readObject();
-            return Integer.parseInt(corpoDati.getMaxPersone());
-        } catch (IOException | ClassNotFoundException | NumberFormatException e) {
-            e.printStackTrace();
-            return 20;
-        }
-    }
 
 
 }

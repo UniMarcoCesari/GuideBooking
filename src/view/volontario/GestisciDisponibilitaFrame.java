@@ -4,6 +4,7 @@ import controller.CalendarioController;
 import controller.VolontariController;
 import costants.Costants;
 import model.Volontario;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -23,16 +24,18 @@ public class GestisciDisponibilitaFrame extends JFrame {
     private String username;
     private CalendarioController calendarioController;
     private VolontariController volontariController;
+    private MainController mainController;
     private Volontario volontarioCorrente;
     private LocalDate meseSelezionato; // Primo giorno del mese selezionato
     private JPanel calendarPanel;
     private JLabel meseLabel;
     private List<JToggleButton> dayButtons = new ArrayList<>();
     
-    public GestisciDisponibilitaFrame(String username) {
+    public GestisciDisponibilitaFrame(String username, MainController mainController) {
         this.username = username;
-        this.calendarioController = new CalendarioController();
-        this.volontariController = new VolontariController();
+        this.calendarioController = mainController.getCalendarioController();
+        this.volontariController = mainController.getVolontarioController();
+        this.mainController = mainController;
         
         // Trova il volontario corrente
         for (Volontario v : volontariController.getListaVolontari()) {
@@ -103,7 +106,7 @@ public class GestisciDisponibilitaFrame extends JFrame {
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
-            new view.volontario.PannelloVolontario(username).setVisible(true);
+            new view.volontario.PannelloVolontario(username, mainController).setVisible(true);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

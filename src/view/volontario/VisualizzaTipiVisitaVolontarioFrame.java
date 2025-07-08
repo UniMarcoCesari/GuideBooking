@@ -1,8 +1,8 @@
 package view.volontario;
 
-import controller.VolontariController;
 import costants.Costants;
 import model.TipoVisita;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,13 +15,13 @@ public class VisualizzaTipiVisitaVolontarioFrame extends JFrame {
 
     private String username;
     private JPanel listPanel;
-    private VolontariController volontariController;
+
     private controller.TipiVisitaController tipiVisitaController;
 
-    public VisualizzaTipiVisitaVolontarioFrame(String username, controller.TipiVisitaController tipiVisitaController) {
+    public VisualizzaTipiVisitaVolontarioFrame(String username,MainController mainController) {
         this.username = username;
-        this.volontariController = new VolontariController();
-        this.tipiVisitaController = tipiVisitaController;
+      
+        this.tipiVisitaController = mainController.getTipiVisitaController();
 
         initializeFrame();
 
@@ -42,7 +42,7 @@ public class VisualizzaTipiVisitaVolontarioFrame extends JFrame {
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
-            new view.volontario.PannelloVolontario(username).setVisible(true);
+            new view.volontario.PannelloVolontario(username,mainController).setVisible(true);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

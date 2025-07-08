@@ -16,6 +16,7 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import costants.Costants;
 import model.Iscrizione;
 import model.Luogo;
 import model.TipoVisita;
@@ -30,6 +31,7 @@ public class VisiteController {
     private final int numeroMaxIscrizine;
     private final VolontariController volontariController;
     private final LuoghiController luoghiController;
+    private final PersistentDataManager dataManager;
 
     private List<Visita> visite;
 
@@ -43,15 +45,13 @@ public class VisiteController {
         }
     }
 
-    public VisiteController(CalendarioController calendarioController,LuoghiController luoghiController,VolontariController volontariController) {
+    public VisiteController(CalendarioController calendarioController,LuoghiController luoghiController,VolontariController volontariController, PersistentDataManager dataManager) {
+        this.dataManager = dataManager;
         this.calendarioController = calendarioController;
         this.luoghiController = luoghiController;
         this.volontariController = volontariController;
-        this.visite = PersistentDataManager.leggiDatiVisite();
-        this.numeroMaxIscrizine = PersistentDataManager.leggiNumMax();
-        if (this.visite == null) {
-            this.visite = new ArrayList<>(); // Inizializza se il file non esiste o è vuoto
-        }
+        this.visite = dataManager.leggiDatiVisite();
+        this.numeroMaxIscrizine = Integer.valueOf(dataManager.caricaCorpoDati(Costants.file_corpo).getMaxPersone());
         aggiornaVisiteAlCambioGiorno(calendarioController.getDatacDateCorrenteLocalDate());
     }
 
@@ -75,7 +75,7 @@ public class VisiteController {
                 }
             }
         }
-        PersistentDataManager.scriviDatiVisite(visite); // salva aggiornamenti
+        dataManager.scriviDatiVisite(visite); // salva aggiornamenti
     }
     
 
@@ -225,7 +225,7 @@ public class VisiteController {
         // visite.removeIf(v -> v.getData().getMonth() == meseTarget.getMonth() &&
         // v.getData().getYear() == meseTarget.getYear());
         visite.addAll(nuoveVisite);
-        PersistentDataManager.scriviDatiVisite(visite);
+        dataManager.scriviDatiVisite(visite);
 
         System.out.println("\n✅ Generazione completata: " + nuoveVisite.size() + " nuove visite create per " +
                 meseTarget.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN) + " " + meseTarget.getYear());
@@ -284,7 +284,7 @@ public class VisiteController {
                 visita.setStato(STATO_VISITA.CONFERMATA);
             }
         }
-        PersistentDataManager.scriviDatiVisite(visite);
+        dataManager.scriviDatiVisite(visite);
     }
 
     public void controlla3Giorni(LocalDate data) {
@@ -333,7 +333,7 @@ public class VisiteController {
         Iscrizione nuova = new Iscrizione(codice, username, numeroPersone);
         visita.aggiungiIscrizione(nuova);
 
-        PersistentDataManager.scriviDatiVisite(visite); // se mantieni una lista globale
+        dataManager.scriviDatiVisite(visite); // se mantieni una lista globale
         
         // Aggiorna l'oggetto Visita nella lista
         int index = visite.indexOf(visita);
@@ -368,7 +368,7 @@ public class VisiteController {
         }
         
         visita.getIscrizioni().remove(iscrizione);
-        PersistentDataManager.scriviDatiVisite(visite); // salva la modifica
+        dataManager.scriviDatiVisite(visite); // salva la modifica
 
         // Aggiorna l'oggetto Visita nella lista
         int index = visite.indexOf(visita);

@@ -9,6 +9,7 @@ import controller.LuoghiController;
 import model.TipoVisita;
 // Removed: import view.corpoDati.NuovoTipoVisitaFrame;
 // Removed: import view.corpoDati.CorpoDatiFase2;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -44,10 +45,10 @@ public class ListaLuoghi extends JFrame {
     private final TipiVisitaController tipoVisitaController;
     private final CalendarioController calendarioController;
 
-    public ListaLuoghi(LuoghiController luoghiController, TipiVisitaController tipoVisitaController, CalendarioController calendarioController) { // Add TipiVisitaController parameter
-        this.luoghiController = luoghiController;
-        this.calendarioController = calendarioController;
-        this.tipoVisitaController = tipoVisitaController; // Initialize the field
+    public ListaLuoghi(MainController mainController) { // Add TipiVisitaController parameter
+        this.luoghiController = mainController.getLuoghiController();
+        this.calendarioController = mainController.getCalendarioController();
+        this.tipoVisitaController = mainController.getTipiVisitaController(); // Initialize the field
 
         initializeFrame();
 
@@ -69,7 +70,7 @@ public class ListaLuoghi extends JFrame {
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
-            new view.configuratore.PannelloConfiguratore().setVisible(true);
+            new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

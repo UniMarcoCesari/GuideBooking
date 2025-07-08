@@ -2,7 +2,7 @@ package view.configuratore;
 
 import controller.CalendarioController;
 import costants.Costants;
-
+import view.login.MainController;
 import controller.CalendarioController;
 import costants.Costants;
 
@@ -25,6 +25,7 @@ public class DatePrecluseSezione extends JFrame {
 
     private LocalDate selectedMonth;
     private final CalendarioController calendarioController;
+    private final MainController mainController;
     private JPanel calendarPanel;
     private JLabel meseLabel;
     private List<JToggleButton> dayButtons = new ArrayList<>();
@@ -32,8 +33,9 @@ public class DatePrecluseSezione extends JFrame {
     // Removed: JTextField dateInputField;
 
 
-    public DatePrecluseSezione(CalendarioController calendarioController) {
-        this.calendarioController = calendarioController;
+    public DatePrecluseSezione(MainController mainController) {
+        this.mainController = mainController;
+        this.calendarioController = mainController.getCalendarioController();
         this.selectedMonth = calculateSelectedMonth();
 
         setupUserInterface();
@@ -79,7 +81,7 @@ public class DatePrecluseSezione extends JFrame {
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
-            new view.configuratore.PannelloConfiguratore().setVisible(true);
+            new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -248,7 +250,7 @@ public class DatePrecluseSezione extends JFrame {
     private void navigateBack() {
         dispose();
         // Assuming PannelloConfiguratore exists and is the correct place to go back to
-        new PannelloConfiguratore().setVisible(true);
+        new PannelloConfiguratore(mainController).setVisible(true);
     }
 
 

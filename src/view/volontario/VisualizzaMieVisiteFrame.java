@@ -3,6 +3,7 @@ package view.volontario;
 import controller.VisiteController;
 import costants.Costants;
 import model.Visita;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,7 +15,12 @@ import card.VisitaCard; // Assicurati che VisitaCard sia importata
 
 public class VisualizzaMieVisiteFrame extends JFrame {
 
-    public VisualizzaMieVisiteFrame(String username,VisiteController visiteController) {
+    
+    private VisiteController visiteController;
+
+    public VisualizzaMieVisiteFrame(String username,MainController mainController) {
+       
+        this.visiteController = mainController.getVisiteController();
 
 
         initializeFrame();
@@ -37,7 +43,7 @@ public class VisualizzaMieVisiteFrame extends JFrame {
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
-            new view.volontario.PannelloVolontario(username).setVisible(true);
+            new view.volontario.PannelloVolontario(username,mainController).setVisible(true);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

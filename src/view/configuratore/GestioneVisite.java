@@ -4,6 +4,7 @@ import controller.CalendarioController;
 import controller.VisiteController;
 import costants.Costants;
 import model.Visita;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -19,7 +20,13 @@ import card.VisitaCard; // Assicurati che VisitaCard sia importata
 public class GestioneVisite extends JFrame {
     private final YearMonth meseAnno; // Cambiato a YearMonth per chiarezza
 
-    public GestioneVisite(VisiteController visiteController, CalendarioController calendarioController) {
+    private final CalendarioController calendarioController;  
+    private final VisiteController visiteController;
+
+    public GestioneVisite(MainController mainController) {
+
+        this.calendarioController = mainController.getCalendarioController();
+        this.visiteController = mainController.getVisiteController();
 
         // Determina il mese e anno target (il prossimo mese rispetto alla data corrente del calendario)
         LocalDate dataCorrente = calendarioController.getDatacDateCorrenteLocalDate();
@@ -46,7 +53,7 @@ public class GestioneVisite extends JFrame {
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             dispose();
-            new view.configuratore.PannelloConfiguratore().setVisible(true);
+            new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -111,7 +118,7 @@ public class GestioneVisite extends JFrame {
                 visiteController.generaVisite();
                 // Ricarica la pagina per vedere cambiamenti
                 dispose();
-                new GestioneVisite(visiteController, calendarioController).setVisible(true);
+                new GestioneVisite(mainController).setVisible(true);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Errore durante la generazione delle visite: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace(); // Log dell'errore
