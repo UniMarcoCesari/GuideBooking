@@ -52,8 +52,7 @@ public class GestioneVisite extends JFrame {
         // Bottone Logout a destra
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
-            dispose();
-            new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
+            mainController.showPannelloConfiguratore();
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -117,8 +116,7 @@ public class GestioneVisite extends JFrame {
             try {
                 visiteController.generaVisite();
                 // Ricarica la pagina per vedere cambiamenti
-                dispose();
-                new GestioneVisite(mainController).setVisible(true);
+                mainController.showGestioneVisite();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Errore durante la generazione delle visite: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
                 ex.printStackTrace(); // Log dell'errore

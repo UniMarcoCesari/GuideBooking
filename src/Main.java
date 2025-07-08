@@ -26,8 +26,7 @@ public class Main {
         // Initialize main controller with all the controllers
         MainController mainController = new MainController(dataManager,authController, tipiVisitaController, visiteController, volontarioController, luoghiController, calendarioController);
 
-        SwingUtilities.invokeLater(() -> new LoginPanel(mainController).setVisible(true));
+        SwingUtilities.invokeLater(() -> mainController.showLoginPanel());
 
     }
 }
-

@@ -39,8 +39,7 @@ public class ListaTipiVisita extends JFrame {
         // Bottone Logout a destra
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
-            dispose();
-            new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
+            mainController.showPannelloConfiguratore();
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -107,14 +106,12 @@ public class ListaTipiVisita extends JFrame {
 
     // Placeholder method for the "Aggiungi" button action
     private void apriDialogAggiungiTipoVisita() {
-        dispose();
-        new NuovoTipoVisita(this,mainController).setVisible(true);
+        mainController.showNuovoTipoVisita(this);
     }
 
     public void rimuoviTipoVisita(TipoVisita tipoVisita) {
         tipiVisitaController.rimuoviTipoVisita(tipoVisita);
         aggiornaListaTipiVisita();
-        dispose();
-        new PannelloConfiguratore(mainController).setVisible(true);
+        mainController.showPannelloConfiguratore();
     }
 }

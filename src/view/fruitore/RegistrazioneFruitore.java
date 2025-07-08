@@ -127,12 +127,9 @@ public class RegistrazioneFruitore extends JFrame {
         }
         else
         {
-            LoginPanel loginFrame = new LoginPanel(mainController);
-            loginFrame.setVisible(true);
-            this.dispose();
+            mainController.showLoginPanel();
         }
 
     }
 
 }
-

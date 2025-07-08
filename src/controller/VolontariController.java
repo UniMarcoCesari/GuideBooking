@@ -15,13 +15,16 @@ public class VolontariController {
     AuthController authController;
     PersistentDataManager dataManager;
     private ArrayList<Volontario> listaVolontari;
-    private Map<LocalDate, Map<String, Boolean>> disponibilitaVolontari;
+    private HashMap<LocalDate, Map<String, Boolean>> disponibilitaVolontari;
 
     public VolontariController(AuthController authController,PersistentDataManager dataManager) {
         this.authController = authController;
         this.dataManager = dataManager;
         listaVolontari = dataManager.caricaDati(Costants.file_volontari);
         disponibilitaVolontari = dataManager.caricaDati(Costants.file_disponibilita_volontari);
+        if (disponibilitaVolontari == null) {
+            disponibilitaVolontari = new HashMap<>();
+        }
     }
 
     public boolean isDisponibile(Volontario volontario, LocalDate data) {
@@ -34,11 +37,11 @@ public class VolontariController {
         return listaVolontari;
     }
 
-    public Map<LocalDate, Map<String, Boolean>> getDisponibilitaVolontari() {
+    public HashMap<LocalDate, Map<String, Boolean>> getDisponibilitaVolontari() {
         return disponibilitaVolontari;
     }
 
-    public void setDisponibilitaVolontari(Map<LocalDate, Map<String, Boolean>> disponibilitaVolontari) {
+    public void setDisponibilitaVolontari(HashMap<LocalDate, Map<String, Boolean>> disponibilitaVolontari) {
         this.disponibilitaVolontari = disponibilitaVolontari;
     }
 
@@ -68,7 +71,7 @@ public class VolontariController {
         return true; // Volontario aggiunto con successo
     }
 
-    public void rimuoviVolonatario(Volontario volontario) {
+    public void rimuoviVolontario(Volontario volontario) {
         listaVolontari.remove(volontario);
         authController.disabilitaCredenziale(volontario.getNome());
         dataManager.salvaDati(listaVolontari, Costants.file_volontari);
@@ -80,8 +83,7 @@ public class VolontariController {
     }
 
     public void salvaDisponibilita() {
-        //TODO sistema
-        // dataManager.salvaDati(disponibilitaVolontari, Costants.file_disponibilita_volontari);
+        dataManager.salvaOggetto(disponibilitaVolontari, Costants.file_disponibilita_volontari);
     }
 
 
@@ -93,11 +95,6 @@ public class VolontariController {
 
 
 
-    public void rimuoviVolontario(Volontario volontario) {
-        listaVolontari.remove(volontario);
-        authController.disabilitaCredenziale(volontario.getNome());
-        dataManager.salvaDati(listaVolontari, Costants.file_volontari);
-    }
 
     public boolean volontarioEsiste(String nomeVolontario) {
         return listaVolontari.stream().anyMatch(v -> v.getNome().equalsIgnoreCase(nomeVolontario));

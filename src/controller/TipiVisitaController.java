@@ -87,4 +87,46 @@ public class TipiVisitaController {
         tipiVisita.removeAll(tipiVisitaDaRimuovere);
         salvaDati();
     }
+
+    public void salvaOAggiornaTipoVisita(String titolo, String descrizione, String puntoIncontro, java.time.LocalDate dataInizio, java.time.LocalDate dataFine, java.util.Set<java.time.DayOfWeek> giorniSettimana, java.time.LocalTime oraInizio, int durata, boolean richiedeBiglietto, int minPartecipanti, int maxPartecipanti, ArrayList<Volontario> volontari, boolean isModifica) throws Exception {
+        if (titolo.isEmpty() || descrizione.isEmpty() || puntoIncontro.isEmpty()) {
+            throw new Exception("Tutti i campi devono essere compilati!");
+        }
+        if (volontari.isEmpty()) {
+            throw new Exception("Seleziona almeno un volontario!");
+        }
+        if (giorniSettimana.isEmpty()) {
+            throw new Exception("Seleziona almeno un giorno della settimana!");
+        }
+        if (dataInizio.isAfter(dataFine)) {
+            throw new Exception("La data di inizio non può essere dopo la data di fine!");
+        }
+        if (!isModifica && titoloEsiste(titolo)) {
+            throw new Exception("Esiste già una visita con questo titolo!");
+        }
+        if (minPartecipanti > maxPartecipanti) {
+            throw new Exception("Il numero minimo di partecipanti non può essere maggiore del massimo!");
+        }
+
+        TipoVisita nuovaVisita = new TipoVisita(
+                titolo,
+                descrizione,
+                puntoIncontro,
+                dataInizio,
+                dataFine,
+                giorniSettimana,
+                oraInizio,
+                durata,
+                richiedeBiglietto,
+                minPartecipanti,
+                maxPartecipanti,
+                volontari
+        );
+
+        if (isModifica) {
+            modificaTipoVisita(nuovaVisita);
+        } else {
+            aggiungiVisita(nuovaVisita);
+        }
+    }
 }

@@ -34,8 +34,7 @@ public class NumMax extends JFrame {
       // Bottone Logout a destra
       JButton logoutButton = Costants.creaBottoneLogOut();
       logoutButton.addActionListener(e -> {
-          dispose();
-          new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
+          mainController.showPannelloConfiguratore();
       });
       
       JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -96,4 +95,3 @@ public class NumMax extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
-

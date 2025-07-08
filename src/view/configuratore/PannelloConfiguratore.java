@@ -51,8 +51,7 @@ public class PannelloConfiguratore extends JFrame {
         // Bottone Logout a destra
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
-            dispose();
-            new view.login.LoginPanel(mainController).setVisible(true);
+            mainController.showLoginPanel();
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -128,16 +127,13 @@ public class PannelloConfiguratore extends JFrame {
         button4 = Costants.createSimpleButton("Gestione Luoghi");
 
         button1.addActionListener(e -> {
-            dispose();
-            new GestioneVisite(mainController);
+            mainController.showGestioneVisite();
         });
         button3.addActionListener(e -> {
-            dispose();
-            new DatePrecluseSezione(mainController);
+            mainController.showDatePrecluse();
         });
         button4.addActionListener(e -> {
-            dispose();
-            new ListaLuoghi(mainController);
+            mainController.showListaLuoghi();
         });
 
         firstRowPanel.add(button1);
@@ -156,16 +152,13 @@ public class PannelloConfiguratore extends JFrame {
         button7 = Costants.createSimpleButton("Numero massimo iscrizioni");
 
         button5.addActionListener(e -> {
-            dispose();
-            new ListaTipiVisita(mainController);
+            mainController.showListaTipiVisita();
         });
         button6.addActionListener(e -> {
-            dispose();
-            new ListaVolontari(mainController);
+            mainController.showListaVolontari();
         });
         button7.addActionListener(e -> {
-            dispose();
-            new NumMax(mainController);
+            mainController.showNumMax();
         });
 
         secondRowPanel.add(button5);

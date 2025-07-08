@@ -53,8 +53,7 @@ public class PannelloFruitore extends JFrame {
          // Bottone Logout a destra
          JButton logoutButton = Costants.creaBottoneLogOut();
          logoutButton.addActionListener(e -> {
-             dispose();
-             new view.login.LoginPanel(mainController).setVisible(true);
+             mainController.showLoginPanel();
          });
          
          JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -127,13 +126,7 @@ public class PannelloFruitore extends JFrame {
                         );
 
                         // Aggiorna la lista delle visite dopo l'iscrizione
-                        // Chiudi il pannello corrente
-                        dispose();
-
-                        // Apri un nuovo pannello
-                        SwingUtilities.invokeLater(() -> {
-                            new PannelloFruitore(username, mainController).setVisible(true);
-                        });
+                        mainController.showPannelloFruitore(username);
 
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(
@@ -173,13 +166,7 @@ public class PannelloFruitore extends JFrame {
                         );
 
                         // Aggiorna la lista delle visite dopo la disiscrizione
-                        // Chiudi il pannello corrente
-                        dispose();
-
-                        // Apri un nuovo pannello
-                        SwingUtilities.invokeLater(() -> {
-                            new PannelloFruitore(username, mainController).setVisible(true);
-                        });
+                        mainController.showPannelloFruitore(username);
 
                     } catch (Exception ex) {
                         // Gestisci altre possibili eccezioni

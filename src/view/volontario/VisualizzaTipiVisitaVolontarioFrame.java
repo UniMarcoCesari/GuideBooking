@@ -41,8 +41,7 @@ public class VisualizzaTipiVisitaVolontarioFrame extends JFrame {
         // Bottone Logout a destra
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
-            dispose();
-            new view.volontario.PannelloVolontario(username,mainController).setVisible(true);
+            mainController.showPannelloVolontario(username);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

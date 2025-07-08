@@ -136,10 +136,9 @@ public class CorpoDatiFase1 extends JFrame {
         }
 
         if (!hasErrors) {
-            dispose();
             CorpoDati corpoDati = new CorpoDati(ambito, maxPersoneText);
             mainController.salvaCorpoDati(corpoDati);
-            new CorpoDatiFase2(corpoDati,mainController).setVisible(true);
+            mainController.showCorpoDatiFase2(corpoDati);
         }
     }
 

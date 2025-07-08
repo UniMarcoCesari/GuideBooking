@@ -69,8 +69,7 @@ public class ListaLuoghi extends JFrame {
         // Bottone Logout a destra
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
-            dispose();
-            new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
+            mainController.showPannelloConfiguratore();
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -456,11 +455,6 @@ public class ListaLuoghi extends JFrame {
         String descrizione = descrizioneField.getText().trim();
         String posizione = posizioneField.getText().trim();
 
-        // Validazione input
-        if (!validateInput(nome, posizione)) {
-            return;
-        }
-
         // Raccogli i tipi di visita selezionati
         ArrayList<TipoVisita> tipiVisita = new ArrayList<>();
         for (int i = 0; i < tipiVisitaModel.size(); i++) {
@@ -473,44 +467,33 @@ public class ListaLuoghi extends JFrame {
             }
         }
 
-        if (tipiVisita.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Inserisci almeno un tipo visita",
-                "Errore di validazione", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        try {
+            luoghiController.salvaOAggiornaLuogo(nome, descrizione, posizione, tipiVisita, selectedLuogo);
+            
+            String message = (selectedLuogo != null) ? "Luogo modificato con successo!" : "Luogo aggiunto con successo!";
+            JOptionPane.showMessageDialog(this, message, "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
 
-        if (selectedLuogo != null) {
-            // Aggiorna il luogo esistente
-            selectedLuogo.setNome(nome);
-            selectedLuogo.setDescrizione(descrizione);
-            selectedLuogo.setPosizione(posizione);
-            selectedLuogo.setTipiVisita(tipiVisita);
-            luoghiController.salvaDati();
-            JOptionPane.showMessageDialog(this, "Luogo modificato con successo!",
-                "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            // Aggiungi un nuovo luogo
-            luoghiController.aggiungiLuogo(new Luogo(nome, descrizione, posizione, tipiVisita));
-            JOptionPane.showMessageDialog(this, "Luogo aggiunto con successo!",
-                "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
-        }
+            // Aggiorna la lista dei luoghi e ripulisci i campi
+            aggiornaListaLuoghi();
+            clearFields();
+            selectedLuogo = null;
+            salvaButton.setText("Salva Luogo");
 
-        // Aggiorna la lista dei luoghi e ripulisci i campi
-        aggiornaListaLuoghi();
-        clearFields();
-        selectedLuogo = null;
-        salvaButton.setText("Salva Luogo");
-
-        // Deseleziona tutte le card
-        for (Component comp : listaPanel.getComponents()) {
-            if (comp instanceof LuogoCard) {
-                ((LuogoCard) comp).setSelected(false);
+            // Deseleziona tutte le card
+            for (Component comp : listaPanel.getComponents()) {
+                if (comp instanceof LuogoCard) {
+                    ((LuogoCard) comp).setSelected(false);
+                }
             }
+            listaPanel.repaint();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Errore di validazione", JOptionPane.ERROR_MESSAGE);
         }
-        listaPanel.repaint();
     }
 
     private boolean validateInput(String nome, String posizione) {
+        // This method is now handled by the controller, but we keep it here for now to avoid breaking other parts of the code.
         if (nome.isEmpty() || posizione.isEmpty()) {
             JOptionPane.showMessageDialog(this, "I campi Nome e Posizione sono obbligatori",
                     "Errore di validazione", JOptionPane.ERROR_MESSAGE);

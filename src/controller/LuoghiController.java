@@ -139,5 +139,25 @@ public class LuoghiController {
         salvaDati();
     }
 
-    
+    public void salvaOAggiornaLuogo(String nome, String descrizione, String posizione, ArrayList<TipoVisita> tipiVisita, Luogo luogoDaAggiornare) throws Exception {
+        if (nome.isEmpty() || posizione.isEmpty()) {
+            throw new Exception("I campi Nome e Posizione sono obbligatori");
+        }
+
+        if (tipiVisita.isEmpty()) {
+            throw new Exception("Inserisci almeno un tipo visita");
+        }
+
+        if (luogoDaAggiornare != null) {
+            // Aggiorna il luogo esistente
+            luogoDaAggiornare.setNome(nome);
+            luogoDaAggiornare.setDescrizione(descrizione);
+            luogoDaAggiornare.setPosizione(posizione);
+            luogoDaAggiornare.setTipiVisita(tipiVisita);
+        } else {
+            // Aggiungi un nuovo luogo
+            aggiungiLuogo(new Luogo(nome, descrizione, posizione, tipiVisita));
+        }
+        salvaDati();
+    }
 }

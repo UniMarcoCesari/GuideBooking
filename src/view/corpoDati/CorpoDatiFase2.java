@@ -128,8 +128,7 @@ public class CorpoDatiFase2 extends JFrame {
     private void salvaEMandaPannello()
     {
         mainController.salvaCorpoDati(corpoDati);
-        dispose();
-        new PannelloConfiguratore(mainController).setVisible(true);
+        mainController.showPannelloConfiguratore();
     }
 
 
@@ -287,6 +286,9 @@ public class CorpoDatiFase2 extends JFrame {
     }
 
     private void openTipoVisitaDialog() {
+        // This navigation should also be handled by the router.
+        // For now, I will leave it as is, as it opens a dialog, not a main frame.
+        // A more complete refactoring would involve a router that can handle dialogs as well.
         new NuovoTipoVisitaFrame(this, tipoVisitaController,volontariController).setVisible(true);
     }
 

@@ -3,15 +3,18 @@ import enumerations.Ruolo;
 import exception.InvalidPasswordException;
 import exception.UserNotFoundException;
 import view.login.ILoginView;
+import view.login.MainController;
 
 public class LoginController {
     private ILoginView view;
     private AuthController authController;
+    private MainController mainController;
     
 
-    public LoginController(ILoginView view, AuthController authController) {
+    public LoginController(ILoginView view, MainController mainController) {
         this.view = view;
-        this.authController = authController;
+        this.mainController = mainController;
+        this.authController = mainController.getAuthController();
     }
 
     public void tentaLogin() {
@@ -28,19 +31,16 @@ public class LoginController {
 
             switch (ruolo) {
                 case PRE_CONFIGURATORE:
-                    view.apriNewPassword(username, ruolo);
-                    view.chiudi();
+                    mainController.showNewPasswordFrame(username, ruolo);
+                    break;
                 case CONFIGURATORE:
-                    view.chiudi();
-                    view.apriPannelloConfiguratore();
+                    mainController.showPannelloConfiguratore();
                     break;
                 case VOLONTARIO:
-                    view.chiudi();
-                    view.apriPannelloVolontario(username);
+                    mainController.showPannelloVolontario(username);
                     break;
                 case FRUITORE:
-                    view.chiudi();
-                    view.apriPannelloFruitore(username);
+                    mainController.showPannelloFruitore(username);
                     break;
                 default:
                     view.mostraErrore("Errore di Autenticazione", "Ruolo non valido.");
@@ -60,8 +60,7 @@ public class LoginController {
     }
 
     public void vaiARegistrazione() {
-        view.chiudi();
-        view.apriRegistrazioneFruitore();
+        mainController.showRegistrazioneFruitore();
     }
 
     public boolean registraNuovoFruitore(String username, String password) {

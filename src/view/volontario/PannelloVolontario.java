@@ -42,8 +42,7 @@ public class PannelloVolontario extends JFrame {
         // Bottone Logout a destra
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
-            dispose();
-            new view.login.LoginPanel(mainController).setVisible(true);
+            mainController.showLoginPanel();
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -128,16 +127,13 @@ public class PannelloVolontario extends JFrame {
         button3 = Costants.createSimpleButton("Visualizza Mie Visite");
 
         button1.addActionListener(_ -> {
-            dispose();
-            new VisualizzaTipiVisitaVolontarioFrame(this.username, this.mainController).setVisible(true);
+            mainController.showVisualizzaTipiVisitaVolontario(username);
         });
         button2.addActionListener(_ -> {
-            dispose();
-            new GestisciDisponibilitaFrame(this.username, this.mainController).setVisible(true);
+            mainController.showGestisciDisponibilita(username);
         });
         button3.addActionListener(_ -> {
-            dispose();
-            new VisualizzaMieVisiteFrame(this.username, mainController).setVisible(true);
+            mainController.showVisualizzaMieVisite(username);
         });
 
         bottomPanel.add(button1);

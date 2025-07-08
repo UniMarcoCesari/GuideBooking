@@ -80,8 +80,7 @@ public class DatePrecluseSezione extends JFrame {
         // Bottone Logout a destra
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
-            dispose();
-            new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
+            mainController.showPannelloConfiguratore();
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -248,9 +247,7 @@ public class DatePrecluseSezione extends JFrame {
 
     // --- Keep navigateBack ---
     private void navigateBack() {
-        dispose();
-        // Assuming PannelloConfiguratore exists and is the correct place to go back to
-        new PannelloConfiguratore(mainController).setVisible(true);
+        mainController.showPannelloConfiguratore();
     }
 
 

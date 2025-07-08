@@ -20,13 +20,11 @@ public class LoginPanel extends JFrame implements ILoginView{
     private final JButton registratiButton; 
 
 
-    private final AuthController authController;
+    private LoginController loginController;
     private final MainController mainController;
 
     public LoginPanel(MainController mainController) {
         this.mainController = mainController;
-
-        this.authController = mainController.getAuthController();
         
         //initilize frame 
         setTitle("Login");
@@ -84,7 +82,9 @@ public class LoginPanel extends JFrame implements ILoginView{
         registrationButtonPanel.setOpaque(false); // Rendi trasparente
         registratiButton = Costants.createSimpleButton("Registrati");
         registratiButton.addActionListener(_ -> {
-            // loginController.vaiARegistrazione();
+            if (loginController != null) {
+                loginController.vaiARegistrazione();
+            }
         });
         registrationButtonPanel.add(registratiButton);
 
@@ -127,7 +127,9 @@ public class LoginPanel extends JFrame implements ILoginView{
         loginButton.setMaximumSize(loginButton.getPreferredSize()); // Adatta la larghezza al testo
 
         loginButton.addActionListener(_ -> {
-            // loginController.tentaLogin();
+            if (loginController != null) {
+                loginController.tentaLogin();
+            }
         });
 
         buttonPanel.add(loginButton);
@@ -159,35 +161,39 @@ public class LoginPanel extends JFrame implements ILoginView{
       JOptionPane.showMessageDialog(this, messaggio, titolo, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    public void setController(LoginController controller) {
+        this.loginController = controller;
+    }
+
     @Override
     public void apriPannelloConfiguratore() {
-        new PannelloConfiguratore(mainController).setVisible(true);
+        // This method is now handled by MainController (Router)
     }
 
     @Override
     public void apriCorpoDatiFase1() {
-        new CorpoDatiFase1(mainController).setVisible(true);
+        // This method is now handled by MainController (Router)
     }
 
     @Override
     public void apriPannelloVolontario(String username) {
-       new PannelloVolontario(username, mainController).setVisible(true);
+        // This method is now handled by MainController (Router)
     }
 
     @Override
     public void apriPannelloFruitore(String username) {
-        new PannelloFruitore(username,mainController).setVisible(true);
+        // This method is now handled by MainController (Router)
     }
 
     @Override
     public void apriNewPassword(String username, Ruolo ruolo) {
-        new NewPasswordFrame(username, ruolo, mainController).setVisible(true);
+        // This method is now handled by MainController (Router)
     }
 
 
     @Override
     public void apriRegistrazioneFruitore() {
-        new RegistrazioneFruitore(mainController).setVisible(true);
+        // This method is now handled by MainController (Router)
     }
 
     @Override

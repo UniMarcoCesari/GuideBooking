@@ -105,8 +105,7 @@ public class GestisciDisponibilitaFrame extends JFrame {
         // Bottone Logout a destra
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
-            dispose();
-            new view.volontario.PannelloVolontario(username, mainController).setVisible(true);
+            mainController.showPannelloVolontario(username);
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -180,20 +179,9 @@ public class GestisciDisponibilitaFrame extends JFrame {
     
 
     private void salvaDisponibilita() {
-        // Ottieni il mese corrente
-        YearMonth yearMonth = YearMonth.of(meseSelezionato.getYear(), meseSelezionato.getMonth());
-        
-        // Per ogni giorno del mese
-        for (int i = 0; i < dayButtons.size(); i++) {
-            JToggleButton button = dayButtons.get(i);
-            LocalDate date = yearMonth.atDay(i + 1);
-
-            // Aggiorna la disponibilità solo se il pulsante è abilitato (non è una data preclusa)
-            if (button.isEnabled()) {
-                volontariController.aggiornaDisponibilita(volontarioCorrente, date, button.isSelected());
-            }
-            volontariController.salvaDisponibilita();
-        }
+        // The model is already up-to-date thanks to the listeners.
+        // We just need to persist the changes.
+        volontariController.salvaDisponibilita();
 
         JOptionPane.showMessageDialog(this, 
             "Disponibilità salvata con successo!", 
@@ -298,7 +286,9 @@ public class GestisciDisponibilitaFrame extends JFrame {
                 
                 // Aggiungi un listener per cambiare colore e testo al click
                 dayButton.addItemListener(e -> {
-                    updateButtonAppearance((JToggleButton) e.getSource());
+                    JToggleButton button = (JToggleButton) e.getSource();
+                    volontariController.aggiornaDisponibilita(volontarioCorrente, date, button.isSelected());
+                    updateButtonAppearance(button);
                 });
             }
 

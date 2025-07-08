@@ -32,6 +32,7 @@ public class NuovoTipoVisita extends JFrame {
 
     private final TipiVisitaController tipiVisitaController;
     private final VolontariController volontariController;
+    private final MainController mainController;
 
     private final ListaTipiVisita parent;
     private final TipoVisita tipoVisitaDaModificare;
@@ -42,6 +43,7 @@ public class NuovoTipoVisita extends JFrame {
     }
 
     public NuovoTipoVisita(ListaTipiVisita parent, MainController mainController, TipoVisita tipoVisitaDaModificare) {
+        this.mainController = mainController;
         this.isModifica = (tipoVisitaDaModificare != null);
         setSize(1200, 900);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -71,8 +73,7 @@ public class NuovoTipoVisita extends JFrame {
         // Bottone Logout a destra
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
-            dispose();
-            new view.configuratore.PannelloConfiguratore(mainController).setVisible(true);
+            mainController.showPannelloConfiguratore();
         });
         
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -256,87 +257,40 @@ public class NuovoTipoVisita extends JFrame {
         //footer e annulla
         JButton salvaButton = Costants.createSimpleButton(isModifica ? "Salva Modifiche" : "Salva Visita");
         salvaButton.addActionListener(e -> {
-            List<String> giorniSettimanaSelezionati = giorniList.getSelectedValuesList();
-            Set<DayOfWeek> giorniSettimana = giorniSettimanaSelezionati.stream()
-                    .map(this::convertToDayOfWeek)
-                    .collect(Collectors.toSet());
+            try {
+                List<String> giorniSettimanaSelezionati = giorniList.getSelectedValuesList();
+                Set<DayOfWeek> giorniSettimana = giorniSettimanaSelezionati.stream()
+                        .map(this::convertToDayOfWeek)
+                        .collect(Collectors.toSet());
 
-            List<String> volontariSelezionati = volontariListVolontari.getSelectedValuesList();
-            ArrayList<Volontario> listaVolontari = new ArrayList<>();
-            for (String nomeVolontario : volontariSelezionati) {
-                listaVolontari.add(new Volontario(nomeVolontario));
+                List<String> volontariSelezionati = volontariListVolontari.getSelectedValuesList();
+                ArrayList<Volontario> listaVolontari = new ArrayList<>();
+                for (String nomeVolontario : volontariSelezionati) {
+                    listaVolontari.add(new Volontario(nomeVolontario));
+                }
+
+                String titolo = titoloField.getText().trim();
+                String descrizione = descrizioneField.getText().trim();
+                String puntoIncontro = puntoIncontroField.getText().trim();
+                LocalDate dataInizio = convertToLocalDate(dataInizioSpinner.getValue());
+                LocalDate dataFine = convertToLocalDate(dataFineSpinner.getValue());
+                LocalTime oraInizio = convertToLocalTime(oraInizioSpinner.getValue());
+                int durata = (int) durataSpinner.getValue();
+                boolean richiedeBiglietto = bigliettoCheckbox.isSelected();
+                int minPartecipanti = (int) minPartecipantiSpinner.getValue();
+                int maxPartecipanti = (int) maxPartecipantiSpinner.getValue();
+
+                tipiVisitaController.salvaOAggiornaTipoVisita(titolo, descrizione, puntoIncontro, dataInizio, dataFine, giorniSettimana, oraInizio, durata, richiedeBiglietto, minPartecipanti, maxPartecipanti, listaVolontari, isModifica);
+
+                String message = isModifica ? "Tipo di visita modificato con successo!" : "Tipo di visita aggiunto con successo!";
+                JOptionPane.showMessageDialog(this, message, "Successo", JOptionPane.INFORMATION_MESSAGE);
+                
+                parent.aggiornaListaTipiVisita();
+                chiudiEmandaIndietro();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Errore: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
             }
-
-            String titolo = titoloField.getText().trim();
-            String descrizione = descrizioneField.getText().trim();
-            String puntoIncontro = puntoIncontroField.getText().trim();
-
-            if (titolo.isEmpty() || descrizione.isEmpty() || puntoIncontro.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Errore: Tutti i campi devono essere compilati!", "Errore", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (volontariListVolontari.getSelectedIndices().length == 0) {
-                JOptionPane.showMessageDialog(this, "Errore: Seleziona almeno un volontario!", "Errore", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (giorniList.getSelectedIndices().length == 0) {
-                JOptionPane.showMessageDialog(this, "Errore: Seleziona almeno un giorno della settimana!", "Errore", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            LocalDate dataInizio = convertToLocalDate(dataInizioSpinner.getValue());
-            LocalDate dataFine = convertToLocalDate(dataFineSpinner.getValue());
-
-            if (dataInizio.isAfter(dataFine)) {
-                JOptionPane.showMessageDialog(this, "Errore: La data di inizio non può essere dopo la data di fine!", "Errore", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            LocalTime oraInizio = convertToLocalTime(oraInizioSpinner.getValue());
-
-            if (!isModifica && tipiVisitaController.titoloEsiste(titolo)) {
-                JOptionPane.showMessageDialog(this, "Errore: Esiste già una visita con questo titolo!", "Errore", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            int minPartecipanti = (int) minPartecipantiSpinner.getValue();
-            int maxPartecipanti = (int) maxPartecipantiSpinner.getValue();
-            boolean richiedeBiglietto = bigliettoCheckbox.isSelected();
-
-            if (minPartecipanti > maxPartecipanti) {
-                JOptionPane.showMessageDialog(this, "Errore: Il numero minimo di partecipanti non può essere maggiore del massimo!",
-                        "Errore", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            TipoVisita nuovaVisita = new TipoVisita(
-                    titolo,
-                    descrizione,
-                    puntoIncontro,
-                    dataInizio,
-                    dataFine,
-                    giorniSettimana,
-                    oraInizio,
-                    (int) durataSpinner.getValue(),
-                    richiedeBiglietto,
-                    minPartecipanti,
-                    maxPartecipanti,
-                    listaVolontari
-            );
-
-            if (isModifica) {
-                tipiVisitaController.modificaTipoVisita(nuovaVisita);
-                JOptionPane.showMessageDialog(this, "Tipo di visita modificato con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                tipiVisitaController.aggiungiVisita(nuovaVisita);
-                JOptionPane.showMessageDialog(this, "Tipo di visita aggiunto con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
-            }
-
-            parent.aggiornaListaTipiVisita();
-
-            chiudiEmandaIndietro();
         });
 
         JButton annullaButton = Costants.createSimpleButton("Annulla");
@@ -425,8 +379,7 @@ public class NuovoTipoVisita extends JFrame {
     }
 
     private void chiudiEmandaIndietro() {
-        this.dispose();
-        parent.setVisible(true);
+        mainController.showListaTipiVisita();
     }
 
     public void aggiornaListaVolontari() {
