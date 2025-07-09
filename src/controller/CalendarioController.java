@@ -23,7 +23,7 @@ public class CalendarioController {
         }
 
         this.calendario = loadedCalendario;
-
+        salvaDati();
     }
 
     private void salvaDati() {
@@ -98,16 +98,15 @@ public class CalendarioController {
 
     // Metodo per aggiungere una data alla lista delle date precluse
     public void aggiungiDataPreclusa(LocalDate data) {
-        calendario.getDatePrecluse().add(data);
+        calendario.addDatePreclusa(data);
         salvaDati();
     }
 
     // Metodo per rimuovere una data dalla lista delle date precluse
     public void rimuoviDataPreclusa(LocalDate data) {
-        boolean removed = calendario.getDatePrecluse().remove(data);
-        if (removed) { // Only save if a date was actually removed
+        boolean removed = calendario.removeDatePreclusa(data);
+        if (removed) { 
             salvaDati();
-            System.out.println("Saved precluded dates after removing: " + data); // Optional log
         }
     }
 

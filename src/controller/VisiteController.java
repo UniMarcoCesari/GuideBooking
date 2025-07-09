@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import costants.Costants;
+import model.CorpoDati;
 import model.Iscrizione;
 import model.Luogo;
 import model.TipoVisita;
@@ -51,7 +52,12 @@ public class VisiteController {
         this.luoghiController = luoghiController;
         this.volontariController = volontariController;
         this.visite = dataManager.leggiDatiVisite();
-        this.numeroMaxIscrizine = Integer.valueOf(dataManager.caricaCorpoDati(Costants.file_corpo).getMaxPersone());
+        CorpoDati corpoDati = dataManager.caricaCorpoDati(Costants.file_corpo);
+        if (corpoDati != null) {
+            this.numeroMaxIscrizine = Integer.valueOf(corpoDati.getMaxPersone());
+        } else {
+            this.numeroMaxIscrizine = 10; // Default value
+        }
         aggiornaVisiteAlCambioGiorno(calendarioController.getDatacDateCorrenteLocalDate());
     }
 

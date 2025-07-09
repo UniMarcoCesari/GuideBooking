@@ -13,9 +13,6 @@ import service.PersistentDataManager;
 
 import javax.swing.JFrame;
 
-import view.login.LoginPanel;
-import view.login.NewPasswordFrame;
-
 public class MainController {
     private JFrame currentFrame;
     private final PersistentDataManager dataManager;
@@ -186,6 +183,18 @@ public class MainController {
             currentFrame.dispose();
         }
         currentFrame = new view.corpoDati.CorpoDatiFase2(corpoDati, this);
+        currentFrame.setVisible(true);
+    }
+
+    public void startFirstTimeSetup() {
+        showCorpoDatiFase1();
+    }
+
+    public void showCorpoDatiFase1() {
+        if (currentFrame != null) {
+            currentFrame.dispose();
+        }
+        currentFrame = new view.corpoDati.CorpoDatiFase1(this);
         currentFrame.setVisible(true);
     }
 

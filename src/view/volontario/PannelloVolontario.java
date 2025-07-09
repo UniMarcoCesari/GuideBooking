@@ -19,10 +19,10 @@ public class PannelloVolontario extends JFrame {
     private MainController mainController;
 
     public PannelloVolontario(String username, MainController mainController) {
-        this.calendarioController = null;
         this.username = username;
         this.mainController = mainController;
         this.visiteController = mainController.getVisiteController();
+        this.calendarioController = mainController.getCalendarioController();
 
         initializeFrame();
 

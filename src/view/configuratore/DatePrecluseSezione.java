@@ -236,13 +236,9 @@ public class DatePrecluseSezione extends JFrame {
             calendarioController.aggiungiDataPreclusa(date);
             System.out.println("Added precluded date: " + date); // Log
         } else {
-            // Assuming rimuoviDataPreclusa exists or will be added to CalendarioController
-            calendarioController.rimuoviDataPreclusa(date);
+             calendarioController.rimuoviDataPreclusa(date);
              System.out.println("Removed precluded date: " + date); // Log
         }
-        // Note: No need to call salva here, saving happens implicitly in the controller (based on original design)
-        // or should be triggered by a separate "Save" button if needed.
-        // For now, we modify the state directly.
     }
 
     // --- Keep navigateBack ---

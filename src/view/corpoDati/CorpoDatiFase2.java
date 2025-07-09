@@ -8,11 +8,13 @@ import model.CorpoDati;
 import model.Luogo;
 import controller.LuoghiController;
 import model.TipoVisita;
-import view.configuratore.PannelloConfiguratore;
 import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.*;
+
+import static costants.Costants.CONFIGURATORE_HEADER_BACK;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,6 +129,11 @@ public class CorpoDatiFase2 extends JFrame {
 
     private void salvaEMandaPannello()
     {
+        if (luoghiController.getLuoghi().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Devi inserire almeno un luogo.", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        corpoDati.setIsAlreadyStart(true);
         mainController.salvaCorpoDati(corpoDati);
         mainController.showPannelloConfiguratore();
     }

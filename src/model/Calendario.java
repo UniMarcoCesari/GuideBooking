@@ -2,16 +2,18 @@ package model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.Set;
 import java.io.Serializable;
 
 public class Calendario implements Serializable {
+    private static final long serialVersionUID = 1L;
     private LocalDate data;
-    private Set<LocalDate> datePrecluse; 
+    private Set<LocalDate> datePrecluse;
 
     public Calendario() {
         this.data = LocalDate.now();
-        this.datePrecluse = Set.of();
+        this.datePrecluse = new HashSet<>();
     }
 
     public LocalDate getData() {
@@ -36,5 +38,13 @@ public class Calendario implements Serializable {
 
     public void indietroUnGiorno() {
         data = data.minusDays(1);
+    }
+
+    public void addDatePreclusa(LocalDate data) {
+        datePrecluse.add(data);
+    }
+
+    public boolean removeDatePreclusa(LocalDate data) {
+        return datePrecluse.remove(data);
     }
 }

@@ -17,7 +17,10 @@ public class AuthController
 
     public AuthController(PersistentDataManager dataManager) {
         this.dataManager = dataManager;
-        credenziali = dataManager.caricaCredenziali();
+        this.credenziali = dataManager.caricaCredenziali();
+        if (this.credenziali == null) {
+            this.credenziali = new java.util.ArrayList<>();
+        }
     }
     
 
@@ -45,8 +48,10 @@ public class AuthController
             if (credenziale.getUsername().equals(username)) {
                 credenziale.setPassword(password);
                 credenziale.setRuolo(ruolo); 
+                System.out.println("Password e ruolo per l'utente " + username + " aggiornati");
             }
         }
+        dataManager.salvaDati(credenziali, file_credenziali);
     }
 
     
@@ -85,5 +90,15 @@ public class AuthController
             }
         }
         dataManager.salvaDati(credenziali, file_credenziali);
+    }
+
+    public void creaCredenzialiDefault() {
+        creaNuovaCredenziale("admin", "admin", Ruolo.PRE_CONFIGURATORE);
+        dataManager.salvaDati(credenziali, file_credenziali);
+    }
+
+
+    public List<Credenziale> getCredenziali() {
+        return credenziali;
     }
 }

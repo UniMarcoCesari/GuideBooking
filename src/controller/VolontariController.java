@@ -20,10 +20,13 @@ public class VolontariController {
     public VolontariController(AuthController authController,PersistentDataManager dataManager) {
         this.authController = authController;
         this.dataManager = dataManager;
-        listaVolontari = dataManager.caricaDati(Costants.file_volontari);
-        disponibilitaVolontari = dataManager.caricaDati(Costants.file_disponibilita_volontari);
-        if (disponibilitaVolontari == null) {
-            disponibilitaVolontari = new HashMap<>();
+        this.listaVolontari = dataManager.caricaDati(Costants.file_volontari);
+        if (this.listaVolontari == null) {
+            this.listaVolontari = new ArrayList<>();
+        }
+        this.disponibilitaVolontari = dataManager.caricaDati(Costants.file_disponibilita_volontari);
+        if (this.disponibilitaVolontari == null) {
+            this.disponibilitaVolontari = new HashMap<>();
         }
     }
 

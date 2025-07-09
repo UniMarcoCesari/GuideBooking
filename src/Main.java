@@ -4,11 +4,10 @@ import controller.AuthController;
 import controller.TipiVisitaController;
 import controller.VisiteController;
 import controller.VolontariController;
+import model.CorpoDati;
 import service.PersistentDataManager;
 import controller.LuoghiController;
 import controller.CalendarioController;
-import controller.LoginController;
-import view.login.LoginPanel;
 import view.login.MainController;
 
 public class Main {
@@ -26,7 +25,21 @@ public class Main {
         // Initialize main controller with all the controllers
         MainController mainController = new MainController(dataManager,authController, tipiVisitaController, visiteController, volontarioController, luoghiController, calendarioController);
 
-        SwingUtilities.invokeLater(() -> mainController.showLoginPanel());
+        // check credenziali existence
+        if (authController.getCredenziali().isEmpty()) {
+            // If no credentials exist, create default credentials
+            authController.creaCredenzialiDefault();
+        }
 
+        CorpoDati corpoDati = dataManager.caricaCorpoDati(costants.Costants.file_corpo);
+
+        
+        if (corpoDati == null || !corpoDati.getIsAlreadyStart()) {
+            SwingUtilities.invokeLater(() -> mainController.startFirstTimeSetup());
+        }
+        else {
+            // Start normal application
+            SwingUtilities.invokeLater(() -> mainController.showLoginPanel());
+        }
     }
 }

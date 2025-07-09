@@ -29,7 +29,7 @@ public class NewPasswordFrame extends JFrame {
 
         String titleText;
         String labelText;
-        if (ruolo.equals(Ruolo.CONFIGURATORE)) {
+        if (ruolo.equals(Ruolo.PRE_CONFIGURATORE)) {
             titleText = "Inizializzazione Configuratore";
             labelText = "Primo Accesso Configuratore";
         } else {
@@ -116,7 +116,13 @@ public class NewPasswordFrame extends JFrame {
 
         JOptionPane.showMessageDialog(this, "✅ Credenziali salvate con successo!");
 
-        authController.setNewPasswordAndRuolo(username, password, ruolo);
+        if (ruolo.equals(Ruolo.PRE_CONFIGURATORE)) {
+            authController.setNewPasswordAndRuolo(username, password, Ruolo.CONFIGURATORE);
+        }
+        else {
+            authController.setNewPasswordAndRuolo(username, password, Ruolo.VOLONTARIO);
+        }
+        
         dispose();  // Chiude la finestra
         new LoginPanel(mainController).setVisible(true);
     }

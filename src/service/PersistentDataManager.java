@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import costants.Costants;
 import costants.Credenziale;
@@ -134,13 +133,16 @@ public class PersistentDataManager {
         }
     }
     public List<Credenziale> caricaCredenziali() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Costants.file_credenziali))) {
+        File file = new File(Costants.file_credenziali);
+        if (!file.exists()) {
+            return null;
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (List<Credenziale>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            return Collections.emptyList();
+            return null;
         }
-        
     }
 
     public List<Visita> leggiDatiVisite(){

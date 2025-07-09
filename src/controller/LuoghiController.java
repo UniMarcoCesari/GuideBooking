@@ -14,9 +14,8 @@ public class LuoghiController {
     public LuoghiController(PersistentDataManager dataManager) {
         this.dataManager = dataManager;
         this.luoghi = dataManager.caricaDati(Costants.file_luoghi);
-        if (luoghi == null) {
-            luoghi = new ArrayList<>();
-            salvaDati();
+        if (this.luoghi == null) {
+            this.luoghi = new ArrayList<>();
         }
     }
 

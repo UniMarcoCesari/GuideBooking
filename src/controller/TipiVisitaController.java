@@ -13,7 +13,10 @@ public class TipiVisitaController {
 
     public TipiVisitaController(PersistentDataManager dataManager) {
         this.dataManager = dataManager;
-        tipiVisita = dataManager.caricaDati(Costants.file_tipi_visita);
+        this.tipiVisita = dataManager.caricaDati(Costants.file_tipi_visita);
+        if (this.tipiVisita == null) {
+            this.tipiVisita = new ArrayList<>();
+        }
     }
 
     public List<TipoVisita> getTipiVisita() {

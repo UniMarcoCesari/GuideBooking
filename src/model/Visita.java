@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class Visita implements Serializable{
+    private static final long serialVersionUID = 1L;
     public enum STATO_VISITA {
         PROPOSTA, COMPLETA, CONFERMATA, CANCELLATA, EFFETTUATA
     }
@@ -85,4 +86,3 @@ public class Visita implements Serializable{
 
     
 }
-
