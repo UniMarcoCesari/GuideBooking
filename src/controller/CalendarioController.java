@@ -17,7 +17,7 @@ public class CalendarioController {
     public CalendarioController(PersistentDataManager dataManager) {
         this.dataManager = dataManager;
 
-        Calendario loadedCalendario = (Calendario) dataManager.caricaDati(CALENDARIO_FILE);
+        Calendario loadedCalendario = (Calendario) dataManager.caricaOggetto(CALENDARIO_FILE);
         if (loadedCalendario == null) {
             loadedCalendario = new Calendario(); // Se il file non esiste, inizializza un nuovo calendario
         }
@@ -27,7 +27,7 @@ public class CalendarioController {
     }
 
     private void salvaDati() {
-        dataManager.salvaDati(calendario, CALENDARIO_FILE);
+        dataManager.salvaOggetto(calendario, CALENDARIO_FILE);
     }
 
     public String getDataCorrente() {
@@ -61,10 +61,10 @@ public class CalendarioController {
     public LocalDate getNomeMesePrimoCheSiPuoModificare() {
         LocalDate data = calendario.getData();
         if (data.getDayOfMonth() > 15 && !isGiornoCancellato(data)) {
-            CorpoDati corpoDati = dataManager.caricaCorpoDati(Costants.file_corpo);
+            CorpoDati corpoDati = dataManager.caricaOggetto(Costants.file_corpo);
             if (!corpoDati.getIsAlreadyStart()) {
                 corpoDati.setIsAlreadyStart(true);
-                dataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+                dataManager.salvaOggetto(corpoDati, Costants.file_corpo);
             }
             data = data.plusMonths(1);
         }
@@ -72,7 +72,7 @@ public class CalendarioController {
     }
 
     public boolean isButtonLocked() {
-        CorpoDati corpoDati = dataManager.caricaCorpoDati(Costants.file_corpo);
+        CorpoDati corpoDati = dataManager.caricaOggetto(Costants.file_corpo);
         return !corpoDati.getIsAlreadyStart();
     }
 

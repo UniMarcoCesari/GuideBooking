@@ -13,7 +13,7 @@ public class LuoghiController {
 
     public LuoghiController(PersistentDataManager dataManager) {
         this.dataManager = dataManager;
-        this.luoghi = dataManager.caricaDati(Costants.file_luoghi);
+        this.luoghi = dataManager.caricaListaOggetti(Costants.file_luoghi);
         if (this.luoghi == null) {
             this.luoghi = new ArrayList<>();
         }
@@ -68,7 +68,7 @@ public class LuoghiController {
     
 
     public void salvaDati() {
-        dataManager.salvaDati(luoghi, Costants.file_luoghi);
+        dataManager.salvaListaOggetti(luoghi, Costants.file_luoghi);
     }
 
     public Boolean aggiungiTipoVisita(Luogo luogoSelezionato, TipoVisita tipoVisita) {

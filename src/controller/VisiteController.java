@@ -51,8 +51,8 @@ public class VisiteController {
         this.calendarioController = calendarioController;
         this.luoghiController = luoghiController;
         this.volontariController = volontariController;
-        this.visite = dataManager.leggiDatiVisite();
-        CorpoDati corpoDati = dataManager.caricaCorpoDati(Costants.file_corpo);
+        this.visite = dataManager.caricaOggetto(Costants.file_visite);
+        CorpoDati corpoDati = dataManager.caricaOggetto(Costants.file_corpo);
         if (corpoDati != null) {
             this.numeroMaxIscrizine = Integer.valueOf(corpoDati.getMaxPersone());
         } else {
@@ -81,7 +81,7 @@ public class VisiteController {
                 }
             }
         }
-        dataManager.scriviDatiVisite(visite); // salva aggiornamenti
+        dataManager.salvaListaOggetti(visite, Costants.file_visite); // salva aggiornamenti
     }
     
 
@@ -231,7 +231,7 @@ public class VisiteController {
         // visite.removeIf(v -> v.getData().getMonth() == meseTarget.getMonth() &&
         // v.getData().getYear() == meseTarget.getYear());
         visite.addAll(nuoveVisite);
-        dataManager.scriviDatiVisite(visite);
+        dataManager.salvaListaOggetti(visite, Costants.file_visite);
 
         System.out.println("\n✅ Generazione completata: " + nuoveVisite.size() + " nuove visite create per " +
                 meseTarget.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN) + " " + meseTarget.getYear());
@@ -290,7 +290,7 @@ public class VisiteController {
                 visita.setStato(STATO_VISITA.CONFERMATA);
             }
         }
-        dataManager.scriviDatiVisite(visite);
+        dataManager.salvaListaOggetti(visite, Costants.file_visite);
     }
 
     public void controlla3Giorni(LocalDate data) {
@@ -339,7 +339,7 @@ public class VisiteController {
         Iscrizione nuova = new Iscrizione(codice, username, numeroPersone);
         visita.aggiungiIscrizione(nuova);
 
-        dataManager.scriviDatiVisite(visite); // se mantieni una lista globale
+        dataManager.salvaListaOggetti(visite,Costants.file_visite); // se mantieni una lista globale
         
         // Aggiorna l'oggetto Visita nella lista
         int index = visite.indexOf(visita);
@@ -374,7 +374,7 @@ public class VisiteController {
         }
         
         visita.getIscrizioni().remove(iscrizione);
-        dataManager.scriviDatiVisite(visite); // salva la modifica
+        dataManager.salvaListaOggetti(visite, Costants.file_visite); // salva la modifica
 
         // Aggiorna l'oggetto Visita nella lista
         int index = visite.indexOf(visita);

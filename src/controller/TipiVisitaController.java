@@ -13,7 +13,7 @@ public class TipiVisitaController {
 
     public TipiVisitaController(PersistentDataManager dataManager) {
         this.dataManager = dataManager;
-        this.tipiVisita = dataManager.caricaDati(Costants.file_tipi_visita);
+        this.tipiVisita = dataManager.caricaListaOggetti(Costants.file_tipi_visita);
         if (this.tipiVisita == null) {
             this.tipiVisita = new ArrayList<>();
         }
@@ -50,7 +50,7 @@ public class TipiVisitaController {
     }
 
     public void salvaDati() {
-        dataManager.salvaDati(tipiVisita, Costants.file_tipi_visita);
+        dataManager.salvaListaOggetti(tipiVisita, Costants.file_tipi_visita);
     }
 
     public boolean titoloEsiste(String titolo) {

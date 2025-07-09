@@ -61,11 +61,11 @@ public class MainController {
     }
 
     public CorpoDati getCorpoDati() {
-        return dataManager.caricaCorpoDati(Costants.file_corpo);
+        return dataManager.caricaOggetto(Costants.file_corpo);
     }
 
     public void salvaCorpoDati(CorpoDati corpoDati) {
-        dataManager.salvaCorpoDati(corpoDati, Costants.file_corpo);
+        dataManager.salvaOggetto(corpoDati, Costants.file_corpo);
     }
 
     // --- Router Methods ---

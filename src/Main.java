@@ -31,7 +31,7 @@ public class Main {
             authController.creaCredenzialiDefault();
         }
 
-        CorpoDati corpoDati = dataManager.caricaCorpoDati(costants.Costants.file_corpo);
+        CorpoDati corpoDati = dataManager.caricaOggetto(costants.Costants.file_corpo);
 
         
         if (corpoDati == null || !corpoDati.getIsAlreadyStart()) {

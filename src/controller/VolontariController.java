@@ -20,11 +20,11 @@ public class VolontariController {
     public VolontariController(AuthController authController,PersistentDataManager dataManager) {
         this.authController = authController;
         this.dataManager = dataManager;
-        this.listaVolontari = dataManager.caricaDati(Costants.file_volontari);
+        this.listaVolontari = dataManager.caricaOggetto(Costants.file_volontari);
         if (this.listaVolontari == null) {
             this.listaVolontari = new ArrayList<>();
         }
-        this.disponibilitaVolontari = dataManager.caricaDati(Costants.file_disponibilita_volontari);
+        this.disponibilitaVolontari = dataManager.caricaOggetto(Costants.file_disponibilita_volontari);
         if (this.disponibilitaVolontari == null) {
             this.disponibilitaVolontari = new HashMap<>();
         }
@@ -69,7 +69,7 @@ public class VolontariController {
         // Se non esiste, crea e aggiungi il nuovo volontario
         Volontario nuovoVolontario = new Volontario(username);
         listaVolontari.add(nuovoVolontario);
-        dataManager.salvaDati(listaVolontari, Costants.file_volontari);
+        dataManager.salvaOggetto(listaVolontari, Costants.file_volontari);
         authController.creaNuovaCredenziale(username, "pw", Ruolo.VOLONTARIO);
         return true; // Volontario aggiunto con successo
     }
@@ -77,7 +77,7 @@ public class VolontariController {
     public void rimuoviVolontario(Volontario volontario) {
         listaVolontari.remove(volontario);
         authController.disabilitaCredenziale(volontario.getNome());
-        dataManager.salvaDati(listaVolontari, Costants.file_volontari);
+        dataManager.salvaOggetto(listaVolontari, Costants.file_volontari);
     }
 
     public void aggiornaDisponibilita(Volontario volontario, LocalDate data, boolean disponibile) {

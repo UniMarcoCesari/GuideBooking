@@ -4,11 +4,6 @@ import controller.*;
 
 import costants.Costants;
 import enumerations.Ruolo;
-import view.configuratore.PannelloConfiguratore;
-import view.corpoDati.CorpoDatiFase1;
-import view.fruitore.PannelloFruitore;
-import view.fruitore.RegistrazioneFruitore; 
-import view.volontario.PannelloVolontario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,13 +13,9 @@ public class LoginPanel extends JFrame implements ILoginView{
     private final JPasswordField passwordField = new JPasswordField("test", 15);
     private final JButton loginButton;
     private final JButton registratiButton; 
-
-
     private LoginController loginController;
-    private final MainController mainController;
 
     public LoginPanel(MainController mainController) {
-        this.mainController = mainController;
         
         //initilize frame 
         setTitle("Login");
