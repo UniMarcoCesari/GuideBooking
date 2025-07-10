@@ -87,8 +87,7 @@ public class VisiteController {
 
         if (!calendarioController.isGiornoDiGenerazioneVisite()) {
             // In un'applicazione reale, gestire l'eccezione o loggare un avviso
-            System.out
-                    .println("AVVISO: Non è il giorno corretto per generare le visite, ma procedo comunque per test.");
+            System.out.println("AVVISO: Non è il giorno corretto per generare le visite, ma procedo comunque per test.");
             // throw new IllegalStateException("Non è il giorno corretto per generare le
             // visite.");
         }

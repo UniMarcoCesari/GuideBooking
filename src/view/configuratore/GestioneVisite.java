@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-import card.VisitaCard; // Assicurati che VisitaCard sia importata
+import card.VisitaCard;
 
 public class GestioneVisite extends JFrame {
     private final YearMonth meseAnno; // Cambiato a YearMonth per chiarezza
@@ -86,7 +86,7 @@ public class GestioneVisite extends JFrame {
             cardListPanel.setBorder(new EmptyBorder(20, 20, 20, 20)); // 20 pixel di padding interno
 
             for (Visita visita : visiteDelMese) {
-                VisitaCard visitaCard = new VisitaCard(visita);
+                VisitaCard visitaCard = new VisitaCard(mainController, visita,null); // Passa il mainController e visita, senza username
                 // Imposta una dimensione preferita per le card (BoxLayout rispetterà l'altezza preferita)
                 // Potrebbe essere necessario aggiustare la larghezza o usaresetAlignmentX per centrare
                 visitaCard.setPreferredSize(new Dimension(400, 200));

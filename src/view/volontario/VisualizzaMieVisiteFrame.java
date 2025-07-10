@@ -77,7 +77,7 @@ public class VisualizzaMieVisiteFrame extends JFrame {
             cardListPanel.setBorder(new EmptyBorder(20, 20, 20, 20)); // 20 pixel di padding interno
 
             for (Visita visita : visiteDelMese) {
-                VisitaCard visitaCard = new VisitaCard(visita, username);
+                VisitaCard visitaCard = new VisitaCard(mainController, visita, username);
                 // Imposta una dimensione preferita per le card
                 visitaCard.setPreferredSize(new Dimension(400, 200));
                 visitaCard.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra le card orizzontalmente

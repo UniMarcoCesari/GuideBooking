@@ -24,7 +24,7 @@ public class AuthController
     }
     
 
-    public Ruolo getRuoloByCredential(String username, String password) throws Exception {
+    public Ruolo login(String username, String password) throws Exception {
         if (credenziali == null) {
             throw new IllegalStateException("Impossibile caricare le credenziali.");
         }
@@ -38,6 +38,19 @@ public class AuthController
               // Password errata
               throw new InvalidPasswordException("Password errata per l'utente: " + username);
               
+           }
+        }
+        throw new UserNotFoundException("Utente non trovato: " + username);
+    }
+
+    public Ruolo getRuoloByUsername(String username) throws Exception {
+        if (credenziali == null) {
+            throw new IllegalStateException("Impossibile caricare le credenziali.");
+        }
+        for (Credenziale credenziale : credenziali) {
+           if (credenziale.getUsername().equals(username)) {
+                // Username esistente
+                return credenziale.getRuolo();  
            }
         }
         throw new UserNotFoundException("Utente non trovato: " + username);

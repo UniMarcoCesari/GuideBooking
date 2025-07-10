@@ -27,7 +27,7 @@ public class LoginController {
         }
 
         try {
-            Ruolo ruolo = authController.getRuoloByCredential(username, password);
+            Ruolo ruolo = authController.login(username, password);
 
             switch (ruolo) {
                 case PRE_CONFIGURATORE:
@@ -44,6 +44,10 @@ public class LoginController {
                     break;
                 case FRUITORE:
                     mainController.showPannelloFruitore(username);
+                    break;
+                case UTENTE_ELIMINATO:
+                    view.mostraErrore("Account Cancellato", "Il tuo account è stato cancellato. Contatta l'amministratore.");
+                    view.pulisciCampi();
                     break;
                 default:
                     view.mostraErrore("Errore di Autenticazione", "Ruolo non valido.");

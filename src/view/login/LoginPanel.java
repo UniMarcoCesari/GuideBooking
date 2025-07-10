@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LoginPanel extends JFrame implements ILoginView{
-    private final JTextField usernameField = new JTextField("pre", 15);
+    private final JTextField usernameField = new JTextField("admin", 15);
     private final JPasswordField passwordField = new JPasswordField("test", 15);
     private final JButton loginButton;
     private final JButton registratiButton; 

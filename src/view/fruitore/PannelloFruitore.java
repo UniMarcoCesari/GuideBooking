@@ -103,7 +103,7 @@ public class PannelloFruitore extends JFrame {
             panel.add(new JLabel("Nessuna visita disponibile al momento."));
         } else {
             for (Visita visita : visiteDisponibili) {
-                VisitaCard card = new VisitaCard(visita, username);
+                VisitaCard card = new VisitaCard(mainController,visita, username,true);
 
                 // Aggiungi l'ActionListener per il bottone Iscriviti
                 card.addIscrivitiActionListener(e -> {
