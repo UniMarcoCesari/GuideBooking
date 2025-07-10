@@ -66,6 +66,7 @@ public class NumMax extends JFrame {
         JButton salvaBtn = new JButton("Salva");
         salvaBtn.setFont(new Font("Arial", Font.BOLD, 14));
         salvaBtn.addActionListener(_ -> {
+            corpoDati.setMaxPersone(textField.getText());
             mainController.salvaCorpoDati(corpoDati);
         });
 

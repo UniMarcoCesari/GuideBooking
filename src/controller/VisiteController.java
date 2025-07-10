@@ -29,7 +29,6 @@ import service.PersistentDataManager;
 public class VisiteController {
 
     private final CalendarioController calendarioController;
-    private final int numeroMaxIscrizine;
     private final VolontariController volontariController;
     private final LuoghiController luoghiController;
     private final PersistentDataManager dataManager;
@@ -52,13 +51,9 @@ public class VisiteController {
         this.luoghiController = luoghiController;
         this.volontariController = volontariController;
         this.visite = dataManager.caricaOggetto(Costants.file_visite);
-        CorpoDati corpoDati = dataManager.caricaOggetto(Costants.file_corpo);
-        if (corpoDati != null) {
-            this.numeroMaxIscrizine = Integer.valueOf(corpoDati.getMaxPersone());
-        } else {
-            this.numeroMaxIscrizine = 10; // Default value
+        if (visite == null) {
+            this.visite = new ArrayList<>();
         }
-        aggiornaVisiteAlCambioGiorno(calendarioController.getDatacDateCorrenteLocalDate());
     }
 
     public void aggiornaVisiteAlCambioGiorno(LocalDate nuovaDataCorrente) {
@@ -313,6 +308,10 @@ public class VisiteController {
 
     // restituisce codice
     public String iscriviFruitore(Visita visita, String username, int numeroPersone) {
+
+        CorpoDati corpoDati = dataManager.caricaOggetto(Costants.file_corpo);
+        int numeroMaxIscrizine = Integer.parseInt(corpoDati.getMaxPersone());
+        
         if (numeroPersone > numeroMaxIscrizine)
         {
             throw new IllegalStateException("Numero persone iscizione troppo elevato Max: "+numeroMaxIscrizine);

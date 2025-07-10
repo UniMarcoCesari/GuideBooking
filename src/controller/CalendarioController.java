@@ -27,6 +27,7 @@ public class CalendarioController {
     }
 
     private void salvaDati() {
+        System.out.println("Salvo calendario con data: " + calendario.getDataString());
         dataManager.salvaOggetto(calendario, CALENDARIO_FILE);
     }
 

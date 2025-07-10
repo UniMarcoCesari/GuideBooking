@@ -33,6 +33,9 @@ public class LoginController {
                 case PRE_CONFIGURATORE:
                     mainController.showNewPasswordFrame(username, ruolo);
                     break;
+                case PRE_VOLONTARIO:
+                    mainController.showNewPasswordFrame(username, ruolo);
+                    break;
                 case CONFIGURATORE:
                     mainController.showPannelloConfiguratore();
                     break;

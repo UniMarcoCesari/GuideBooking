@@ -48,7 +48,7 @@ public class AuthController
             if (credenziale.getUsername().equals(username)) {
                 credenziale.setPassword(password);
                 credenziale.setRuolo(ruolo); 
-                System.out.println("Password e ruolo per l'utente " + username + " aggiornati");
+                System.out.println("Password e ruolo per l'utente " + username + " aggiornati" + " con ruolo " + ruolo);
             }
         }
         dataManager.salvaListaOggetti(credenziali, file_credenziali);

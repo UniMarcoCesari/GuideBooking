@@ -124,6 +124,6 @@ public class NewPasswordFrame extends JFrame {
         }
         
         dispose();  // Chiude la finestra
-        new LoginPanel(mainController).setVisible(true);
+        mainController.showLoginPanel();
     }
 }
