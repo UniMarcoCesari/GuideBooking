@@ -106,7 +106,7 @@ public class AuthController
     }
 
     public void creaCredenzialiDefault() {
-        creaNuovaCredenziale("admin", "admin", Ruolo.PRE_CONFIGURATORE);
+        creaNuovaCredenziale("admin", "test", Ruolo.PRE_CONFIGURATORE);
         dataManager.salvaListaOggetti(credenziali, file_credenziali);
     }
 

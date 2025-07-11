@@ -93,14 +93,26 @@ public class LoginPanel extends JFrame implements ILoginView{
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.CENTER;
 
+        // Testo sopra i campi username e password
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        JLabel formInfoLabel = new JLabel("<html><div style=\"text-align: center;\">Attenzione: la password di default per di admin e volontari è: \"test\"<br>Al primo accesso sarà necessario cambiare la password</div></html>");
+        formInfoLabel.setFont(formInfoLabel.getFont().deriveFont(Font.ITALIC));
+        formInfoLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        formInfoLabel.setForeground(Costants.BORDER_COLOR);
+        formInfoLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0)); // padding sotto
+        formPanel.add(formInfoLabel, gbc);
+
+        gbc.gridwidth = 1; // reset gridwidth
+        gbc.gridy = 1;
+        gbc.gridx = 0;
         formPanel.add(new JLabel("Username:"), gbc);
 
         gbc.gridx = 1;
         formPanel.add(usernameField, gbc);
 
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.gridx = 0;
         formPanel.add(new JLabel("Password:"), gbc);
 

@@ -70,7 +70,7 @@ public class VolontariController {
         Volontario nuovoVolontario = new Volontario(username);
         listaVolontari.add(nuovoVolontario);
         dataManager.salvaOggetto(listaVolontari, Costants.file_volontari);
-        authController.creaNuovaCredenziale(username, "pw", Ruolo.PRE_VOLONTARIO);
+        authController.creaNuovaCredenziale(username, "test", Ruolo.PRE_VOLONTARIO);
         return true; // Volontario aggiunto con successo
     }
 
