@@ -1,10 +1,7 @@
 package view.login;
 
 import controller.*;
-
 import costants.Costants;
-import enumerations.Ruolo;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -168,36 +165,6 @@ public class LoginPanel extends JFrame implements ILoginView{
         this.loginController = controller;
     }
 
-    @Override
-    public void apriPannelloConfiguratore() {
-        // This method is now handled by MainController (Router)
-    }
-
-    @Override
-    public void apriCorpoDatiFase1() {
-        // This method is now handled by MainController (Router)
-    }
-
-    @Override
-    public void apriPannelloVolontario(String username) {
-        // This method is now handled by MainController (Router)
-    }
-
-    @Override
-    public void apriPannelloFruitore(String username) {
-        // This method is now handled by MainController (Router)
-    }
-
-    @Override
-    public void apriNewPassword(String username, Ruolo ruolo) {
-        // This method is now handled by MainController (Router)
-    }
-
-
-    @Override
-    public void apriRegistrazioneFruitore() {
-        // This method is now handled by MainController (Router)
-    }
 
     @Override
     public void chiudi() {
