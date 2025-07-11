@@ -6,10 +6,12 @@ import controller.LuoghiController;
 import controller.TipiVisitaController;
 import controller.VisiteController;
 import controller.VolontariController;
-import controller.LoginController;
 import costants.Costants;
+import enumerations.Ruolo;
 import model.CorpoDati;
 import service.PersistentDataManager;
+import view.configuratore.ListaTipiVisita;
+import factory.ViewFactory;
 
 import javax.swing.JFrame;
 
@@ -22,11 +24,13 @@ public class MainController {
     private final VolontariController volontarioController;
     private final LuoghiController luoghiController;
     private final CalendarioController calendarioController;
-
+    
+    private final ViewFactory viewFactory; // <-- NUOVA DIPENDENZA
 
     public MainController(PersistentDataManager dataManager, AuthController authController, TipiVisitaController tipiVisitaController,
             VisiteController visiteController, VolontariController volontarioController,
             LuoghiController luoghiController, CalendarioController calendarioController) {
+        
         this.dataManager = dataManager;
         this.authController = authController;
         this.tipiVisitaController = tipiVisitaController;
@@ -34,191 +38,106 @@ public class MainController {
         this.volontarioController = volontarioController;
         this.luoghiController = luoghiController;
         this.calendarioController = calendarioController;
+
+        // Il MainController crea la sua factory, passandole un riferimento
+        // a se stesso (this) affinché la factory possa iniettarlo nelle viste.
+        this.viewFactory = new ViewFactory(this);
     }
 
-    public AuthController getAuthController() {
-        return authController;
-    }
+    // --- Metodi getter per i servizi (rimangono invariati) ---
+    public AuthController getAuthController() { return authController; }
+    public TipiVisitaController getTipiVisitaController() { return tipiVisitaController; }
+    public VisiteController getVisiteController() { return visiteController; }
+    public VolontariController getVolontarioController() { return volontarioController; }
+    public LuoghiController getLuoghiController() { return luoghiController; }
+    public CalendarioController getCalendarioController() { return calendarioController; }
+    public CorpoDati getCorpoDati() { return dataManager.caricaOggetto(Costants.file_corpo); }
+    public void salvaCorpoDati(CorpoDati corpoDati) { dataManager.salvaOggetto(corpoDati, Costants.file_corpo); }
 
-    public TipiVisitaController getTipiVisitaController() {
-        return tipiVisitaController;
-    }
 
-    public VisiteController getVisiteController() {
-        return visiteController;
-    }
+    // --- Metodi Router (ora delegano la creazione alla factory) ---
 
-    public VolontariController getVolontarioController() {
-        return volontarioController;
-    }
-
-    public LuoghiController getLuoghiController() {
-        return luoghiController;
-    }
-
-    public CalendarioController getCalendarioController() {
-        return calendarioController;
-    }
-
-    public CorpoDati getCorpoDati() {
-        return dataManager.caricaOggetto(Costants.file_corpo);
-    }
-
-    public void salvaCorpoDati(CorpoDati corpoDati) {
-        dataManager.salvaOggetto(corpoDati, Costants.file_corpo);
-    }
-
-    // --- Router Methods ---
-
-    public void showLoginPanel() {
+    private void showFrame(JFrame frame) {
         if (currentFrame != null) {
             currentFrame.dispose();
         }
-        LoginPanel loginView = new LoginPanel(this);
-        LoginController loginController = new LoginController(loginView, this); // Pass the view and the main controller
-        loginView.setController(loginController); // Link the controller to the view
-        currentFrame = loginView;
+        currentFrame = frame;
         currentFrame.setVisible(true);
+    }
+
+    public void showLoginPanel() {
+        showFrame(viewFactory.createLoginPanel());
     }
 
     public void showPannelloConfiguratore() {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.configuratore.PannelloConfiguratore(this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createPannelloConfiguratore());
     }
 
-    // Add more router methods as needed
     public void showPannelloVolontario(String username) {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.volontario.PannelloVolontario(username, this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createPannelloVolontario(username));
     }
 
     public void showPannelloFruitore(String username) {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.fruitore.PannelloFruitore(username, this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createPannelloFruitore(username));
     }
 
-    public void showNewPasswordFrame(String username, enumerations.Ruolo ruolo) {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new NewPasswordFrame(username, ruolo, this);
-        currentFrame.setVisible(true);
+    public void showNewPasswordFrame(String username, Ruolo ruolo) {
+        showFrame(viewFactory.createNewPasswordFrame(username, ruolo));
     }
 
     public void showRegistrazioneFruitore() {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.fruitore.RegistrazioneFruitore(this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createRegistrazioneFruitore());
     }
 
     public void showGestioneVisite() {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.configuratore.GestioneVisite(this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createGestioneVisite());
     }
 
     public void showDatePrecluse() {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.configuratore.DatePrecluseSezione(this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createDatePrecluse());
     }
 
     public void showListaLuoghi() {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.configuratore.ListaLuoghi(this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createListaLuoghi());
     }
 
     public void showListaTipiVisita() {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.configuratore.ListaTipiVisita(this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createListaTipiVisita());
     }
 
     public void showListaVolontari() {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.configuratore.ListaVolontari(this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createListaVolontari());
     }
 
     public void showNumMax() {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.configuratore.NumMax(this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createNumMax());
     }
 
-    public void showNuovoTipoVisita(view.configuratore.ListaTipiVisita parent) {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.configuratore.NuovoTipoVisita(parent, this);
-        currentFrame.setVisible(true);
+    public void showNuovoTipoVisita(ListaTipiVisita parent) {
+        showFrame(viewFactory.createNuovoTipoVisita(parent));
+    }
+
+    public void showCorpoDatiFase1() {
+        showFrame(viewFactory.createCorpoDatiFase1());
     }
 
     public void showCorpoDatiFase2(CorpoDati corpoDati) {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.corpoDati.CorpoDatiFase2(corpoDati, this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createCorpoDatiFase2(corpoDati));
     }
 
     public void startFirstTimeSetup() {
         showCorpoDatiFase1();
     }
 
-    public void showCorpoDatiFase1() {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.corpoDati.CorpoDatiFase1(this);
-        currentFrame.setVisible(true);
-    }
-
     public void showVisualizzaTipiVisitaVolontario(String username) {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.volontario.VisualizzaTipiVisitaVolontarioFrame(username, this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createVisualizzaTipiVisitaVolontario(username));
     }
 
     public void showGestisciDisponibilita(String username) {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.volontario.GestisciDisponibilitaFrame(username, this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createGestisciDisponibilita(username));
     }
 
     public void showVisualizzaMieVisite(String username) {
-        if (currentFrame != null) {
-            currentFrame.dispose();
-        }
-        currentFrame = new view.volontario.VisualizzaMieVisiteFrame(username, this);
-        currentFrame.setVisible(true);
+        showFrame(viewFactory.createVisualizzaMieVisite(username));
     }
 }

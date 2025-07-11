@@ -9,7 +9,6 @@ import javax.swing.border.EmptyBorder;
 
 import controller.CalendarioController;
 import controller.TipiVisitaController;
-import controller.VisiteController;
 import controller.VolontariController;
 
 import java.awt.*;
