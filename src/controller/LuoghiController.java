@@ -88,7 +88,8 @@ public class LuoghiController {
     
     }
 
-    public void rimuoviVolonatario(Volontario volontario, List<TipoVisita> tipiVisitaDaRimuovere) {
+    public void rimuoviVolonatario(Volontario volontario) {
+        List<TipoVisita> tipiVisitaDaRimuovere = new ArrayList<>();
         for (Luogo luogo : luoghi) {
             for (TipoVisita tipoVisita : luogo.getTipiVisita()) {
                 tipoVisita.rimuoviVolontario(volontario);
@@ -98,7 +99,6 @@ public class LuoghiController {
             }
             luogo.getTipiVisita().removeAll(tipiVisitaDaRimuovere);
         }
-
 
         // rimuovi luoghi senza tipi visita
         luoghi.removeIf(l -> l.getTipiVisita().isEmpty());

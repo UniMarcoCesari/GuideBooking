@@ -3,11 +3,13 @@ package card;
 import model.TipoVisita;
 import model.Volontario;
 import view.configuratore.ListaVolontari;
+import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import controller.CalendarioController;
+import controller.LuoghiController;
 import controller.TipiVisitaController;
 import controller.VolontariController;
 
@@ -31,15 +33,17 @@ public class VolontarioCard extends JPanel {
     private final List<TipoVisita> listaTipoVisita;
     private final VolontariController volontarioController;
     private final TipiVisitaController tipoVisitaController;
+    private final LuoghiController luoghiController;
     private final CalendarioController calendarioController;
     private final ListaVolontari parent;
 
-    public VolontarioCard(Volontario volontario, List<TipoVisita> listaTipoVisita, VolontariController volontarioController,TipiVisitaController tipoVisitaController,CalendarioController calendarioController,ListaVolontari parent) {
+    public VolontarioCard(Volontario volontario, List<TipoVisita> listaTipoVisita,MainController mainController ,ListaVolontari parent) {
         this.volontario = volontario;
         this.listaTipoVisita = listaTipoVisita;
-        this.volontarioController = volontarioController;
-        this.tipoVisitaController = tipoVisitaController;
-        this.calendarioController = calendarioController;
+        this.volontarioController = mainController.getVolontarioController();
+        this.tipoVisitaController = mainController.getTipiVisitaController();
+        this.calendarioController = mainController.getCalendarioController();
+        this.luoghiController = mainController.getLuoghiController();
         this.parent = parent;
 
         // Configurazione panel
@@ -120,6 +124,7 @@ public class VolontarioCard extends JPanel {
         eliminaButton.addActionListener(e -> {
             volontarioController.rimuoviVolontario(volontario);
             tipoVisitaController.rimuoviVolonatario(volontario);
+            luoghiController.rimuoviVolonatario(volontario);
             parent.aggiornaListaVolontari();
             System.out.println("Elimina button clicked for " + volontario.getNome());
         });

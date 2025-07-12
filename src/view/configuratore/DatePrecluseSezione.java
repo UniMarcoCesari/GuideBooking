@@ -3,8 +3,6 @@ package view.configuratore;
 import controller.CalendarioController;
 import costants.Costants;
 import view.login.MainController;
-import controller.CalendarioController;
-import costants.Costants;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -21,7 +19,6 @@ import java.util.Locale;
 
 public class DatePrecluseSezione extends JFrame {
     private static final Locale ITALIAN_LOCALE = Locale.ITALIAN;
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy", ITALIAN_LOCALE); // Keep for potential future use, but not primary now
 
     private LocalDate selectedMonth;
     private final CalendarioController calendarioController;
@@ -29,8 +26,6 @@ public class DatePrecluseSezione extends JFrame {
     private JPanel calendarPanel;
     private JLabel meseLabel;
     private List<JToggleButton> dayButtons = new ArrayList<>();
-    // Removed: DefaultListModel<String> dateListModel = new DefaultListModel<>();
-    // Removed: JTextField dateInputField;
 
 
     public DatePrecluseSezione(MainController mainController) {
@@ -40,9 +35,8 @@ public class DatePrecluseSezione extends JFrame {
 
         setupUserInterface();
         initializeFrame();
-        setupUserInterface(); // Call setupUI after initializing frame components
+        setupUserInterface(); 
 
-        // No need to call loadPrecludedDates separately, aggiornaCalendario will handle it
     }
 
      private LocalDate calculateSelectedMonth() {
@@ -58,9 +52,6 @@ public class DatePrecluseSezione extends JFrame {
     }
 
     private void setupUserInterface() {
-        // Removed erroneous call: JPanel mainPanel = createMainPanel();
-        // Main Panel setup
-        // Removed duplicate declaration: JPanel mainPanel = new JPanel(...); -> Use the one below
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
@@ -108,9 +99,9 @@ public class DatePrecluseSezione extends JFrame {
         contentPanel.add(monthPanel, BorderLayout.NORTH);
 
         // Calendar Panel (Grid)
-        calendarPanel = new JPanel(new GridLayout(0, 7, 5, 5)); // 0 rows means flexible rows
+        calendarPanel = new JPanel(new GridLayout(0, 7, 5, 5));
         calendarPanel.setBackground(Costants.BACKGROUND_COLOR);
-        calendarPanel.setBorder(new EmptyBorder(Costants.SPACING, 0, Costants.SPACING, 0)); // Add some vertical padding
+        calendarPanel.setBorder(new EmptyBorder(Costants.SPACING, 0, Costants.SPACING, 0)); 
 
 
         // Add Day Labels (Mon, Tue, etc.)
@@ -129,15 +120,13 @@ public class DatePrecluseSezione extends JFrame {
 
 
         // Footer Panel
-        JPanel footerPanel = Costants.createFooterPanel(""); // Updated footer text
+        JPanel footerPanel = Costants.createFooterPanel("");
         footerPanel.setBackground(Costants.CONFIGURATORE_HEADER_BACK);
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
-        add(mainPanel); // Add the main panel to the JFrame
+        add(mainPanel); 
     }
 
-
-    // --- New methods for Calendar View ---
 
     private void aggiornaCalendario() {
         // Clear previous buttons and components after the day labels
@@ -240,13 +229,6 @@ public class DatePrecluseSezione extends JFrame {
              System.out.println("Removed precluded date: " + date); // Log
         }
     }
-
-    // --- Keep navigateBack ---
-    private void navigateBack() {
-        mainController.showPannelloConfiguratore();
-    }
-
-
 
 
 

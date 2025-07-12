@@ -79,6 +79,8 @@ public class TipiVisitaController {
 
     }
 
+    // rimuovi volontario da tutti i tipi visita
+    // se un tipo visita non ha piu volontari rimuovila
     public void rimuoviVolonatario(Volontario volontario) {
         List<TipoVisita> tipiVisitaDaRimuovere = new ArrayList<>();
         for (TipoVisita tipoVisita : tipiVisita) {

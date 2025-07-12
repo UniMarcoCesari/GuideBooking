@@ -94,7 +94,7 @@ public class LoginPanel extends JFrame implements ILoginView{
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        JLabel formInfoLabel = new JLabel("<html><div style=\"text-align: center;\">Attenzione: la password di default per di admin e volontari è: \"test\"<br>Al primo accesso sarà necessario cambiare la password</div></html>");
+        JLabel formInfoLabel = new JLabel("<html><div style=\"text-align: center;\">Attenzione: la password di default per l'admin e volontari è: \"test\"<br>Al primo accesso sarà necessario cambiare la password</div></html>");
         formInfoLabel.setFont(formInfoLabel.getFont().deriveFont(Font.ITALIC));
         formInfoLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
         formInfoLabel.setForeground(Costants.BORDER_COLOR);

@@ -72,10 +72,6 @@ public class CalendarioController {
         return data.withDayOfMonth(1);
     }
 
-    public boolean isButtonLocked() {
-        CorpoDati corpoDati = dataManager.caricaOggetto(Costants.file_corpo);
-        return !corpoDati.getIsAlreadyStart();
-    }
 
     private boolean isGiornoCancellato(LocalDate data) {
         for (LocalDate dataPreclusa : calendario.getDatePrecluse()) {

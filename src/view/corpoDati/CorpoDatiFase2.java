@@ -135,7 +135,7 @@ public class CorpoDatiFase2 extends JFrame {
         }
         corpoDati.setIsAlreadyStart(true);
         mainController.salvaCorpoDati(corpoDati);
-        mainController.showPannelloConfiguratore();
+        mainController.showLoginPanel();
     }
 
 
