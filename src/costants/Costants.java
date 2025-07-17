@@ -2,6 +2,7 @@ package costants;
 
 import java.awt.*;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -12,14 +13,14 @@ import javax.swing.border.LineBorder;
 public class Costants
 {
 
-      public static final String  file_luoghi = "src/data/luoghi.dat";
-      public static final String  file_credenziali = "src/data/credenziali.dat";
-      public static final String  file_tipi_visita = "src/data/tipiVisita.dat";
-      public static final String  file_volontari = "src/data/volontari.dat";
-      public static final String  file_corpo = "src/data/corpo.dat";
-      public static String file_date = "src/data/date.dat";
-      public static String file_disponibilita_volontari = "src/data/disponibilitaVolontari.dat";
-      public static String file_visite = "src/data/visite.dat";
+    public static final String file_luoghi = Paths.get("src", "data", "luoghi.dat").toString();
+    public static final String file_credenziali = Paths.get("src", "data", "credenziali.dat").toString();
+    public static final String file_tipi_visita = Paths.get("src", "data", "tipiVisita.dat").toString();
+    public static final String file_volontari = Paths.get("src", "data", "volontari.dat").toString();
+    public static final String file_corpo = Paths.get("src", "data", "corpo.dat").toString();
+    public static String file_date = Paths.get("src", "data", "date.dat").toString();
+    public static String file_disponibilita_volontari = Paths.get("src", "data", "disponibilitaVolontari.dat").toString();
+    public static String file_visite = Paths.get("src", "data", "visite.dat").toString();
 
 
     // Header
@@ -29,14 +30,6 @@ public class Costants
     public static final Color FRUITORE_HEADER_BACK = new Color(102, 0, 204); // Dark Purple for Fruitore
     public static final Color CONFIGURATORE_HEADER_BACK = new Color(0, 127, 255); // BarkBlue for Configuratore
 
-
-    // // Ruoli
-    // public static final String ruolo_PRE_configuratore =  Ruolo.PRE_CONFIGURATORE;
-    // public static final String ruolo_configuratore =  "configuratore";
-    // public static final String ruolo_volontario = "volontario";
-    // public static final String ruolo_pre_volontario = "preVolontario";
-    // public static String ruolo_eliminato = "eliminato";
-    // public static String ruolo_fruitore = "fruitore";
 
     // Colori principali
     public static final Color ACCENT_COLOR = new Color(55, 65, 81); // Grigio scuro testo
