@@ -11,20 +11,19 @@ import java.awt.*;
 
 import java.util.List;
 
-import card.VisitaCard; // Assicurati che VisitaCard sia importata
+import card.VisitaCard; 
 
 public class VisualizzaMieVisiteFrame extends JFrame {
 
-    
+    // Controller per le visite
     private VisiteController visiteController;
 
     public VisualizzaMieVisiteFrame(String username,MainController mainController) {
-       
         this.visiteController = mainController.getVisiteController();
-
 
         initializeFrame();
 
+        // Pannello principale
         JPanel mainPanel = new JPanel(new BorderLayout(Costants.SPACING, Costants.SPACING));
         mainPanel.setBackground(Costants.BACKGROUND_COLOR);
 
@@ -32,81 +31,72 @@ public class VisualizzaMieVisiteFrame extends JFrame {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(Costants.VOLONTARIO_HEADER_BACK);
 
-       
-        // Titolo al centro
         JLabel titolo = new JLabel("Le tue visite assegnate", SwingConstants.CENTER);
         titolo.setForeground(Color.WHITE);
         titolo.setFont(new Font("Arial", Font.BOLD, 20));
         headerPanel.add(titolo, BorderLayout.CENTER);
 
-        // Bottone Logout a destra
         JButton logoutButton = Costants.creaBottoneLogOut();
         logoutButton.addActionListener(e -> {
             mainController.showPannelloVolontario(username);
         });
-        
+
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         headerRightPanel.setOpaque(false);
         headerRightPanel.add(logoutButton);
         headerPanel.add(headerRightPanel, BorderLayout.EAST);
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
-        
 
-        // Contenuto principale con ScrollPane e BoxLayout
+        // Pannello contenente le card delle visite
         JPanel cardContainerPanel = new JPanel();
         cardContainerPanel.setLayout(new BoxLayout(cardContainerPanel, BoxLayout.Y_AXIS));
-        cardContainerPanel.setBackground(Costants.BACKGROUND_COLOR); // Sfondo del contenitore delle card
-        cardContainerPanel.setBorder(new EmptyBorder(Costants.SPACING, Costants.SPACING, Costants.SPACING, Costants.SPACING)); // Padding
+        cardContainerPanel.setBackground(Costants.BACKGROUND_COLOR);
+        cardContainerPanel.setBorder(new EmptyBorder(Costants.SPACING, Costants.SPACING, Costants.SPACING, Costants.SPACING));
 
-        // Ottieni le visite username
+        // Recupera le visite del mese
         List<Visita> visiteDelMese = visiteController.getVisite(username); 
 
+        // Se non ci sono visite, mostra un messaggio
         if (visiteDelMese.isEmpty()) {
             JLabel noVisiteLabel = new JLabel("Nessuna visita pianificata per questo mese.", SwingConstants.CENTER);
             noVisiteLabel.setFont(Costants.TITLE_FONT);
-            cardContainerPanel.setLayout(new BorderLayout()); // Cambia layout per centrare il messaggio
+            cardContainerPanel.setLayout(new BorderLayout()); 
             cardContainerPanel.add(noVisiteLabel, BorderLayout.CENTER);
-            mainPanel.add(cardContainerPanel, BorderLayout.CENTER); // Aggiungi il pannello con il messaggio se non ci sono visite
+            mainPanel.add(cardContainerPanel, BorderLayout.CENTER); 
         } else {
-            // Pannello per le card, disposto verticalmente
+            // Crea un pannello per le card delle visite
             JPanel cardListPanel = new JPanel();
-            cardListPanel.setLayout(new BoxLayout(cardListPanel, BoxLayout.Y_AXIS)); // Layout verticale
+            cardListPanel.setLayout(new BoxLayout(cardListPanel, BoxLayout.Y_AXIS)); 
             cardListPanel.setBackground(Costants.BACKGROUND_COLOR);
-            // Aggiunge padding interno al pannello delle card
-            cardListPanel.setBorder(new EmptyBorder(20, 20, 20, 20)); // 20 pixel di padding interno
 
+            // Crea le card delle visite
             for (Visita visita : visiteDelMese) {
                 VisitaCard visitaCard = new VisitaCard(mainController, visita, username);
-                // Imposta una dimensione preferita per le card
                 visitaCard.setPreferredSize(new Dimension(400, 200));
-                visitaCard.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra le card orizzontalmente
+                visitaCard.setAlignmentX(Component.CENTER_ALIGNMENT); 
                 cardListPanel.add(visitaCard);
-                cardListPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Spaziatura verticale
+                cardListPanel.add(Box.createRigidArea(new Dimension(0, 10)));
             }
 
-            // ScrollPane per la lista di card
+            // Aggiungi un pannello di scroll
             JScrollPane scrollPane = new JScrollPane(cardListPanel);
-            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // No scroll orizzontale
-            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); // Scroll verticale se necessario
-            // Rimuove il bordo dallo JScrollPane per avere la scrollbar attaccata a destra
-            scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Nessun bordo esterno
-            scrollPane.getViewport().setBackground(Costants.BACKGROUND_COLOR); // Sfondo del viewport
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); 
+            scrollPane.setBorder(BorderFactory.createEmptyBorder()); 
+            scrollPane.getViewport().setBackground(Costants.BACKGROUND_COLOR); 
 
-            mainPanel.add(scrollPane, BorderLayout.CENTER); // Aggiungi lo scrollPane con le card
+            mainPanel.add(scrollPane, BorderLayout.CENTER); 
         }
 
-        // Footer con genera visite
-        JPanel footerPanel = Costants.createFooterPanel(""); // Usa il metodo costante
+        // Footer
+        JPanel footerPanel = Costants.createFooterPanel(""); 
         footerPanel.setBackground(Costants.VOLONTARIO_HEADER_BACK);
         
 
-       
-
-        // Aggiungi un pannello per il bottone per allinearlo a destra nel footer
         JPanel footerButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        footerButtonPanel.setOpaque(false); // Rendi trasparente
-        footerPanel.add(footerButtonPanel, BorderLayout.EAST); // Aggiungi il pannello del bottone
+        footerButtonPanel.setOpaque(false); 
+        footerPanel.add(footerButtonPanel, BorderLayout.EAST); 
 
         mainPanel.add(footerPanel, BorderLayout.SOUTH);
 
@@ -115,10 +105,11 @@ public class VisualizzaMieVisiteFrame extends JFrame {
     }
 
     private void initializeFrame() {
-        setTitle("Gestione Visite Pianificate"); // Titolo più descrittivo
+        setTitle("Gestione Visite Pianificate"); 
         setSize(1200, 800);
-        setMinimumSize(new Dimension(800, 600)); // Dimensione minima
+        setMinimumSize(new Dimension(800, 600)); 
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Chiudi solo questa finestra, non l'app
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
     }
 }
+

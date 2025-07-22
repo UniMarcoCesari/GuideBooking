@@ -6,8 +6,6 @@ import view.login.MainController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-
 import java.awt.*;
 
 public class PannelloVolontario extends JFrame {
@@ -44,7 +42,7 @@ public class PannelloVolontario extends JFrame {
         logoutButton.addActionListener(e -> {
             mainController.showLoginPanel();
         });
-        
+
         JPanel headerRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         headerRightPanel.setOpaque(false);
         headerRightPanel.add(logoutButton);
@@ -156,6 +154,5 @@ public class PannelloVolontario extends JFrame {
         revalidate();
         repaint();
     }
-
-    
 }
+

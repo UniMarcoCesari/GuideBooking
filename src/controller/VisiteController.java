@@ -59,7 +59,8 @@ public class VisiteController {
     public void aggiornaVisiteAlCambioGiorno(LocalDate nuovaDataCorrente) {
         for (Visita visita : visite) {
             LocalDate dataVisita = visita.getData();
-    
+
+            //PROPOSTA/COMPLETA -> CONFERMATA
             if (visita.getStato() == STATO_VISITA.PROPOSTA || visita.getStato() == STATO_VISITA.COMPLETA) {
                 if (dataVisita.minusDays(3).isEqual(nuovaDataCorrente)) {
                     if (visita.getTotaleIscritti() >= visita.getTipo().getMinPartecipanti()) {
@@ -69,7 +70,8 @@ public class VisiteController {
                     }
                 }
             }
-    
+            
+            //CONFERMATA -> EFFETTUATA
             if (visita.getStato() == STATO_VISITA.CONFERMATA) {
                 if (dataVisita.isEqual(nuovaDataCorrente)) {
                     visita.setStato(STATO_VISITA.EFFETTUATA);
@@ -86,10 +88,8 @@ public class VisiteController {
                 + oggi.plusMonths(1).getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN));
 
         if (!calendarioController.isGiornoDiGenerazioneVisite()) {
-            // In un'applicazione reale, gestire l'eccezione o loggare un avviso
+            // possibile solo in caso di test
             System.out.println("AVVISO: Non è il giorno corretto per generare le visite, ma procedo comunque per test.");
-            // throw new IllegalStateException("Non è il giorno corretto per generare le
-            // visite.");
         }
 
         // Mese target: il prossimo
@@ -135,8 +135,8 @@ public class VisiteController {
             // Itera sui luoghi
             for (Luogo luogo : luoghi) {
                 String nomeLuogo = luogo.getNome();
-                orariOccupatiPerLuogo.putIfAbsent(nomeLuogo, new ArrayList<>()); // Inizializza la lista per il luogo se
-                                                                                 // non esiste
+                orariOccupatiPerLuogo.putIfAbsent(nomeLuogo, new ArrayList<>()); 
+                                                             
                 List<TimeSlot> orariOccupatiLuogoCorrente = orariOccupatiPerLuogo.get(nomeLuogo);
 
                 System.out.println("Luogo: " + nomeLuogo);
@@ -179,19 +179,19 @@ public class VisiteController {
                     // occupato oggi
                     Volontario volontarioAssegnato = null;
                     for (Volontario v : tipo.getVolontari()) {
-                        System.out.println("        Tentativo volontario: " + v.getNome());
+                        System.out.println("Tentativo volontario: " + v.getNome());
                         if (!volontariController.isDisponibile(v, data)) {
-                            System.out.println("          Non disponibile per calendario.");
+                            System.out.println("Non disponibile per calendario.");
                             continue;
                         }
                         if (volontariOccupatiDelGiorno.contains(v.getNome())) {
-                            System.out.println("          Già occupato oggi in altra visita.");
+                            System.out.println("Già occupato oggi in altra visita.");
                             continue;
                         }
 
                         // Se arriviamo qui, il volontario è valido
                         volontarioAssegnato = v;
-                        System.out.println("        Volontario trovato: " + v.getNome());
+                        System.out.println("Volontario trovato: " + v.getNome());
                         break; // Trovato un volontario, esci dal loop dei volontari per questo tipo
                     }
 
@@ -205,12 +205,10 @@ public class VisiteController {
                         volontariOccupatiDelGiorno.add(volontarioAssegnato.getNome());
                         orariOccupatiLuogoCorrente.add(potenzialeSlot); // Aggiungi lo slot appena occupato
 
-                        System.out.println("      ✅ Visita creata: " + visita.getTipo().getTitolo() + " con "
+                        System.out.println("Visita creata: " + visita.getTipo().getTitolo() + " con "
                                 + volontarioAssegnato.getNome() + " alle " + visita.getTipo().getOraInizio());
-                        // Non fare break qui, potremmo voler programmare *altri tipi* di visita nello
-                        // stesso luogo oggi
                     } else {
-                        System.out.println("      Nessun volontario disponibile trovato per questo tipo/data/orario.");
+                        System.out.println("Nessun volontario disponibile trovato per questo tipo/data/orario.");
                     }
                 } // Fine loop TipiVisita per questo Luogo
             } // Fine loop Luoghi per questo Giorno
@@ -218,16 +216,10 @@ public class VisiteController {
             data = data.plusDays(1); // Passa al giorno successivo
         } // Fine loop Giorni del Mese
 
-        // Aggiungi le nuove visite alla lista esistente ed effettua il salvataggio
-        // Potrebbe essere utile rimuovere prima le visite esistenti per il mese target
-        // per evitare duplicati se si rigenera
-        // Esempio (da valutare attentamente):
-        // visite.removeIf(v -> v.getData().getMonth() == meseTarget.getMonth() &&
-        // v.getData().getYear() == meseTarget.getYear());
         visite.addAll(nuoveVisite);
         dataManager.salvaListaOggetti(visite, Costants.file_visite);
 
-        System.out.println("\n✅ Generazione completata: " + nuoveVisite.size() + " nuove visite create per " +
+        System.out.println("Generazione completata: " + nuoveVisite.size() + " nuove visite create per " +
                 meseTarget.getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN) + " " + meseTarget.getYear());
     }
 
@@ -337,7 +329,7 @@ public class VisiteController {
         Iscrizione nuova = new Iscrizione(codice, username, numeroPersone);
         visita.aggiungiIscrizione(nuova);
 
-        dataManager.salvaListaOggetti(visite,Costants.file_visite); // se mantieni una lista globale
+        dataManager.salvaListaOggetti(visite,Costants.file_visite);
         
         // Aggiorna l'oggetto Visita nella lista
         int index = visite.indexOf(visita);

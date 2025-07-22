@@ -25,7 +25,7 @@ public class MainController {
     private final LuoghiController luoghiController;
     private final CalendarioController calendarioController;
     
-    private final ViewFactory viewFactory; // <-- NUOVA DIPENDENZA
+    private final ViewFactory viewFactory; 
 
     public MainController(PersistentDataManager dataManager, AuthController authController, TipiVisitaController tipiVisitaController,
             VisiteController visiteController, VolontariController volontarioController,

@@ -12,7 +12,7 @@ import view.login.MainController;
 
 public class Main {
     public static void main(String[] args) {
-        // Initialize all controllers
+        // Inizializza tutti i controller
         PersistentDataManager dataManager = new PersistentDataManager();
         AuthController authController = new AuthController(dataManager);
         TipiVisitaController tipiVisitaController = new TipiVisitaController(dataManager);
@@ -22,12 +22,12 @@ public class Main {
         VisiteController visiteController = new VisiteController(calendarioController, luoghiController, volontarioController,dataManager);
         
         
-        // Initialize main controller with all the controllers
+        // Inizializza il controller principale con tutti i controller
         MainController mainController = new MainController(dataManager,authController, tipiVisitaController, visiteController, volontarioController, luoghiController, calendarioController);
 
-        // check credenziali existence
+        // Verifica esistenza delle credenziali
         if (authController.getCredenziali().isEmpty()) {
-            // If no credentials exist, create default credentials
+            // Se non esistono credenziali, crea credenziali di default
             authController.creaCredenzialiDefault();
         }
 
@@ -35,11 +35,13 @@ public class Main {
 
         
         if (corpoDati == null || !corpoDati.getIsAlreadyStart()) {
+            // Avvia setup iniziale
             SwingUtilities.invokeLater(() -> mainController.startFirstTimeSetup());
         }
         else {
-            // Start normal application
+            // Avvia applicazione normale
             SwingUtilities.invokeLater(() -> mainController.showLoginPanel());
         }
     }
 }
+

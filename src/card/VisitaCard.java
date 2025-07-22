@@ -182,8 +182,9 @@ public class VisitaCard extends JPanel {
     // Aggiunge la label delle iscrizioni
     private void addIscrizioniLabel(JPanel parent, Font labelFont) {
         int maxPartecipanti = visita.getTipo().getMaxPartecipanti();
+        int minPartecipanti = visita.getTipo().getMinPartecipanti();
         int totaleIscritti = visita.getTotaleIscritti();
-        String iscrizioniText = String.format("Iscrizioni: %d / %d", totaleIscritti, maxPartecipanti);
+        String iscrizioniText = String.format("Iscrizioni %d, Min: %d, Max: %d", totaleIscritti, minPartecipanti, maxPartecipanti);
         JLabel iscrizioniLabel = new JLabel(iscrizioniText);
         iscrizioniLabel.setFont(labelFont);
         iscrizioniLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
